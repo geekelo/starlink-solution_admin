@@ -178,7 +178,7 @@ const styles = {
     marginTop: '5px',
     borderRadius: '4px',
     border: '1px solid #ccc',
-    boxSizing: 'border-box',U
+    boxSizing: 'border-box',
   },
   button: {
     padding: '10px',
