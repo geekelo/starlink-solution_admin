@@ -9,12 +9,21 @@ body {
     "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #015885;
+  background-color: #001529;
   color: white;
 }
 
 .app {
   min-height: 100vh;
+}
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.page-container {
+  padding: 1.5rem;
 }
 
 /* Navbar Styles */
@@ -102,6 +111,36 @@ body {
   .nav-links.active a,
   .navbar-right.active a {
     margin: 0.5rem 0;
+  }
+
+  .page-container {
+    padding: 1rem;
+  }
+
+  .navbar {
+    padding: 1rem;
+  }
+
+  .signup-container {
+    padding: 1rem;
+    padding-top: 4rem; /* Adjusted padding for mobile */
+  }
+
+  .signup-content {
+    margin: 0;
+    padding: 1.5rem;
+  }
+
+  .name-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .signup-header h1 {
+    font-size: 2rem;
+  }
+
+  .signup-header p {
+    font-size: 1rem;
   }
 }
 
@@ -195,33 +234,5 @@ body {
 
 .signup-button:active {
   transform: translateY(0);
-}
-
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem;
-  }
-
-  .signup-container {
-    padding: 1rem;
-    padding-top: 4rem; /* Adjusted padding for mobile */
-  }
-
-  .signup-content {
-    margin: 0;
-    padding: 1.5rem;
-  }
-
-  .name-fields {
-    grid-template-columns: 1fr;
-  }
-
-  .signup-header h1 {
-    font-size: 2rem;
-  }
-
-  .signup-header p {
-    font-size: 1rem;
-  }
 }
 
