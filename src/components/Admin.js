@@ -3,6 +3,7 @@ import "../styles/Admin.css";
 import AdminMobileNav from "./Nav";
 import Requests from "./Request";
 import WalletPage from "./Wallet";
+import KitPage from "./Kit";
 
 const AdminPanel = () => {
   const [activePage, setActivePage] = useState("requests"); // Default to Requests
@@ -26,7 +27,7 @@ const AdminPanel = () => {
       <div className="admin-content">
         {activePage === "requests" && <Requests />}
         {activePage === "wallet-history" && <WalletPage />}
-        {activePage === "kits" && <p>Kits Section</p>}
+        {activePage === "kits" && <KitPage />}
         {activePage === "users" && <p>Users Section</p>}
       </div>
     </div>

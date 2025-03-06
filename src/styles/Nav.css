@@ -6,7 +6,7 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    padding: 5px 15px;
+    padding: 10px 15px;
   }
   .logo{
     height: 65px;
@@ -17,6 +17,11 @@
     justify-content: space-between;
     align-items: center;
     
+  }
+  .kit-nav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   
   .menu-toggle {
