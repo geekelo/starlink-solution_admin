@@ -4,6 +4,7 @@ import AdminMobileNav from "./Nav";
 import Requests from "./Request";
 import WalletPage from "./Wallet";
 import KitPage from "./Kit";
+import Users from "./User";
 
 const AdminPanel = () => {
   const [activePage, setActivePage] = useState("requests"); // Default to Requests
@@ -28,7 +29,7 @@ const AdminPanel = () => {
         {activePage === "requests" && <Requests />}
         {activePage === "wallet-history" && <WalletPage />}
         {activePage === "kits" && <KitPage />}
-        {activePage === "users" && <p>Users Section</p>}
+        {activePage === "users" && <Users />}
       </div>
     </div>
   );

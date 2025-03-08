@@ -4,6 +4,7 @@ import './styles/App.css';
 import Login from './components/Login';
 import SignUp from './components/SignUp';
 import AdminPanel from './components/Admin';
+import UserDetails from './components/Userdetail';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<AdminPanel />} /> 
+        <Route path="/user/:id" element={<UserDetails />} />
 
       </Routes>
     </Router>

@@ -109,7 +109,7 @@ const KitPage = () => {
       </div>
 {/* Metrics Section - Updates Based on Filters */}
 <div className="kit-metrics">
-        <div className="metric-box">
+        <div className="kitmetric-box">
           <div className="metric-icon">
             <Package size={40} color="#b6bbc1" />
             <h4>Total Kits</h4>
@@ -117,7 +117,7 @@ const KitPage = () => {
           <p>{totalKits}</p>
         </div>
 
-        <div className="metric-box">
+        <div className="kitmetric-box">
           <div className="metric-icon">
             <CheckCircle size={40} color="green" />
             <h4>Active Kits</h4>
@@ -125,7 +125,7 @@ const KitPage = () => {
           <p>{activeKits}</p>
         </div>
 
-        <div className="metric-box">
+        <div className="kitmetric-box">
           <div className="metric-icon">
             <XCircle size={40} color="#ff1500b8" />
             <h4>Inactive Kits</h4>

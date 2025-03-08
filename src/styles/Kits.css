@@ -98,7 +98,7 @@
   border-radius: 8px;
 }
 
-.metric-box {
+.kitmetric-box {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -109,6 +109,8 @@
   color: white;
   text-align: center;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  min-height: 200px;
+  justify-content: space-around;
 }
 
 .metric-icon {
@@ -119,12 +121,12 @@
   margin-bottom: 8px;
 }
 
-.metric-box h4 {
+.kitmetric-box h4 {
   margin: 0;
   font-size: 26px;
 }
 
-.metric-box p {
+.kitmetric-box p {
   font-size: 20px;
   font-weight: bold;
   margin: 5px 0 0;
