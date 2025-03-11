@@ -65,3 +65,10 @@
     color: white;
   }
   
+
+  @media (max-width: 768px) {
+    .logo {
+      width: 60%;
+      object-fit: contain;
+    }
+  }

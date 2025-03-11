@@ -4,6 +4,8 @@ import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, X, FileText, Wallet, History, DollarSign } from "lucide-react"
 import "../styles/Sidebar.css"
+import Wallet from "./Wallet"
+import WalletPage from "./WalletPage"
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -23,6 +25,7 @@ const Sidebar = () => {
     { path: "/", name: "Requests", icon: <FileText size={20} /> },
     { path: "/fund-wallet", name: "Fund Wallet", icon: <DollarSign size={20} /> },
     { path: "/wallet", name: "Wallet", icon: <Wallet size={20} /> },
+    { path: "/walletbalance", name: "Wallet", icon: <WalletPage size={20} /> },
     { path: "/transactions", name: "Transaction History", icon: <History size={20} /> },
   ]
 

@@ -35,6 +35,12 @@ const AdminMobileNav = ({ onNavClick, activePage }) => {
           Wallet History
         </li>
         <li
+          className={activePage === "wallet-balance" ? "active" : ""}
+          onClick={() => handleNavClick("wallet-balance")}
+        >
+          Wallet balance
+        </li>
+        <li
           className={activePage === "kits" ? "active" : ""}
           onClick={() => handleNavClick("kits")}
         >
