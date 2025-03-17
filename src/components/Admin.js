@@ -2,7 +2,8 @@ import { useState } from "react";
 import "../styles/Admin.css";
 import AdminMobileNav from "./Nav";
 import Requests from "./Request";
-import WalletPage from "./Wallet";
+import Wallet from "./Wallet";
+import WalletPage from "./WalletPage";
 import KitPage from "./Kit";
 import Users from "./User";
 
@@ -27,7 +28,8 @@ const AdminPanel = () => {
       {/* Content Section */}
       <div className="admin-content">
         {activePage === "requests" && <Requests />}
-        {activePage === "wallet-history" && <WalletPage />}
+        {activePage === "wallet-history" && <Wallet />}
+        {activePage === "wallet-balance" && <WalletPage />}
         {activePage === "kits" && <KitPage />}
         {activePage === "users" && <Users />}
       </div>
