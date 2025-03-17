@@ -1,95 +1,102 @@
 /* Requests Section */
 .requests-section {
-    background-color: #010a12;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-height: 94vh;
-  }
-  
-  .request-header{
-    font-size: 34px;
-    padding: 12px 0;
-  }/* Requests Section */
+  background: #f1f1f1; /* Neutral Gray */
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  min-height: 94vh;
+}
 
-  /* Tabs */
-  .tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-  }
-  
-  .tabs button {
-    padding: 10px 15px;
-    border: none;
-    background-color: #ddd;
-    cursor: pointer;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: all 0.3s;
-    width: 10em;
-  }
-  
-  .tabs button.active {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  /* Funding List */
-  .funding-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  /* Funding Card */
-  .funding-card {
-    background-color: white;
-    padding: 15px;
-    border-radius: 5px;
+.request-header {
+  font-size: 34px;
+  padding: 12px 0;
+  color: #002147; /* Deep Blue */
+}
 
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .funding-card p {
-    margin: 0;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .funding-card strong {
-    color: #000;
-  }
-  
-  /* CTA */
-  .cta {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .cta select {
-    padding: 5px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
-  
-  .save-btn {
-    padding: 7px 12px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s;
-  }
-  
-  .save-btn:hover {
-    background-color: #218838;
-  }
-  
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.tabs button {
+  padding: 10px 15px;
+  border: none;
+  background-color: #d6e4f0; /* Soft Blue */
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: all 0.3s;
+  width: 10em;
+  color: #002147;
+}
+
+.tabs button:hover {
+  background-color: #aac4e4; /* Slightly darker blue */
+}
+
+.tabs button.active {
+  background-color: #0056b3;
+  color: white;
+}
+
+/* Funding List */
+.funding-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Funding Card */
+.funding-card {
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 5px solid #0056b3; /* Blue accent */
+}
+
+.funding-card p {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.funding-card strong {
+  color: #002147; /* Deep Blue */
+}
+
+/* CTA */
+.cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cta select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #0056b3;
+  background: #eef4fa; /* Light Blue */
+}
+
+/* Save Button */
+.save-btn {
+  padding: 7px 12px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.save-btn:hover {
+  background-color: #0056b3;
+}

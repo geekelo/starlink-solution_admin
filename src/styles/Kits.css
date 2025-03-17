@@ -1,7 +1,6 @@
 .kit-container {
   padding: 20px;
   margin: 0 auto;
-  background: #0f2439;
   min-height: 100vh;
 }
 
@@ -9,6 +8,7 @@
   text-align: center;
   margin: 30px 0;
   font-size: 40px;
+  color: #0f2439;
 }
 
 .search-filter {
@@ -140,12 +140,13 @@
 }
 
 .kit-card {
-  background-color: #0056b3;
+  background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease-in-out;
-  color: white;
+  color: black;
+  border: 1px solid #00adef;
 }
 
 .kit-card:hover {
@@ -162,14 +163,14 @@
   font-size: 14px;
 }
 
-.edit-btn {
+.kit-card .edit-btn {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
   margin-top: 15px;
   padding: 10px;
-  background: #007bff;
+  background: #00adef;
   color: white;
   border: none;
   border-radius: 6px;
@@ -267,6 +268,7 @@
 @media (max-width: 480px) {
   .kit-grid {
     grid-template-columns: repeat(1, 1fr);
+    gap: 4px;
   }
   .search-filter {
     padding: 8px;

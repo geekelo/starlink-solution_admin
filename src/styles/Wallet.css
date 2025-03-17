@@ -1,7 +1,8 @@
 .wallet-container {
  padding: 20px;
   min-height: 100vh;
-  background:  #0f2439;
+ 
+  background:  #f1f1f1;
   color: white;
  
 
@@ -12,7 +13,7 @@
   text-align: center;
   font-size: 28px;
   padding: 15px 0;
-  color: #b6bbc1;
+  color: black;
 }
 .wallet-nav{
   display: flex;
@@ -65,7 +66,7 @@
   width: 100%;
   max-width: 250px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  margin-bottom: 12px;
+  margin: 12px 0;
 }
 
 .wallettabs {
@@ -78,9 +79,9 @@
   padding: 12px 18px;
   width: 120px;
   cursor: pointer;
-  color: black;
+  color: whitesmoke;
   font-weight: bold;
-background-color: rgba(128, 128, 128, 0.049);}
+background-color: #0a1930}
 
 .wallettab-button.tab-all.active {
   background-color: #00adef;
@@ -119,12 +120,14 @@ background-color: rgba(128, 128, 128, 0.049);}
   text-align: center;
   font-size: 20px;
   font-weight: bold;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease-in-out;
   min-height: 200px;
   display: flex;
   justify-content: center;
   flex-direction: column;
+  border: 2px solid #007bff;
+  background: #fff;
 }
 .history-box h4{
   padding: 10px 0;
@@ -135,17 +138,17 @@ background-color: rgba(128, 128, 128, 0.049);}
 }
 
 .funding {
-  background: #d4edda;
-  color: #155724;
+  border-color : #0f541f;
+  color: #06240d;
 }
 
 .renewal {
-  background: #fff3cd;
+  border-color: #bd9512;
   color: #856404;
 }
 
 .withdrawal {
-  background: #f8d7da;
+  border-color: #bc1220;
   color: #721c24;
 }
 
