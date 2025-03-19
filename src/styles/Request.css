@@ -19,7 +19,9 @@
   gap: 10px;
   margin-bottom: 15px;
 }
-
+.req-message{
+  color: #002147;
+}
 .tabs button {
   padding: 10px 15px;
   border: none;

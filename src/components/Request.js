@@ -86,7 +86,7 @@ const Requests = () => {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className="error-message">Loading...</p>
       ) : (
         <>
           {activeTab === "funding" && (
@@ -109,7 +109,7 @@ const Requests = () => {
                   </div>
                 ))
               ) : (
-                <p>No funding requests available.</p>
+                <p  className="req-message">No funding requests available.</p>
               )}
             </div>
           )}
@@ -144,7 +144,7 @@ const Requests = () => {
                   </div>
                 ))
               ) : (
-                <p>No Starlink kit requests available.</p>
+                <p  className="req-message">No Starlink kit requests available.</p>
               )}
             </div>
           )}

@@ -209,7 +209,6 @@ background-color: #0a1930}
   background: #0056b3;
 }
 
-
 @media (max-width: 600px) {
   .wallet-container {
     padding: 15px;
@@ -223,7 +222,35 @@ background-color: #0a1930}
     grid-template-columns: 1fr;
   }
 
-  .tab-button {
-    padding: 10px 14px;
+  .wallettabs {
+    flex-wrap: wrap;
   }
+
+  .metrics {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding-bottom: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .metrics::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
+  }
+
+  .metrics {
+    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+  }
+
+  .metric-box {
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
+  .wallet-nav{
+    flex-direction: column;
+    justify-content: center;
+    gap: 1px;
+  }
+  
 }
