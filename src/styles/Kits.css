@@ -274,6 +274,11 @@
     padding: 8px;
   }
 
+  .kitmetric-box {
+    margin: 6px 0;
+    min-width: 100%;
+   
+  }
   .filter-box,
   .search-box {
     flex-direction: row;
@@ -294,12 +299,15 @@
     width: 100%;
   }
   .kit-header {
-    font-size: 16px; /* Further reduce for mobile */
+    font-size: 14px; /* Further reduce for mobile */
     margin: 15px 0;
-    padding: 10px; /* Add padding for better spacing */
+    padding: 5px; /* Add padding for better spacing */
   }
   .metric-box{
     min-width: 100%;
+  }
+  .kit-container {
+  padding: 8px;
   }
 
 }

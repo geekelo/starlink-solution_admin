@@ -1,0 +1,93 @@
+.withdrawal-container {
+    max-width: 450px;
+    margin: 60px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    
+  }
+  
+ .withdrawal-container h2 {
+    font-size: 32px;
+    margin: 10px 0;
+    color: #000;
+  }
+  
+  .withdrawal-info {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+  
+  .withdrawal-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+    text-align: left;
+  }
+  
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+  }
+  
+ .withdrawal-form input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #0056b3;
+    font-size: 14px;
+    transition: border 0.3s ease-in-out;
+    color: #000;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+  }
+  
+  .withdraw-btn {
+    background:#1a3a5f;
+    color: white;
+    font-size: 16px;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .withdraw-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .withdraw-btn:hover {
+    background: #0056b3;
+  }
+  
+  .withdrawal-message {
+    margin-top: 15px;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 6px;
+  }
+  
+  .success {
+    color: green;
+    background: #e6f4ea;
+  }
+  
+  .error {
+    color: red;
+    background: #fde2e2;
+  }
+  

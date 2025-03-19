@@ -1,174 +1,127 @@
-import "../styles/WalletPage.css";
-import { GoArrowSwitch, GoArrowDownLeft, GoArrowUpRight } from "react-icons/go";
-import { RiHome3Line } from "react-icons/ri";
-import { GrPowerCycle } from "react-icons/gr";
-import { FaCreditCard } from "react-icons/fa6";
-import { IoNotificationsOutline } from "react-icons/io5";
-import { CiUser } from "react-icons/ci";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { createAxiosInstance } from "../config/axios";
+import "../styles/Wallet.css";
+import WalletBalance from "./WalletBalance";
+import Funding from "./funding";
+import Renewal from "./Renewal";
 
 const WalletPage = () => {
+  const [walletHistory, setWalletHistory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeTab, setActiveTab] = useState("All");
+  const [walletBalance, setWalletBalance] = useState(0);
+  const itemsPerPage = 6;
+
+  const fetchWalletHistory = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const axiosInstance = createAxiosInstance();
+      const response = await axiosInstance.get("/api/v1/admin/wallet_histories");
+
+      const { fundings, renewals } = response.data;
+
+      if (!fundings || !renewals) {
+        throw new Error("Missing fundings or renewals data");
+      }
+
+      const formatTransactions = (items, type) =>
+        items.map((item) => ({
+          id: item.id,
+          type,
+          amount: parseFloat(item.amount),
+          date: new Date(item.created_at).toISOString().split("T")[0],
+          email: item.user_email || item.email,
+          reference: item.kit_number || item.reference,
+        }));
+
+      const formattedFundings = formatTransactions(fundings, "Funding");
+      const formattedRenewals = formatTransactions(renewals, "Renewal");
+
+      setWalletHistory([...formattedFundings, ...formattedRenewals]);
+    } catch (err) {
+      console.error("Failed to fetch wallet history:", err);
+      setError("Failed to load wallet history.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Filter history
+  const filteredHistory = walletHistory.filter((item) => {
+    const date = new Date(item.date);
+    const monthMatches = selectedMonth ? date.getMonth() + 1 === parseInt(selectedMonth) : true;
+    const yearMatches = selectedYear ? date.getFullYear() === parseInt(selectedYear) : true;
+    const tabMatches = activeTab === "All" || item.type === activeTab;
+    return monthMatches && yearMatches && tabMatches;
+  });
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentHistory = filteredHistory.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
-    <div className="page-container">
-
-
-
-      <div >
-        <h1 className="wallet-page-header">Wallet balance</h1>
-        <p className="sub-text-header">$500.<span className="sub-text-header-gray">00</span></p>
-      </div>
+    <div className="wallet-container">
       <div>
-        <h2 className="wallet-page-header">Wallet History</h2>
-        <div className="wallet-history-wrapper">
-
-          <div className="wallet-history-card">
-            <div className="icon-wrapper">
-              <GoArrowDownLeft color="#00ADEF" />
-
-            </div>
-
-            <div className="bottom-history-div">
-
-              <span>
-                Total Funding
-              </span>
-              <p>
-                $220,000
-              </p>
-            </div>
-
-
-          </div>
-
-          <div className="wallet-history-card">
-            <div className="icon-wrapper">
-              <GrPowerCycle color="#00ADEF" />
-            </div>
-
-            <div className="bottom-history-div">
-
-              <span>
-                Total Renewal
-              </span>
-              <p>
-                $65,000
-              </p>
-            </div>
-
-
-          </div>
-          <div className="wallet-history-card">
-            <div className="icon-wrapper">
-              <GoArrowUpRight color="#00ADEF" />
-            </div>
-
-            <div className="bottom-history-div">
-
-              <span>
-                Total Withdrawal
-              </span>
-              <p>
-                $85,000
-              </p>
-            </div>
-
-
-          </div>
-          <div className="wallet-history-card">
-            <div className="icon-wrapper">
-              <GoArrowSwitch color="#00ADEF" />
-            </div>
-
-            <div className="bottom-history-div">
-
-              <span>
-                Total in System
-              </span>
-              <p>
-                $185,000
-              </p>
-            </div>
-
-
-          </div>
+        <div className="wallet-nav">
+          <h2 className="wallet-header">Wallet History</h2>
+          <WalletBalance onBalanceFetched={setWalletBalance} />
         </div>
 
+        <div className="wallettabs">
+          {["All", "Funding", "Renewal", "Withdrawal"].map((tab) => (
+            <button
+              key={tab}
+              className={`wallettab-button tab-${tab.toLowerCase()} ${activeTab === tab ? "active" : ""}`}
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
-      </div>
-
-      <div >
-
-        <p className="details-header">Transaction Details</p>
-        <div className="transaction-div">
-          <div  className="transaction-card">
-            <div className="icon-text-wrapper">
-              <div className="icon-wrapper">
-
-                <GoArrowDownLeft color="#446608" />
-              </div>
-              <p className="sub-text-header-gray">31/1/2025</p>
-
-
-
-            </div>
-              <p className="text-color">$100,000</p>
+        {loading ? (
+          <p>Loading wallet history...</p>
+        ) : error ? (
+          <p className="error-message">{error}</p>
+        ) : (
+          <div className="wallet-history">
+            {currentHistory.length > 0 ? (
+              currentHistory.map((item) =>
+                item.type === "Funding" ? (
+                  <Funding key={item.id} transaction={item} />
+                ) : item.type === "Renewal" ? (
+                  <Renewal key={item.id} transaction={item} />
+                ) : (
+                  <div key={item.id} className={`history-box ${item.type.toLowerCase()}`}>
+                    <p>₦{item.amount.toLocaleString()}</p>
+                    <span>{new Date(item.date).toLocaleDateString()}</span>
+                  </div>
+                )
+              )
+            ) : (
+              <p>No history found.</p>
+            )}
           </div>
+        )}
 
-          <div  className="transaction-card">
-            <div className="icon-text-wrapper">
-              <div className="icon-wrapper">
-
-                <GoArrowDownLeft color="#BF0317" />
-              </div>
-              <p className="sub-text-header-gray">31/1/2025</p>
-
-
-
-            </div>
-              <p className="text-color">$100,000</p>
-          </div>
-
-          <div  className="transaction-card">
-            <div className="icon-text-wrapper">
-              <div className="icon-wrapper">
-
-                <GoArrowDownLeft color="#446608" />
-              </div>
-              <p className="sub-text-header-gray">31/1/2025</p>
-
-
-
-            </div>
-              <p className="text-color">$100,000</p>
-          </div>
-
-          <div  className="transaction-card">
-            <div className="icon-text-wrapper">
-              <div className="icon-wrapper">
-
-                <GoArrowSwitch color="#E29946" />
-              </div>
-              <p className="sub-text-header-gray">31/1/2025</p>
-
-
-
-            </div>
-              <p className="text-color">$100,000</p>
-          </div>
+        <div className="pagination">
+          <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+            <ChevronLeft size={18} />
+          </button>
+          <button onClick={() => setCurrentPage((prev) => (indexOfLastItem < filteredHistory.length ? prev + 1 : prev))} disabled={indexOfLastItem >= filteredHistory.length}>
+            <ChevronRight size={18} />
+          </button>
         </div>
       </div>
-
-      <div className="footer-icons-div">
-      <div className="footer-icons">
-
-      <RiHome3Line color="#5E5E5E" />
-      <FaCreditCard  color="#5E5E5E" />
-      <IoNotificationsOutline color="#5E5E5E" />
-      <CiUser color="#5E5E5E" />
-      </div>
     </div>
-    </div>
-  )
-}
+  );
+};
 
-export default WalletPage
-
+export default WalletPage;

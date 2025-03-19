@@ -46,6 +46,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  
 }
 
 /* Funding Card */
@@ -86,9 +87,9 @@
 }
 
 /* Save Button */
-.save-btn {
+.cta .save-btn {
   padding: 7px 12px;
-  background-color: #007BFF;
+  background-color: #0a1930;
   color: white;
   border: none;
   border-radius: 4px;
@@ -99,4 +100,64 @@
 
 .save-btn:hover {
   background-color: #0056b3;
+}
+.invoice{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.invoice button{
+  padding: 14px;
+  border-radius: 12px;
+  background: #0a1930;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+}
+
+@media (max-width: 768px) {
+  .request-header {
+    font-size: 24px;
+  }
+
+  .funding-card p {
+    font-size: 12px;
+  }
+
+  .cta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cta select,
+  .save-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .request-header {
+    font-size: 20px;
+    text-align: center;
+  }
+
+
+
+  .funding-card {
+    padding: 10px;
+  }
+
+  .invoice button {
+    font-size: 12px;
+    padding: 10px;
+  }
+  .invoice{
+    padding: 20px 0;
+  }
 }

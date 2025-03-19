@@ -41,6 +41,12 @@ const AdminMobileNav = ({ onNavClick, activePage }) => {
           Wallet balance
         </li>
         <li
+          className={activePage === "wallet-withdrawal" ? "active" : ""}
+          onClick={() => handleNavClick("wallet-withdrawal")}
+        >
+          Wallet Withdrawal
+        </li>
+        <li
           className={activePage === "kits" ? "active" : ""}
           onClick={() => handleNavClick("kits")}
         >
@@ -51,6 +57,12 @@ const AdminMobileNav = ({ onNavClick, activePage }) => {
           onClick={() => handleNavClick("users")}
         >
           Users
+        </li>
+        <li
+          className={activePage === "manage-funds" ? "active" : ""}
+          onClick={() => handleNavClick("manage-funds")}
+        >
+          Manage Funding
         </li>
       </ul>
     </nav>

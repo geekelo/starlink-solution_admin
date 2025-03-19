@@ -5,6 +5,7 @@ import Login from './components/Login';
 import SignUp from './components/SignUp';
 import AdminPanel from './components/Admin';
 import UserDetails from './components/Userdetail';
+import FundingPage from './components/ManageFunding';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/" element={<AdminPanel />} /> 
         <Route path="/user/:id" element={<UserDetails />} />
+        <Route path='/funding' element={<FundingPage />} />
 
       </Routes>
     </Router>

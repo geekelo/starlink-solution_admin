@@ -5,6 +5,7 @@
     align-items: center;
     padding: 2rem;
     padding-top: 5rem; /* Add padding for navbar */
+    background:#0099d6;
   }
   
   .login-content {

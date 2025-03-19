@@ -1,0 +1,101 @@
+.funding-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .funding-header {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .funding-section {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-bar button {
+    background: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .search-bar button:hover {
+    background: #0056b3;
+  }
+  
+  .funding-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+  }
+  
+  .funding-card {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .funding-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .funding-card p {
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  
+  .funding-card strong {
+    color: #333;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .status.Pending {
+    background: #ffcc00;
+    color: #663d00;
+  }
+  
+  .status.Approved {
+    background: #28a745;
+    color: #fff;
+  }
+  
+  .status.Rejected {
+    background: #dc3545;
+    color: #fff;
+  }
+  
+  .no-records {
+    text-align: center;
+    font-size: 16px;
+    color: #888;
+  }
+  
