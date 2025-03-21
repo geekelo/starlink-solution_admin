@@ -64,6 +64,12 @@ const AdminMobileNav = ({ onNavClick, activePage }) => {
         >
           Manage Funding
         </li>
+        <li
+          className={activePage === "manage-renewal" ? "active" : ""}
+          onClick={() => handleNavClick("manage-renewal")}
+        >
+          Manage Renewals
+        </li>
       </ul>
     </nav>
   );
