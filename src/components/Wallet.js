@@ -28,7 +28,8 @@ const WalletPage = () => {
     const fetchWalletHistory = async () => {
       setLoading(true);
       setError("");
-
+      const token = localStorage.getItem("token");
+console.log(token)
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get(

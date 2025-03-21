@@ -8,6 +8,7 @@ import KitPage from "./Kit";
 import Users from "./User";
 import WithdrawalPage from "./Withdrawal";
 import FundingPage from "./ManageFunding";
+import RenewalPage from "./ManageRenewal";
 
 const AdminPanel = () => {
   const [activePage, setActivePage] = useState("requests"); // Default to Requests
@@ -36,6 +37,7 @@ const AdminPanel = () => {
         {activePage === "users" && <Users />}
         {activePage === "wallet-withdrawal" && <WithdrawalPage />}
         {activePage === "manage-funds" && <FundingPage />}
+        {activePage === "manage-renewal" && <RenewalPage />}
       </div>
     </div>
   );

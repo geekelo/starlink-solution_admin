@@ -78,6 +78,22 @@
     align-items: center;
 }
 
+.fundedit-button{
+    width: 25px;
+    height: 25px;
+    background: #005985;
+    cursor: pointer;
+  }
+  .fund-btn{
+    margin: 10px 0 ;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap:6px;
+    color: #005985;
+    font-weight: 500;
+  }
+
 /* Modal Content */
 .modal-content {
     background: white;
@@ -112,7 +128,99 @@
     justify-content: space-between;
     margin-top: 15px;
 }
-
+/* Modal Overlay */
+.user-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+  
+  /* Modal Container */
+  .user-modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    background: white;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  /* Modal Title */
+  .user-modal-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  /* Modal Content */
+  .user-modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  /* Labels */
+  .user-modal-label {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  
+  /* Input Fields */
+  .user-modal-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  /* Modal Actions */
+  .user-modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  /* Buttons */
+  .user-modal-button {
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 4px;
+    transition: 0.3s;
+  }
+  
+  .user-modal-button.save {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .user-modal-button.save:hover {
+    background-color: #0056b3;
+  }
+  
+  .user-modal-button.cancel {
+    background-color: red;
+    color: white;
+  }
+  
+  .user-modal-button.cancel:hover {
+    background-color: darkred;
+  }
+  
 .save-btn {
     background: #28a745;
     color: white;

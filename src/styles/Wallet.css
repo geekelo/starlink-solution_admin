@@ -178,35 +178,236 @@ background-color: #0a1930}
   border: none;
   transition: background 0.3s ease-in-out;
 }
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Container */
+.funding-modal {
+  background: #fff;
+  padding: 20px;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Header */
+.funding-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.funding-modal-header h3 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+}
+
+.funding-modal-header button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.funding-modal-header button svg {
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.funding-modal-header button:hover svg {
+  color: #000;
+}
+
+/* Modal Body */
+.funding-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.funding-modal-body label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #555;
+}
+
+.funding-modal-body input,
+.funding-modal-body select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  outline: none;
+}
+
+.funding-modal-body select {
+  cursor: pointer;
+}
+
+/* Modal Footer */
+.funding-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.funding-modal-footer button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.funding-modal-footer button:first-child {
+  background: #0a1930;
+  color: #fff;
+}
+
+.funding-modal-footer button:first-child:hover {
+  background: #0056b3;
+}
+
+.funding-modal-footer button:last-child {
+  background: #ddd;
+  color: #333;
+}
+
+.funding-modal-footer button:last-child:hover {
+  background: #bbb;
+}
+.renew-flex{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap:6px;
+}
+.success-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+}
+
+.success-modal h3 {
+  margin: 15px 0;
+  color: green;
+}
+
+.success-modal button {
+  background-color: green;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .pagination button:disabled {
   background: #5a98de;
   cursor: not-allowed;
 }
-.search-bar {
+
+
+/* Search Section */
+.funding-search-container {
   display: flex;
-  gap: 0px;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
   margin: 20px 0;
 }
 
-.search-bar input {
-  flex: 1;
-  padding: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.funding-search-bar {
+  display: flex;
+  width: 100%;
+  max-width: 500px;
+  gap: 0px;
+  align-items: center;
 }
 
-.search-bar button {
-  background: #0a1930;
+.funding-search-input {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #007bff;
+  border-radius: 8px  0 0 8px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.funding-search-input:focus {
+  border-color: #0056b3;
+}
+
+.funding-search-button {
+  background: #007bff;
   color: #fff;
-  padding: 14px;
+  padding: 13px 18px;
   border: none;
-  border-radius: 5px 0 5px 0;
+  border-radius: 0   8px  8px 0;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.funding-search-button:hover {
+  background: #0056b3;
+}
+
+.fundedit-button{
+  width: 25px;
+  height: 25px;
+  background: #0a1930;
   cursor: pointer;
 }
+/* Create Funds Button */
+.create-funds-button {
+  background: #0a1930;
+  color: #fff;
+  font-weight: 600;
+  font-size: 17px;
+  padding: 14px 20px;
+  border-radius:16px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
 
-.search-bar button:hover {
-  background: #0056b3;
+.create-funds-button:hover {
+  background: #004494;
 }
 
 @media (max-width: 600px) {

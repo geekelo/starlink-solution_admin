@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { createAxiosInstance } from "../config/axios";
-import { Package, CheckCircle, XCircle, Search, Filter, Edit2 } from "lucide-react";
+import { Package, CheckCircle, XCircle, Search, Filter, Edit2, X } from "lucide-react";
 import "../styles/Kits.css";
 
 const KitPage = () => {
@@ -11,13 +11,24 @@ const KitPage = () => {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedKit, setSelectedKit] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [formData, setFormData] = useState({
+    kit_number: selectedKit?.kit_number || "",
+    address: selectedKit?.address || "",
+    company_name: selectedKit?.company_name || "",
+    company_number: selectedKit?.company_number || "",
+    nin: selectedKit?.nin || "",
+    status: selectedKit?.status || "active",
+    service_line_number: selectedKit?.service_line_number || "",
+  });
+  const kitsPerPage = 12;
 
   useEffect(() => {
     const fetchKits = async () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
-        
+
         const formattedKits = response.data.map((kit) => ({
           kitId: kit.id,
           kitNo: kit.kit_number,
@@ -29,7 +40,8 @@ const KitPage = () => {
           nin: kit.nin,
           status: kit.is_active ? "Active" : "Inactive",
           plan: "N/A",
-          serviceNo: kit.company_number || "N/A",
+          serviceNo: kit.service_line_number
+          || "N/A",
           dateAdded: kit.created_at.split("T")[0],
         }));
 
@@ -43,10 +55,24 @@ const KitPage = () => {
 
     fetchKits();
   }, []);
-
+  useEffect(() => {
+    if (selectedKit) {
+      setFormData({
+        kit_number: selectedKit.kitNo || "",
+        address: selectedKit.address || "",
+        company_name: selectedKit.companyName || "",
+        company_number: selectedKit.serviceNo || "",
+        nin: selectedKit.nin || "",
+        status: selectedKit.status.toLowerCase() || "active",
+        service_line_number: selectedKit.serviceNo || "",
+      });
+    }
+  }, [selectedKit]);
+  
   const filteredKits = useMemo(() => {
+    if (!Array.isArray(kits)) return [];
     if (!searchQuery) return kits;
-
+  
     return kits.filter((kit) => {
       if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
       if (searchType === "month") {
@@ -54,10 +80,11 @@ const KitPage = () => {
         return kitMonth === searchQuery;
       }
       if (searchType === "year") return kit.dateAdded.startsWith(searchQuery);
-
+  
       return kit[searchType]?.toString().toLowerCase().includes(searchQuery.toLowerCase());
     });
   }, [searchQuery, searchType, kits]);
+  
 
   const metrics = useMemo(() => ({
     total: filteredKits.length,
@@ -74,22 +101,35 @@ const KitPage = () => {
     setIsModalOpen(false);
     setSelectedKit(null);
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setSelectedKit((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
+  
 
   const handleSave = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-      await axiosInstance.put(`/api/v1/admin/kit_records/${selectedKit.kitId}`, selectedKit);
-      setKits((prevKits) => prevKits.map((kit) => (kit.kitId === selectedKit.kitId ? selectedKit : kit)));
+    const res =  await axiosInstance.patch(`/api/v1/admin/kit_records/${selectedKit.kitId}`, {
+        starlink_kit: formData,
+      });
+  console.log(res)
+      // Update kits state with the modified kit
+      setKits((prevKits) =>
+        prevKits.map((kit) =>
+          kit.kitId === selectedKit.kitId ? { ...kit, ...formData, status: formData.status.charAt(0).toUpperCase() + formData.status.slice(1) } : kit
+        )
+      );
+  
       closeModal();
     } catch (err) {
       setError("Failed to update kit. Please try again.");
     }
   };
+  
+  const indexOfLastKit = currentPage * kitsPerPage;
+  const indexOfFirstKit = indexOfLastKit - kitsPerPage;
+  const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
 
   return (
     <div className="kit-container">
@@ -109,7 +149,6 @@ const KitPage = () => {
               <option value="username">User</option>
             </select>
           </div>
-
           <div className="search-box">
             <Search size={24} color="#b6bbc1" />
             {searchType === "dateAdded" ? (
@@ -123,10 +162,10 @@ const KitPage = () => {
             )}
           </div>
         </div>
-      </div>
-
-      {/* Metrics Section */}
-      <div className="kit-metrics">
+    
+          </div>
+{/* Metrics Section */}
+<div className="kit-metrics">
         <div className="kitmetric-box">
           <div className="metric-icon">
             <Package size={40} color="#b6bbc1" />
@@ -153,8 +192,8 @@ const KitPage = () => {
       </div>
 
       <div className="kit-grid">
-        {loading ? <p>Loading kits...</p> : filteredKits.map((kit) => (
-          <div key={kit.kitId} className={`kit-card ${kit.status.toLowerCase()}`}>
+      {loading ? <p>Loading kits...</p> : currentKits.map((kit) => (
+             <div key={kit.kitId} className={`kit-card ${kit.status.toLowerCase()}`}>
             <h3>Kit No: {kit.kitNo}</h3>
             <p><strong>Address:</strong> {kit.address}</p>
             <p><strong>NIN:</strong> {kit.nin}</p>
@@ -170,6 +209,49 @@ const KitPage = () => {
           </div>
         ))}
       </div>
+  
+    
+
+     
+      <div className="pagination">
+      <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button>
+      
+        <button onClick={() => setCurrentPage((prev) => (prev * kitsPerPage < filteredKits.length ? prev + 1 : prev))} disabled={currentPage * kitsPerPage >= filteredKits.length}>Next</button>
+       </div>
+      {isModalOpen && (
+        <div className="user-modal-overlay" onClick={() => setIsModalOpen(false)}>
+         <div className="user-modal-container">
+         
+          <h3 className="user-modal-title">Edit Kit</h3>
+  
+          {error && <p className="error-message">{error}</p>}
+          <div className="user-modal-content">
+          <label className="user-modal-label">Kit Number:</label>
+          <input type="text"  className="user-modal-input" name="kit_number" value={formData.kit_number} onChange={handleChange} placeholder="Kit Number" />
+          <label className="user-modal-label">Address:</label>
+          <input type="text"  className="user-modal-input" name="address" value={formData.address} onChange={handleChange} placeholder="Address" />
+          <label className="user-modal-label">Comapny Name:</label>
+          <input type="text"  className="user-modal-input" name="company_name" value={formData.company_name} onChange={handleChange} placeholder="Company Name" />
+          <label className="user-modal-label">Company Number:</label>
+          <input type="text"  className="user-modal-input" name="company_number" value={formData.company_number} onChange={handleChange} placeholder="Company Number" />
+          <label className="user-modal-label">Nin:</label>
+          <input type="text"  className="user-modal-input" name="nin" value={formData.nin} onChange={handleChange} placeholder="NIN" />
+          <label className="user-modal-label">Status:</label>
+          <select name="status"  className="user-modal-input" value={formData.status}  onChange={handleChange}>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+          <label className="user-modal-label">Service Line Number:</label>
+          <input type="text"  className="user-modal-input" name="service_line_number" value={formData.service_line_number} onChange={handleChange} placeholder="Service Line Number" />
+          <div className="user-modal-actions">
+        <button className="user-modal-button save" onClick={handleSave}>Save</button>
+        <button className="user-modal-button cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+      </div>
+         
+        </div>
+        </div>
+      </div>
+      )}
     </div>
   );
 };
