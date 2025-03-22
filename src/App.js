@@ -7,6 +7,7 @@ import AdminPanel from "./components/Admin";
 import UserDetails from "./components/Userdetail";
 import FundingPage from "./components/ManageFunding";
 import ProtectedRoute from "./protectedRoutes"; 
+import Requests from "./components/Request";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
 
         {/* Protected Routes */}
-        <Route path="/" element={<ProtectedRoute element={<AdminPanel />} />} />
+        <Route path="/" element={<ProtectedRoute element={<Requests />} />} />
         <Route path="/user/:id" element={<ProtectedRoute element={<UserDetails />} />} />
         <Route path="/funding" element={<ProtectedRoute element={<FundingPage />} />} />
       </Routes>
