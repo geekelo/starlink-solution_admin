@@ -13,7 +13,7 @@ const Users = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10;
+  const usersPerPage = 12;
   const navigate = useNavigate();
 
   useEffect(() => {

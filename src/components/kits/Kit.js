@@ -219,7 +219,7 @@ const KitPage = () => {
         <button onClick={() => setCurrentPage((prev) => (prev * kitsPerPage < filteredKits.length ? prev + 1 : prev))} disabled={currentPage * kitsPerPage >= filteredKits.length}>Next</button>
        </div>
       {isModalOpen && (
-        <div className="user-modal-overlay" onClick={() => setIsModalOpen(false)}>
+        <div className="modal-overlay" >
          <div className="user-modal-container">
          
           <h3 className="user-modal-title">Edit Kit</h3>
