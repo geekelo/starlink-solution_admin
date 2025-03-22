@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { createAxiosInstance } from "../config/axios";
+import { createAxiosInstance } from "../../config/axios";
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,9 +8,9 @@ import {
   ArrowDownCircle,
   Database,
 } from "lucide-react";
-import "../styles/Wallet.css";
-import Funding from "./funding";
-import Renewal from "./Renewal";
+import "../../styles/Wallet.css";
+import Funding from "../funding/funding";
+import Renewal from "../renewal/Renewal";
 import WalletBalance from "./WalletBalance";
 
 const WalletPage = () => {

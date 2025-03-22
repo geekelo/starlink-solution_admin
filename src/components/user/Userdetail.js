@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import users from "../assets/User"; // Import user data
-import "../styles/User.css";
+import users from "../../assets/User"; // Import user data
+import "../../styles/User.css";
 
 const UserDetails = () => {
   const { id } = useParams();

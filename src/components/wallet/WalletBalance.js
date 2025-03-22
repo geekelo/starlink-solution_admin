@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { createAxiosInstance } from "../config/axios";
-import '../styles/Wallet.css'
+import { createAxiosInstance } from "../../config/axios";
+import '../../styles/Wallet.css'
 const WalletBalance = ({ onBalanceFetched }) => {
   const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(false);

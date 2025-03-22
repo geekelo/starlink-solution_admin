@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { createAxiosInstance } from "../config/axios";
-import "../styles/Wallet.css";
+import { createAxiosInstance } from "../../config/axios";
+import "../../styles/Wallet.css";
 import { Edit, X, CheckCircle } from "lucide-react";
 
 const FundingPage = () => {

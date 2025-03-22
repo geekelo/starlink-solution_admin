@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { createAxiosInstance } from "../config/axios";
-import "../styles/Request.css";
+import { createAxiosInstance } from "../../config/axios";
+import "../../styles/Request.css";
 import { Bell } from "lucide-react";
 
 const Requests = () => {

@@ -1,5 +1,5 @@
 import React from "react";
-import '../styles/Wallet.css'
+import '../../styles/Wallet.css'
 const Renewal = ({ transaction }) => {
   return (
     <div className="history-box renewal">

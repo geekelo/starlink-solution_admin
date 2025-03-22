@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
-import { createAxiosInstance } from "../config/axios";
+import { createAxiosInstance } from "../../config/axios";
 import { Package, CheckCircle, XCircle, Search, Filter, Edit2, X } from "lucide-react";
-import "../styles/Kits.css";
+import "../../styles/Kits.css";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");

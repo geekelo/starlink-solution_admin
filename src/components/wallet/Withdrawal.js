@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createAxiosInstance } from "../config/axios";
+import { createAxiosInstance } from "../../config/axios";
 import { FaMoneyBillWave, FaRegStickyNote, FaCalendarAlt } from "react-icons/fa";
-import "../styles/Withdrawal.css";
+import "../../styles/Withdrawal.css";
 
 const WithdrawalPage = () => {
   const [amount, setAmount] = useState("");
