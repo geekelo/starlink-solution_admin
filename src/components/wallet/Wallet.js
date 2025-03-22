@@ -28,7 +28,7 @@ const WalletPage = () => {
     const fetchWalletHistory = async () => {
       setLoading(true);
       setError("");
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("candra");
 console.log(token)
       try {
         const axiosInstance = createAxiosInstance();
