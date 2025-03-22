@@ -26,7 +26,7 @@ const Login = () => {
       console.log("Login successful:", response.data);
 
       // Store the token
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("candra", response.data.token);
 
       // Redirect to home AFTER token is set
       navigate("/");
