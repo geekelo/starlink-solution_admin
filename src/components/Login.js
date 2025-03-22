@@ -1,37 +1,39 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/Login.css';
-import { createAxiosInstance } from '../config/axios';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/Login.css";
+import { createAxiosInstance } from "../config/axios";
 
 const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); // Initialize navigation
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
       const axiosInstance = createAxiosInstance();
-      const response = await axiosInstance.post('/api/v1/login', {
+      const response = await axiosInstance.post("/api/v1/login", {
         starlink_user: {
           email,
           password,
         },
       });
 
-      console.log('Login successful:', response.data);
-      localStorage.setItem('token', response.data.token);
+      console.log("Login successful:", response.data);
 
-      // Redirect to home page after successful login
-      navigate('/');
+      // Store the token
+      localStorage.setItem("token", response.data.token);
+
+      // Redirect to home AFTER token is set
+      navigate("/");
     } catch (err) {
-      console.error('Login failed:', err.response?.data || err.message);
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      console.error("Login failed:", err.response?.data || err.message);
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -73,7 +75,7 @@ const Login = () => {
           </div>
 
           <button type="submit" className="login-button" disabled={loading}>
-            {loading ? 'Logging in...' : 'Log In'}
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
       </div>
