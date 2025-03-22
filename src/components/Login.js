@@ -1,143 +1,84 @@
-import { useState, useEffect } from "react";
-import { createAxiosInstance } from "../config/axios";
-import "../styles/Request.css";
-import { Bell } from "lucide-react";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../styles/Login.css';
+import { createAxiosInstance } from '../config/axios';
 
-const Requests = () => {
-  const [activeTab, setActiveTab] = useState("funding");
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize navigation
 
-  const [fundingData, setFundingData] = useState([]);
-  const [kits, setKits] = useState([]);
-  const plans = ["Basic", "Standard", "Premium"];
-
-  useEffect(() => {
-    fetchFundingRequests();
-    fetchStarlinkKits();
-  }, []);
-
-  const fetchFundingRequests = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
     setLoading(true);
+
     try {
       const axiosInstance = createAxiosInstance();
-      const response = await axiosInstance.get("/api/v1/admin/funding_kit_requests/pending_paid");
-      setFundingData(response.data);
+      const response = await axiosInstance.post('/api/v1/admin/login', {
+        starlink_user: {
+          email,
+          password,
+        },
+      });
+
+      console.log('Login successful:', response.data);
+      localStorage.setItem('token', response.data.token);
+
+      // Redirect to home page after successful login
+      navigate('/');
     } catch (err) {
-      setError("Failed to fetch funding requests.");
+      console.error('Login failed:', err.response?.data || err.message);
+      setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const fetchStarlinkKits = async () => {
-    setLoading(true);
-    try {
-      const axiosInstance = createAxiosInstance();
-      const response = await axiosInstance.get("/api/v1/admin/funding_kit_requests/pending_starlink_kits");
-      setKits(response.data);
-    } catch (err) {
-      setError("Failed to fetch Starlink kits.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleStatusChange = (id, newStatus) => {
-    setKits((prevKits) =>
-      prevKits.map((kit) => (kit.id === id ? { ...kit, status: newStatus } : kit))
-    );
-  };
-
-  const handlePlanChange = (id, newPlan) => {
-    setKits((prevKits) =>
-      prevKits.map((kit) => (kit.id === id ? { ...kit, plan: newPlan } : kit))
-    );
   };
 
   return (
-    <div className="requests-section">
-      <div className="invoice">
-        <h3 className="request-header">Requests</h3>
-        <button onClick={() => alert("Invoice Reminder Sent")} disabled={loading}>
-          {loading ? "Sending..." : "Invoice Reminder"} <Bell size={14} />
-        </button>
+    <div className="login-container">
+      <div className="login-content">
+        <div className="login-header">
+          <h1>Log In</h1>
+          <p>Access your Starlink Admin account</p>
+        </div>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <form className="login-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email Address"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button type="submit" className="login-button" disabled={loading}>
+            {loading ? 'Logging in...' : 'Log In'}
+          </button>
+        </form>
       </div>
-
-      {error && <p className="error-message">{error}</p>}
-
-      <div className="tabs">
-        <button className={activeTab === "funding" ? "active" : ""} onClick={() => setActiveTab("funding")}>
-          Funding
-        </button>
-        <button className={activeTab === "kits" ? "active" : ""} onClick={() => setActiveTab("kits")}>
-          Kits
-        </button>
-      </div>
-
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        <>
-          {activeTab === "funding" && (
-            <div className="funding-list">
-              {fundingData.length > 0 ? (
-                fundingData.map((item, index) => (
-                  <div key={index} className="funding-card">
-                    <p><strong>Date:</strong> {item.date}</p>
-                    <p><strong>Amount:</strong> {item.amount}</p>
-                    <p><strong>Reference:</strong> {item.reference}</p>
-                    <p><strong>Payment Type:</strong> {item.type}</p>
-                    <div className="cta">
-                      <select>
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                        <option value="Rejected">Rejected</option>
-                      </select>
-                      <button className="save-btn">Save</button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No funding requests available.</p>
-              )}
-            </div>
-          )}
-
-          {activeTab === "kits" && (
-            <div className="funding-list">
-              {kits.length > 0 ? (
-                kits.map((kit) => (
-                  <div key={kit.id} className="funding-card">
-                    <p><strong>NIN:</strong> {kit.nin}</p>
-                    <p><strong>Address:</strong> {kit.address}</p>
-                    <p><strong>Name:</strong> {kit.name}</p>
-                    <p><strong>Kit No:</strong> {kit.kitNo}</p>
-                    <div className="cta">
-                      <select value={kit.status} onChange={(e) => handleStatusChange(kit.id, e.target.value)}>
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
-                      </select>
-                      <select value={kit.plan} onChange={(e) => handlePlanChange(kit.id, e.target.value)}>
-                        {plans.map((plan) => (
-                          <option key={plan} value={plan}>
-                            {plan}
-                          </option>
-                        ))}
-                      </select>
-                      <button className="save-btn">Save</button>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No Starlink kit requests available.</p>
-              )}
-            </div>
-          )}
-        </>
-      )}
     </div>
   );
 };
 
-export default Requests;
+export default Login;
