@@ -70,7 +70,7 @@ const Requests = () => {
       <div className="invoice">
         <h3 className="request-header">Requests</h3>
         <button onClick={() => alert("Invoice Reminder Sent")} disabled={loading}>
-          {loading ? "Sending..." : "Invoice Reminder"} <Bell size={14} />
+         Invoice Reminder <Bell size={14} />
         </button>
       </div>
 
