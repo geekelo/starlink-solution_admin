@@ -1,17 +1,17 @@
 import { useState } from "react";
 import "../styles/Admin.css";
-import AdminMobileNav from "./Nav";
-import Requests from "./Request";
-import Wallet from "./Wallet";
-import WalletPage from "./WalletPage";
-import KitPage from "./Kit";
-import Users from "./User";
-import WithdrawalPage from "./Withdrawal";
-import FundingPage from "./ManageFunding";
-import RenewalPage from "./ManageRenewal";
+import AdminMobileNav from "./nav/Nav";
+import Requests from "./request/Request";
+import Wallet from "./wallet/Wallet";
+import WalletPage from "./wallet/WalletPage";
+import KitPage from "./kits/Kit";
+import Users from "./user/User";
+import WithdrawalPage from "./wallet/Withdrawal";
+import FundingPage from "./funding/ManageFunding";
+import RenewalPage from "./renewal/ManageRenewal";
 
 const AdminPanel = () => {
-  const [activePage, setActivePage] = useState("requests"); // Default to Requests
+  const [activePage, setActivePage] = useState("requests"); 
 
   // Function to handle navigation click
   const handleNavClick = (page) => {

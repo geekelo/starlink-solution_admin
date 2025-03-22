@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import "../styles/RequestPage.css"
+import "../../styles/RequestPage.css"
 
 // Sample data for tables
 const fundingRequestsData = [

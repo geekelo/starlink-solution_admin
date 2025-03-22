@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Login.css";
-import { createAxiosInstance } from "../config/axios";
-
+import "../../styles/Login.css";
+import { createAxiosInstance } from "../../config/axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

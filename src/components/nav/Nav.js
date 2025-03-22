@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
-import "../styles/Nav.css";
-import logo from '../assets/logo.png'
+import "../../styles/Nav.css";
+import logo from '../../assets/logo.png'
 
 const AdminMobileNav = ({ onNavClick, activePage }) => {
   const [isOpen, setIsOpen] = useState(false);

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createAxiosInstance } from "../config/axios";
-import "../styles/User.css";
+import { createAxiosInstance } from "../../config/axios";
+import "../../styles/User.css";
 import { Edit, User2, Wallet } from "lucide-react";
 
 const Users = () => {

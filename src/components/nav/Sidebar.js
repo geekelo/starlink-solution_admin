@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import { Menu, X, FileText, Wallet, History, DollarSign } from "lucide-react"
-import "../styles/Sidebar.css"
+import "../../styles/Sidebar.css"
 import Wallet from "./Wallet"
 import WalletPage from "./WalletPage"
 
