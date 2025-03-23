@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Wallet.css";
+import KitRenewalModal from "./KitRenewalModal";
+import Renewal from "./Renewal";
 
 const RenewalPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const userEmail = queryParams.get("email") || "";
+  const kitNum = queryParams.get("kitNumber") || "";
 
-  const [email, setEmail] = useState(userEmail);
+  const [kitNumber, setkitNumber] = useState(kitNum);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [renewalData, setRenewalData] = useState([]);
@@ -16,9 +18,8 @@ const RenewalPage = () => {
   const [recordType, setRecordType] = useState("");
   const [formData, setFormData] = useState({
     kit_number: "",
-    status: "accepted",
+    status: "",
     date_of_renewal: "",
-    deadline: "",
     kit_renewal: {
       amount: "",
       month: "",
@@ -26,17 +27,18 @@ const RenewalPage = () => {
       credit_admin: "",
       start_date: "",
       end_date: "",
+      deadline: "",
     },
   });
 
   useEffect(() => {
-    if (userEmail) {
+    if (kitNumber) {
       handleSearch();
     }
-  }, [userEmail]);
+  }, [kitNum]);
 
   const handleSearch = async () => {
-    if (!email) return;
+    if (!kitNumber) return;
     setLoading(true);
     setError("");
     setRenewalData([]);
@@ -44,12 +46,17 @@ const RenewalPage = () => {
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get(
-        `/api/v1/admin/user_kit_renewals?email=${email}`
+        `/api/v1/admin/kit_renewals?kit_number=${kitNumber}`
       );
-      const sortedData = response.data.sort(
-        (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
-      );
-      setRenewalData(sortedData);
+
+      if (response.data) {
+        console.log(response);
+        const sortedData = response.data.sort(
+          (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
+        );
+        setRenewalData(sortedData);
+      }
+
     } catch (err) {
       setError("No records found or an error occurred.");
     } finally {
@@ -60,13 +67,8 @@ const RenewalPage = () => {
   const handleCreateRecord = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-      const payload = {
-        ...formData,
-        date_of_renewal: recordType === "receipt" ? new Date().toISOString() : "",
-        deadline: recordType === "invoice" ? new Date().toISOString() : "",
-      };
-
-      await axiosInstance.post(`/api/v1/admin/kit_renewals`, payload);
+  
+      await axiosInstance.post(`/api/v1/admin/kit_renewals`, formData);
       alert(`${recordType} created successfully!`);
       setShowModal(false);
     } catch (err) {
@@ -81,16 +83,19 @@ const RenewalPage = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name.startsWith("kit_renewal.")) {
-      const field = name.split(".")[1];
-      setFormData((prev) => ({
-        ...prev,
-        kit_renewal: { ...prev.kit_renewal, [field]: value },
-      }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
-  };
+  
+    setFormData((prev) => {
+      if (name.startsWith("kit_renewal.")) {
+        const field = name.split(".")[1];
+        return {
+          ...prev,
+          kit_renewal: { ...prev.kit_renewal, [field]: value },
+        };
+      } else {
+        return { ...prev, [name]: value };
+      }
+    });
+  };  
 
   return (
     <div className="wallet-container">
@@ -99,11 +104,11 @@ const RenewalPage = () => {
         <div className="funding-search-container">
           <div className="funding-search-bar">
             <input
-              type="email"
+              type="text"
               className="funding-search-input"
-              placeholder="Enter user email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter kit number"
+              value={kitNumber}
+              onChange={(e) => setkitNumber(e.target.value)}
             />
             <button className="funding-search-button" onClick={handleSearch} disabled={loading}>
               {loading ? "Searching..." : "Search"}
@@ -111,10 +116,7 @@ const RenewalPage = () => {
           </div>
           <div className="renew-flex">
             <button className="create-funds-button" onClick={() => openModal("invoice")}>
-              Create Invoice
-            </button>
-            <button className="create-funds-button" onClick={() => openModal("receipt")}>
-              Create Receipt
+              Create Renewal
             </button>
           </div>
         </div>
@@ -122,40 +124,23 @@ const RenewalPage = () => {
 
       {error && <p className="error-message">{error}</p>}
 
+      {renewalData.length > 0 ? (
+        renewalData.map((item) => (
+          <Renewal transaction={item} />
+        ))
+      ) : (
+        <p className="error-message">No records found.</p>
+      )}
+
       {showModal && (
-       <div className="user-modal-overlay">
-       <div className="user-modal-container">
-       
-            <h3>Create {recordType}</h3>
-            <div className="user-modal-content">
-            <label className="user-modal-label">Kit Number:</label>
-         
-            <input className="user-modal-input" type="text" name="kit_number" placeholder="Kit Number" value={formData.kit_number} onChange={handleInputChange} />
-            <label className="user-modal-label">Kit Renewal Amount:</label>
-         
-            <input className="user-modal-input" type="number" name="kit_renewal.amount" placeholder="Amount" value={formData.kit_renewal.amount} onChange={handleInputChange} />
-            <label className="user-modal-label">Month:</label>
-         
-            <input className="user-modal-input" type="text" name="kit_renewal.month" placeholder="Month" value={formData.kit_renewal.month} onChange={handleInputChange} />
-            <label className="user-modal-label">Year:</label>
-         
-            <input className="user-modal-input" type="number" name="kit_renewal.year" placeholder="Year" value={formData.kit_renewal.year} onChange={handleInputChange} />
-            <label className="user-modal-label">Kit Credit Admin:</label>
-         
-            <input className="user-modal-input" type="text" name="kit_renewal.credit_admin" placeholder="Credit Admin" value={formData.kit_renewal.credit_admin} onChange={handleInputChange} />
-            <label className="user-modal-label">Kit StartDate:</label>
-         
-            <input className="user-modal-input" type="date" name="kit_renewal.start_date" placeholder="Start Date" value={formData.kit_renewal.start_date} onChange={handleInputChange} />
-            <label className="user-modal-label">Kit EndDate:</label>
-         
-            <input type="date" name="kit_renewal.end_date" className="user-modal-input" placeholder="End Date" value={formData.kit_renewal.end_date} onChange={handleInputChange} />
-            <div className="user-modal-actions">
-            <button  className="user-modal-button save" onClick={handleCreateRecord}>Save</button>
-            <button className="user-modal-button cancel" onClick={() => setShowModal(false)}>Cancel</button>
-          </div>
-          </div>
-          </div>
-        </div>
+        <KitRenewalModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        recordType="Kit Renewal"
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleCreateRecord={handleCreateRecord}
+      />
       )}
     </div>
   );
