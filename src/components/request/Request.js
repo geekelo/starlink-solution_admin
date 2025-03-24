@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Request.css";
-import { Bell } from "lucide-react";
+import InvoiceReminder from "../reminders/InvoiceReminder";
 
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("funding");
@@ -67,12 +67,7 @@ const Requests = () => {
 
   return (
     <div className="requests-section">
-      <div className="invoice">
-        <h3 className="request-header">Requests</h3>
-        <button onClick={() => alert("Invoice Reminder Sent")} disabled={loading}>
-         Invoice Reminder <Bell size={14} />
-        </button>
-      </div>
+      <InvoiceReminder />
 
       {error && <p className="error-message">{error}</p>}
 
