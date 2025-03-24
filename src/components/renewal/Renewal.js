@@ -19,6 +19,7 @@ const Renewal = ({ transaction }) => {
       <span className="transaction-date">
         {new Date(transaction?.created_at).toLocaleDateString()}
       </span>
+      <button className="edit-btn" onClick={() => openModal("edit")}>Edit</button>
     </div>
   );
 };
