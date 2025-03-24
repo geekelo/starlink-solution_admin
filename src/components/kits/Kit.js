@@ -199,7 +199,10 @@ const KitPage = () => {
       </div>
 
       <div className="kit-grid">
-      {loading ? <p>Loading kits...</p> : currentKits.map((kit) => (
+      {loading ? <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
+          {/* <p>Loading kits...</p> */}
+        </div>: currentKits.map((kit) => (
              <div key={kit.kitId} className={`kit-card ${kit.status.toLowerCase()}`}>
             <h3>Kit No: {kit.kitNo}</h3>
             <p><strong>Address:</strong> {kit.address}</p>
