@@ -1,19 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import "./styles/App.css";
 import Login from "./components/auth/Login";
 import SignUp from "./components/auth/SignUp";
-import AdminPanel from "./components/Admin";
 import FundingPage from "./components/funding/ManageFunding";
 import UserDetails from "./components/user/Userdetail";
 import RenewalPage from "./components/renewal/ManageRenewal";
 import AdminMobileNav from "./components/nav/Nav";
+import Requests from "./components/request/Request";
+import Wallet from "./components/wallet/Wallet";
+import WalletPage from "./components/wallet/WalletPage";
+import KitPage from "./components/kits/Kit";
+import Users from "./components/user/User";
+import WithdrawalPage from "./components/wallet/Withdrawal";
+import Renewal from "./components/renewal/Renewal";
 
 const AdminLayout = () => {
   return (
     <div>
       <AdminMobileNav />
-      <Outlet /> {/* This will render the respective protected page */}
+      <div className="outlet-container">
+        <Outlet />
+      </div>
     </div>
   );
 };
@@ -39,9 +47,19 @@ function App() {
 
             {/* Protected Routes with AdminMobileNav */}
             <Route element={<AdminLayout />}>
+              <Route path="/" element={<Requests /> } />
               <Route path="/user/:id" element={<UserDetails />} />
               <Route path="/funding" element={<FundingPage />} />
               <Route path="/renewals" element={<RenewalPage />} />
+              <Route path="/wallet" element={<Wallet />} />
+              <Route path="wallet-history" element={<WalletPage />} />
+              <Route path="wallet-balance" element={<WalletPage />} />
+              <Route path="wallet-withdrawal" element={<WithdrawalPage />} />
+              <Route path="kits" element={<KitPage />} />
+              <Route path="users" element={<Users />} />
+              <Route path="manage-funds" element={<FundingPage />} />
+              <Route path="manage-renewal" element={<Renewal />} />
+
             </Route>
 
             {/* Redirect unknown routes to home */}
