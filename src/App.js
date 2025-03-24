@@ -53,12 +53,11 @@ function App() {
               <Route path="/renewals" element={<RenewalPage />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="wallet-history" element={<WalletPage />} />
-              <Route path="wallet-balance" element={<WalletPage />} />
               <Route path="wallet-withdrawal" element={<WithdrawalPage />} />
               <Route path="kits" element={<KitPage />} />
               <Route path="users" element={<Users />} />
               <Route path="manage-funds" element={<FundingPage />} />
-              <Route path="manage-renewal" element={<Renewal />} />
+              <Route path="manage-renewal" element={<RenewalPage />} />
 
             </Route>
 
