@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { createAxiosInstance } from "../../config/axios";
 import { Package, CheckCircle, XCircle, Search, Filter, Edit2, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
 
 const KitPage = () => {
@@ -23,6 +24,7 @@ const KitPage = () => {
   });
   const kitsPerPage = 12;
 
+  const navigate = useNavigate();
   useEffect(() => {
     const fetchKits = async () => {
       try {
@@ -55,6 +57,7 @@ const KitPage = () => {
 
     fetchKits();
   }, []);
+
   useEffect(() => {
     if (selectedKit) {
       setFormData({
@@ -85,7 +88,6 @@ const KitPage = () => {
     });
   }, [searchQuery, searchType, kits]);
   
-
   const metrics = useMemo(() => ({
     total: filteredKits.length,
     active: filteredKits.filter((kit) => kit.status === "Active").length,
@@ -101,6 +103,7 @@ const KitPage = () => {
     setIsModalOpen(false);
     setSelectedKit(null);
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -130,6 +133,10 @@ const KitPage = () => {
   const indexOfLastKit = currentPage * kitsPerPage;
   const indexOfFirstKit = indexOfLastKit - kitsPerPage;
   const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
+
+  const goToRenewals = (kit) => {
+    navigate(`/renewals?kitNumber=${kit.kitNo}`);
+  };
 
   return (
     <div className="kit-container">
@@ -162,10 +169,10 @@ const KitPage = () => {
             )}
           </div>
         </div>
-    
-          </div>
-{/* Metrics Section */}
-<div className="kit-metrics">
+      </div>
+
+      {/* Metrics Section */}
+      <div className="kit-metrics">
         <div className="kitmetric-box">
           <div className="metric-icon">
             <Package size={40} color="#b6bbc1" />
@@ -203,6 +210,10 @@ const KitPage = () => {
             <p><strong>Service No:</strong> {kit.serviceNo}</p>
             <p><strong>Username:</strong> {kit.username}</p>
             <p><strong>Date:</strong> {kit.dateAdded}</p>
+            <button className="edit-btn" onClick={() => goToRenewals(kit)}>
+              Renewals
+            </button>
+
             <button className="edit-btn" onClick={() => openModal(kit)}>
               <Edit2 size={16} />
             </button>
