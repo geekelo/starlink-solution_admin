@@ -25,9 +25,6 @@ const AdminMobileNav = () => {
         <li className={location.pathname === "/wallet-history" ? "active" : ""}>
           <Link to="/wallet-history" onClick={() => setIsOpen(false)}>Wallet History</Link>
         </li>
-        <li className={location.pathname === "/wallet-balance" ? "active" : ""}>
-          <Link to="/wallet-balance" onClick={() => setIsOpen(false)}>Wallet Balance</Link>
-        </li>
         <li className={location.pathname === "/wallet-withdrawal" ? "active" : ""}>
           <Link to="/wallet-withdrawal" onClick={() => setIsOpen(false)}>Wallet Withdrawal</Link>
         </li>
