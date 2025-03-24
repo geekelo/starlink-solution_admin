@@ -29,7 +29,7 @@ const Login = () => {
       localStorage.setItem("candra", response.data.token);
 
       // Redirect to home AFTER token is set
-      navigate("/");
+      window.location.href = "/";
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
       setError(err.response?.data?.message || "Login failed. Please try again.");
