@@ -123,6 +123,8 @@ const KitPage = () => {
           kit.kitId === selectedKit.kitId ? { ...kit, ...formData, status: formData.status.charAt(0).toUpperCase() + formData.status.slice(1) } : kit
         )
       );
+      console.log(kits)
+      console.log(res)
   
       closeModal();
     } catch (err) {
