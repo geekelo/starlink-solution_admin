@@ -107,7 +107,7 @@ const RenewalPage = () => {
               type="text"
               className="funding-search-input"
               placeholder="Enter kit number"
-              value={kitNumber}
+              value={kitNumber || ""}
               onChange={(e) => setkitNumber(e.target.value)}
             />
             <button className="funding-search-button" onClick={handleSearch} disabled={loading}>
@@ -124,7 +124,7 @@ const RenewalPage = () => {
 
       {error && <p className="error-message">{error}</p>}
 
-      {renewalData.length > 0 ? (
+      {renewalData ? (
         renewalData.map((item) => (
           <Renewal transaction={item} />
         ))
