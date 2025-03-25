@@ -23,9 +23,7 @@ import logo from "../../assets/logo.png";
     <aside className={`mobile-drawer ${isOpen ? 'open' : ''}`}>
       <div className="drawer-header">
         <img className="logo-full" src={logo} alt="Logo" />
-        {/* <button className="close-drawer" onClick={onClose}>
-          <X size={24} />
-        </button> */}
+
       </div>
       
       <ul className="drawer-menu">

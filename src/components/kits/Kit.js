@@ -333,32 +333,7 @@ const KitPage = () => {
         ))
       )}
     </div>
-      {/* <div className="kit-grid">
-      {loading ? <div className="loading-spinner-container">
-          <div className="loading-spinner"></div>
-          {/* <p>Loading kits...</p> 
-        </div>: currentKits.map((kit) => (
-             <div key={kit.kitId} className={`kit-card ${kit.status.toLowerCase()}`}>
-            <h3>Kit No: {kit.kitNo}</h3>
-            <p><strong>Address:</strong> {kit.address}</p>
-            <p><strong>NIN:</strong> {kit.nin}</p>
-            <p><strong>Company:</strong> {kit.companyName}</p>
-            <p><strong>Status:</strong> {kit.status}</p>
-            <p><strong>Plan:</strong> {kit.plan}</p>
-            <p><strong>Service No:</strong> {kit.serviceNo}</p>
-            <p><strong>Username:</strong> {kit.username}</p>
-            <p><strong>Date:</strong> {kit.dateAdded}</p>
-            <button className="edit-btn" onClick={() => goToRenewals(kit)}>
-              Renewals
-            </button>
-
-            <button className="edit-btn" onClick={() => openModal(kit)}>
-              <Edit2 size={16} />
-            </button>
-          </div>
-        ))}
-      </div> */}
-  
+    
     
 
      
