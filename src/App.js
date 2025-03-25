@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import "./styles/App.css";
 import Login from "./components/auth/Login";
@@ -14,14 +14,68 @@ import KitPage from "./components/kits/Kit";
 import Users from "./components/user/User";
 import WithdrawalPage from "./components/wallet/Withdrawal";
 import Renewal from "./components/renewal/Renewal";
+import { AdminSidebar } from "./components/nav/Sidebar";
+import { MobileHeader } from "./components/nav/header";
+import MobileDrawer from "./components/nav/Nav";
 
 const AdminLayout = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  
+  // Handle window resize to toggle between mobile and desktop views
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setMobileDrawerOpen(false);
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   return (
-    <div>
-      <AdminMobileNav />
-      <div className="outlet-container">
-        <Outlet />
+    <div className="admin-layout">
+      {isMobile && (
+        <MobileHeader 
+          isDrawerOpen={mobileDrawerOpen}
+          toggleDrawer={() => setMobileDrawerOpen(!mobileDrawerOpen)}
+        />
+      )}
+      
+      {isMobile ? (
+        <MobileDrawer 
+          isOpen={mobileDrawerOpen} 
+          onClose={() => setMobileDrawerOpen(false)} 
+        />
+      ) : (
+        <AdminSidebar 
+          expanded={sidebarExpanded} 
+          onMouseEnter={() => setSidebarExpanded(true)}
+          onMouseLeave={() => setSidebarExpanded(false)}
+        />
+      )}
+      
+      <div className={`admin-content 
+        ${!isMobile && 'with-sidebar'} 
+        ${!isMobile && !sidebarExpanded && 'sidebar-collapsed'}
+        ${isMobile && 'mobile-content'}
+        ${isMobile && mobileDrawerOpen && 'drawer-open'}`
+      }>
+        <div className="outlet-container">
+          <Outlet />
+        </div>
       </div>
+      
+      {/* Overlay for mobile drawer */}
+      {isMobile && mobileDrawerOpen && (
+        <div 
+          className="mobile-overlay" 
+          onClick={() => setMobileDrawerOpen(false)}
+        />
+      )}
     </div>
   );
 };
