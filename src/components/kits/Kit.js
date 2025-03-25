@@ -142,15 +142,7 @@ const KitPage = () => {
 
       setKits((prevKits) =>
         prevKits.map((kit) =>
-          kit.kitId === selectedKit.kitId
-            ? {
-                ...kit,
-                ...formData,
-                status:
-                  formData.status.charAt(0).toUpperCase() +
-                  formData.status.slice(1),
-              }
-            : kit
+          
           kit.kitId === selectedKit.kitId
             ? {
                 ...kit,
