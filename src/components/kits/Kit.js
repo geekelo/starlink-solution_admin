@@ -151,9 +151,17 @@ const KitPage = () => {
                   formData.status.slice(1),
               }
             : kit
+          kit.kitId === selectedKit.kitId
+            ? {
+                ...kit,
+                ...formData,
+                status:
+                  formData.status.charAt(0).toUpperCase() +
+                  formData.status.slice(1),
+              }
+            : kit
         )
       );
-      console.log(kits)
       closeModal();
     } catch (err) {
       setError("Failed to update kit. Please try again.");
