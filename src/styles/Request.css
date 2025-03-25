@@ -12,6 +12,40 @@
   padding: 12px 0;
   color: #002147; /* Deep Blue */
 }
+.auto-renew-container {
+  display: flex;
+  margin:  0;
+  align-items: center;
+  gap: 12px;
+}
+
+.auto-renew-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 15px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.auto-renew-btn:hover {
+  background-color: #0056b3;
+}
+
+.auto-renew-btn:disabled {
+  background-color: gray;
+  cursor: not-allowed;
+}
+
+.success-message {
+  color: green;
+  text-align: center;
+  margin-top: 10px;
+}
+
+
 
 /* Tabs */
 .tabs {
