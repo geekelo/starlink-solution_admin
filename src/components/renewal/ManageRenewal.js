@@ -4,6 +4,7 @@ import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Wallet.css";
 import KitRenewalModal from "./KitRenewalModal";
 import Renewal from "./Renewal";
+import EditKitRenewalModal from "./EditKitRenewal";
 
 const RenewalPage = () => {
   const location = useLocation();
@@ -16,19 +17,21 @@ const RenewalPage = () => {
   const [renewalData, setRenewalData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [recordType, setRecordType] = useState("");
+  const [editMode, setEditMode] = useState(false);
+  const [selectedRecordId, setSelectedRecordId] = useState(null);
+
   const [formData, setFormData] = useState({
     kit_number: "",
     status: "",
     date_of_renewal: "",
-    kit_renewal: {
-      amount: "",
-      month: "",
-      year: "",
-      credit_admin: "",
-      start_date: "",
-      end_date: "",
-      deadline: "",
-    },
+
+    amount: "",
+    month: "",
+    year: "",
+    credit_admin: "",
+    start_date: "",
+    end_date: "",
+    deadline: "",
   });
 
   useEffect(() => {
@@ -49,16 +52,16 @@ const RenewalPage = () => {
         `/api/v1/admin/kit_renewals?kit_number=${kitNumber}`
       );
 
-      if (response.data) {
-        console.log(response);
+      if (response.data.length > 0) {
         const sortedData = response.data.sort(
           (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
         );
         setRenewalData(sortedData);
+      } else {
+        setError("No records found.");
       }
-
     } catch (err) {
-      setError("No records found or an error occurred.");
+      setError("Error fetching records.");
     } finally {
       setLoading(false);
     }
@@ -67,23 +70,80 @@ const RenewalPage = () => {
   const handleCreateRecord = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-  
-      await axiosInstance.post(`/api/v1/admin/kit_renewals`, formData);
-      alert(`${recordType} created successfully!`);
+
+      const url = formData.id
+        ? `/api/v1/admin/kit_renewals/${formData.id}`
+        : `/api/v1/admin/kit_renewals`;
+
+      const method = formData.id ? "patch" : "post"; // Use POST for creating, PATCH for updating
+
+      const response = await axiosInstance[method](url, {
+        ...formData,
+        kit_number: formData.kit_number,
+      });
+      handleSearch();
+
       setShowModal(false);
-    } catch (err) {
-      setError(`Failed to create ${recordType}. Please try again.`);
+    } catch (error) {
+      setError("Failed to save the record. Please try again.");
+      console.error("Error:", error);
     }
   };
 
-  const openModal = (type) => {
+  const handleEditRecord = async () => {
+    try {
+      const axiosInstance = createAxiosInstance();
+      await axiosInstance.patch(
+        `/api/v1/admin/kit_renewals/${selectedRecordId}`,
+        formData
+      );
+      alert("Renewal updated successfully!");
+      setShowModal(false);
+      setEditMode(false);
+      handleSearch(); // Refresh data
+    } catch (err) {
+      setError("Failed to update renewal. Please try again.");
+    }
+  };
+  const openModal = (type, transaction = null) => {
     setRecordType(type);
     setShowModal(true);
+
+    if (transaction) {
+      setEditMode(true);
+      setSelectedRecordId(transaction.id);
+      setFormData({
+        kit_number: transaction.kit_number || "",
+        status: transaction.status || "",
+        date_of_renewal: transaction.date_of_renewal || "",
+        amount: transaction.amount || "",
+        month: transaction.month || "",
+        year: transaction.year || "",
+        credit_admin: transaction.credit_admin || false,
+        start_date: transaction.start_date || "",
+        end_date: transaction.end_date || "",
+        deadline: transaction.deadline || "",
+      });
+    } else {
+      setEditMode(false);
+      setSelectedRecordId(null);
+      setFormData({
+        kit_number: kitNumber,
+        status: "",
+        date_of_renewal: "",
+        amount: "",
+        month: "",
+        year: "",
+        credit_admin: false,
+        start_date: "",
+        end_date: "",
+        deadline: "",
+      });
+    }
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-  
     setFormData((prev) => {
       if (name.startsWith("kit_renewal.")) {
         const field = name.split(".")[1];
@@ -95,7 +155,7 @@ const RenewalPage = () => {
         return { ...prev, [name]: value };
       }
     });
-  };  
+  };
 
   return (
     <div className="wallet-container">
@@ -110,12 +170,19 @@ const RenewalPage = () => {
               value={kitNumber || ""}
               onChange={(e) => setkitNumber(e.target.value)}
             />
-            <button className="funding-search-button" onClick={handleSearch} disabled={loading}>
+            <button
+              className="funding-search-button"
+              onClick={handleSearch}
+              disabled={loading}
+            >
               {loading ? "Searching..." : "Search"}
             </button>
           </div>
           <div className="renew-flex">
-            <button className="create-funds-button" onClick={() => openModal("invoice")}>
+            <button
+              className="create-funds-button"
+              onClick={() => openModal("invoice")}
+            >
               Create Renewal
             </button>
           </div>
@@ -124,23 +191,24 @@ const RenewalPage = () => {
 
       {error && <p className="error-message">{error}</p>}
 
-      {renewalData ? (
+      {renewalData.length > 0 ? (
         renewalData.map((item) => (
-          <Renewal transaction={item} />
+          <Renewal key={item.id} transaction={item} openModal={openModal} />
         ))
       ) : (
         <p className="error-message">No records found.</p>
       )}
 
       {showModal && (
-        <KitRenewalModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        recordType="Kit Renewal"
-        formData={formData}
-        handleInputChange={handleInputChange}
-        handleCreateRecord={handleCreateRecord}
-      />
+        <EditKitRenewalModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          recordType={recordType}
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleCreateRecord={editMode ? handleEditRecord : handleCreateRecord}
+          editMode={editMode}
+        />
       )}
     </div>
   );

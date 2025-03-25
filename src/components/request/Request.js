@@ -7,6 +7,7 @@ const Requests = () => {
   const [activeTab, setActiveTab] = useState("funding");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState(""); // Success message
 
   const [fundingData, setFundingData] = useState([]);
   const [kits, setKits] = useState([]);
@@ -23,21 +24,12 @@ const Requests = () => {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get("/api/v1/admin/funding_kit_requests/pending_paid");
       setFundingData(response.data);
-      console.log(fundingData)
     } catch (err) {
       setError("Failed to fetch funding requests.");
     } finally {
       setLoading(false);
     }
   };
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-  
 
   const fetchStarlinkKits = async () => {
     setLoading(true);
@@ -45,7 +37,6 @@ const Requests = () => {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get("/api/v1/admin/funding_kit_requests/pending_starlink_kits");
       setKits(response.data);
-      console.log(kits)
     } catch (err) {
       setError("Failed to fetch Starlink kits.");
     } finally {
@@ -53,23 +44,47 @@ const Requests = () => {
     }
   };
 
-  const handleStatusChange = (id, newStatus) => {
-    setKits((prevKits) =>
-      prevKits.map((kit) => (kit.id === id ? { ...kit, status: newStatus } : kit))
-    );
+  // Handle Auto-Renew Subscriptions
+  const handleAutoRenew = async () => {
+    setLoading(true);
+    setMessage("");
+    setError("");
+    try {
+      const axiosInstance = createAxiosInstance();
+      await axiosInstance.post("/api/v1/admin/auto_renews"); // POST request
+      setMessage("Auto-renewal triggered successfully!"); // Show success message
+    } catch (err) {
+      setError("Failed to trigger auto-renewal."); // Show error message
+    } finally {
+      setLoading(false);
+    }
   };
+  // Function to handle status change
+const handleStatusChange = (id, newStatus) => {
+  setKits((prevKits) =>
+    prevKits.map((kit) =>
+      kit.id === id ? { ...kit, status: newStatus } : kit
+    )
+  );
+};
 
-  const handlePlanChange = (id, newPlan) => {
-    setKits((prevKits) =>
-      prevKits.map((kit) => (kit.id === id ? { ...kit, plan: newPlan } : kit))
-    );
-  };
+// Function to handle plan change
+const handlePlanChange = (id, newPlan) => {
+  setKits((prevKits) =>
+    prevKits.map((kit) =>
+      kit.id === id ? { ...kit, plan: newPlan } : kit
+    )
+  );
+};
+
 
   return (
     <div className="requests-section">
-      <InvoiceReminder />
-
-      {error && <p className="error-message">{error}</p>}
+     {/* Auto-Renew Button */}
+     <InvoiceReminder />
+     
+     
+      {message && <p className="success-message">{message}</p>}
 
       <div className="tabs">
         <button className={activeTab === "funding" ? "active" : ""} onClick={() => setActiveTab("funding")}>
@@ -79,6 +94,8 @@ const Requests = () => {
           Kits
         </button>
       </div>
+
+     
 
       {loading ? (
         <p className="error-message">Loading...</p>
@@ -104,7 +121,7 @@ const Requests = () => {
                   </div>
                 ))
               ) : (
-                <p  className="req-message">No funding requests available.</p>
+                <p className="req-message">No funding requests available.</p>
               )}
             </div>
           )}
@@ -121,7 +138,7 @@ const Requests = () => {
                     <p><strong>Company Name:</strong> {kit.company_name}</p>
                     <p><strong>Starlink_Plan_Id:</strong>{kit.starlink_plan_id}</p>
                     <p><strong>Starlink_User_Id:</strong>{kit.starlink_user_id}</p>
-                    <p><strong>Date:</strong>{formatDate(kit.created_at)}</p>
+                    <p><strong>Date:</strong>{new Date(kit.created_at).toLocaleDateString("en-US")}</p>
                     <div className="cta">
                       <select value={kit.status} onChange={(e) => handleStatusChange(kit.id, e.target.value)}>
                         <option value="Pending">Pending</option>
@@ -139,7 +156,7 @@ const Requests = () => {
                   </div>
                 ))
               ) : (
-                <p  className="req-message">No Starlink kit requests available.</p>
+                <p className="req-message">No Starlink kit requests available.</p>
               )}
             </div>
           )}

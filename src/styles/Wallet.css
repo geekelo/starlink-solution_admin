@@ -1,4 +1,4 @@
-.wallet-container {
+/* .wallet-container {
  padding: 20px;
   min-height: 100vh;
  
@@ -178,7 +178,7 @@ background-color: #0a1930}
   border: none;
   transition: background 0.3s ease-in-out;
 }
-/* Modal Overlay */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -192,7 +192,7 @@ background-color: #0a1930}
   z-index: 1000;
 }
 
-/* Modal Container */
+
 .funding-modal {
   background: #fff;
   padding: 20px;
@@ -202,7 +202,7 @@ background-color: #0a1930}
   animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Modal Header */
+
 .funding-modal-header {
   display: flex;
   justify-content: space-between;
@@ -233,7 +233,7 @@ background-color: #0a1930}
   color: #000;
 }
 
-/* Modal Body */
+
 .funding-modal-body {
   display: flex;
   flex-direction: column;
@@ -260,7 +260,7 @@ background-color: #0a1930}
   cursor: pointer;
 }
 
-/* Modal Footer */
+
 .funding-modal-footer {
   display: flex;
   justify-content: flex-end;
@@ -324,7 +324,7 @@ background-color: #0a1930}
   margin-top: 10px;
 }
 
-/* Animation */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -342,7 +342,7 @@ background-color: #0a1930}
 }
 
 
-/* Search Section */
+
 .funding-search-container {
   display: flex;
   flex-direction: column;
@@ -394,7 +394,7 @@ background-color: #0a1930}
   background: #0a1930;
   cursor: pointer;
 }
-/* Create Funds Button */
+
 .create-funds-button {
   background: #0a1930;
   color: #fff;
@@ -436,12 +436,12 @@ background-color: #0a1930}
   }
 
   .metrics::-webkit-scrollbar {
-    display: none; /* Hide scrollbar for Chrome, Safari, and Edge */
+    display: none; 
   }
 
   .metrics {
-    -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; 
+    scrollbar-width: none; 
   }
 
   .metric-box {
@@ -454,4 +454,974 @@ background-color: #0a1930}
     gap: 1px;
   }
   
+} */
+
+
+/* Wallet Container Styles */
+.kit-container {
+  padding: 20px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #f1f1f1;
+}
+
+.kit-header {
+  text-align: center;
+  margin: 20px 0;
+  font-size: 40px;
+  color: #0f2439;
+}
+
+.kit-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Wallet Balance */
+.wallet-balance {
+  background-color: #27394d;
+  padding: 20px;
+  text-align: center;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: 500;
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  margin: 12px 0;
+  color: white;
+}
+
+.wallet-balance h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.wallet-balance p {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* Tab buttons */
+.wallettabs {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.wallettab-button {
+  padding: 12px 18px;
+  width: 120px;
+  cursor: pointer;
+  color: whitesmoke;
+  font-weight: bold;
+  background-color: #0a1930;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.wallettab-button:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.wallettab-button:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+.wallettab-button.tab-all.active {
+  background-color: #00adef;
+  color: black;
+}
+
+.wallettab-button.tab-funding.active {
+  background-color: #d4edda;
+  color: black;
+}
+
+.wallettab-button.tab-renewal.active {
+  background-color: #fff3cd;
+  color: black;
+}
+
+.wallettab-button.tab-withdrawal.active {
+  background-color: #f8d7da;
+  color: black;
+}
+
+/* Kit metrics (used for wallet totals) */
+.kit-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.kitmetric-box {
+  background: #0a1930;
+  border-radius: 8px;
+  text-align: center;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  min-height: 200px;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  color: white;
+}
+
+.metric-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.metric-icon h4 {
+  font-size: 24px;
+  color: #0f78a7;
+  margin: 0;
+}
+
+.kitmetric-box p {
+  font-size: 24px;
+  margin: 5px 0 0;
+  font-weight: bold;
+}
+
+/* Kit grid (used for transaction cards) */
+.kit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.kit-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #0f2439;
+  position: relative;
+  color: black;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.kit-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Status indicators */
+.kit-card.active {
+  border-left: 4px solid #16a34a;
+}
+
+.kit-card.inactive {
+  border-left: 4px solid #dc2626;
+}
+
+.kit-card.renewal {
+  border-left: 4px solid #eab308;
+}
+
+/* Header styling */
+.kit-card h3 {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Grid layout for info items with icons */
+.kit-info-grid {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: 12px 8px;
+  align-items: start;
+}
+
+/* Icon styling */
+.kit-info-icon {
+  color: #64748b;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 2px;
+}
+
+/* Text styling */
+.kit-info-text {
+  font-size: 14px;
+  color: black;
+  margin: 0;
+}
+
+.kit-info-text strong {
+  margin-right: 4px;
+  color: #1a3a5f;
+}
+
+/* Status badge styling */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.status-badge.active {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.status-badge.inactive {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.status-badge.renewal {
+  background-color: #fef9c3;
+  color: #ca8a04;
+}
+
+/* Three-dot menu styling */
+.menu-dots {
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.menu-dots:hover {
+  background-color: #f0f9ff;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+  position: absolute;
+  top: 50px;
+  right: 15px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 150px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f9ff;
+}
+
+.dropdown-item svg {
+  margin-right: 10px;
+  color: #64748b;
+}
+
+/* Empty state */
+.no-transactions {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.no-transactions p {
+  font-size: 18px;
+  color: #64748b;
+}
+
+/* Loading spinner */
+.loading-spinner-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 40px 0;
+  grid-column: 1 / -1;
+}
+
+.loading-spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: #0a1930;
+  animation: spin 1s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.pagination button {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: #0f2439;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  border: none;
+  transition: background 0.3s ease-in-out;
+}
+
+.pagination button:disabled {
+  background: #5a98de;
+  cursor: not-allowed;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* Modal Container */
+.funding-modal {
+  background: #fff;
+  padding: 20px;
+  width: 600px;
+  max-width: 90%;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Header */
+.funding-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.funding-modal-header h3 {
+  font-size: 20px;
+  color: #333;
+  margin: 0;
+}
+
+.funding-modal-header button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.funding-modal-header button svg {
+  color: #888;
+  transition: color 0.2s ease;
+}
+
+.funding-modal-header button:hover svg {
+  color: #000;
+}
+
+/* Modal two-column layout */
+.modal-two-columns {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+}
+
+.modal-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Transaction details */
+.transaction-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.transaction-details p {
+  margin: 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 16px;
+  color: #333;
+}
+
+.transaction-details p:last-child {
+  border-bottom: none;
+}
+
+.transaction-details p strong {
+  color: #0a1930;
+  margin-right: 8px;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .kit-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .kit-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .kit-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .modal-two-columns {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .funding-modal {
+    width: 90%;
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .kit-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .kit-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .wallettabs {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+  
+  .wallettab-button {
+    flex: 0 0 auto;
+  }
+  
+  .kit-header {
+    font-size: 28px;
+    margin: 10px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .kit-container {
+    padding: 10px;
+  }
+  
+  .kit-header {
+    font-size: 24px;
+  }
+  
+  .kitmetric-box {
+    min-height: 150px;
+    padding: 15px;
+  }
+  
+  .metric-icon h4 {
+    font-size: 18px;
+  }
+  
+  .kitmetric-box p {
+    font-size: 18px;
+  }
+  
+  .funding-modal-header h3 {
+    font-size: 18px;
+  }
+  
+  .funding-modal-body {
+    padding-right: 5px;
+  }
+  
+  .transaction-details p {
+    font-size: 14px;
+  }
+  
+  .funding-modal-footer button {
+    padding: 8px 15px;
+    font-size: 14px;
+  }
+}
+
+/* Modal Form Styling */
+.funding-modal-body form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.funding-modal-body label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+.funding-modal-body input,
+.funding-modal-body select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.funding-modal-body input:focus,
+.funding-modal-body select:focus {
+  border-color: #0a1930;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(10, 25, 48, 0.1);
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button styles */
+.funding-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.funding-modal-footer button:first-child {
+  background: #0a1930;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.funding-modal-footer button:last-child {
+  background: #f0f0f0;
+  color: #333;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.funding-modal-footer button:first-child:hover {
+  background: #0d2240;
+}
+
+.funding-modal-footer button:last-child:hover {
+  background: #ddd;
+}
+
+/* Improved scrolling for modal content */
+.funding-modal-body {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  margin-right: -10px;
+  scrollbar-width: thin;
+  scrollbar-color: #0a1930 #f0f0f0;
+}
+
+.funding-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.funding-modal-body::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.funding-modal-body::-webkit-scrollbar-thumb {
+  background-color: #0a1930;
+  border-radius: 4px;
+}
+
+/* Edit button for renewals */
+.edit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #0a1930;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn:hover {
+  background-color: #0d2240;
+}
+
+/* Modal for Kit Renewal edit */
+.renewalmodal-container {
+  background: white;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.renewalmodal-container h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0f2439;
+  font-size: 24px;
+}
+
+.renewalmodal-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.renewalmodal-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+.modal-input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.modal-input:focus {
+  border-color: #0a1930;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(10, 25, 48, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.modal-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal-button.save {
+  background: #0a1930;
+  color: white;
+}
+
+.modal-button.cancel {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.modal-button.save:hover {
+  background: #0d2240;
+}
+
+.modal-button.cancel:hover {
+  background: #ddd;
+}
+
+/* Transaction date styling */
+.transaction-date {
+  display: block;
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Error message styling */
+.error-message {
+  color: #dc2626;
+  background-color: #fee2e2;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+/* Empty state with icon */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+.empty-state svg {
+  color: #d1d5db;
+  margin-bottom: 15px;
+  width: 60px;
+  height: 60px;
+}
+
+.empty-state h4 {
+  color: #374151;
+  margin-bottom: 8px;
+  font-size: 18px;
+}
+
+.empty-state p {
+  color: #6b7280;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Success alert styling */
+.success-alert {
+  background-color: #d1fae5;
+  color: #047857;
+  padding: 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.success-alert svg {
+  min-width: 20px;
+}
+
+/* Additional styles for mobile optimization */
+@media (max-width: 576px) {
+  .renewalmodal-content {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .renewalmodal-container {
+    padding: 15px;
+  }
+  
+  .renewalmodal-container h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+  
+  .modal-label {
+    font-size: 13px;
+  }
+  
+  .modal-input {
+    padding: 8px;
+    font-size: 13px;
+  }
+  
+  .modal-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  
+  .kit-grid {
+    padding: 10px;
+    gap: 15px;
+  }
+  
+  .kit-card {
+    padding: 15px;
+  }
+  
+  .kit-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+  }
+  
+  .kit-info-grid {
+    gap: 10px 6px;
+  }
+  
+  .kit-info-text {
+    font-size: 13px;
+  }
+}
+
+/* Media query for extra small devices */
+@media (max-width: 375px) {
+  .kit-container {
+    padding: 8px;
+  }
+  
+  .kit-header {
+    font-size: 20px;
+    margin: 8px 0;
+  }
+  
+  .wallet-balance {
+    padding: 15px;
+    font-size: 14px;
+  }
+  
+  .wallet-balance h3 {
+    font-size: 16px;
+  }
+  
+  .wallet-balance p {
+    font-size: 18px;
+  }
+  
+  .wallettab-button {
+    padding: 10px 12px;
+    width: auto;
+    min-width: 80px;
+    font-size: 13px;
+  }
+  
+  .kitmetric-box {
+    min-height: 130px;
+    padding: 12px;
+  }
+  
+  .metric-icon h4 {
+    font-size: 16px;
+  }
+  
+  .kitmetric-box p {
+    font-size: 16px;
+  }
+  
+  .pagination button {
+    padding: 8px 12px;
+  }
+}
+
+/* Print styles - hide unnecessary elements when printing */
+@media print {
+  .kit-nav, .wallettabs, .pagination, .menu-dots, .edit-btn {
+    display: none !important;
+  }
+  
+  .kit-container {
+    padding: 0;
+    background: white;
+  }
+  
+  .kit-header {
+    font-size: 24px;
+    margin: 10px 0;
+  }
+  
+  .kit-grid {
+    display: block;
+  }
+  
+  .kit-card {
+    page-break-inside: avoid;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    box-shadow: none;
+  }
+  
+  .kitmetric-box {
+    break-inside: avoid;
+    color: black;
+    background: white;
+    border: 1px solid #ddd;
+  }
+  
+  .metric-icon h4 {
+    color: black;
+  }
 }
