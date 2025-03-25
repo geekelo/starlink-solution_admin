@@ -24,15 +24,14 @@ const RenewalPage = () => {
     kit_number: "",
     status: "",
     date_of_renewal: "",
-   
-      amount: "",
-      month: "",
-      year: "",
-      credit_admin: "",
-      start_date: "",
-      end_date: "",
-      deadline: "",
-    
+
+    amount: "",
+    month: "",
+    year: "",
+    credit_admin: "",
+    start_date: "",
+    end_date: "",
+    deadline: "",
   });
 
   useEffect(() => {
@@ -46,13 +45,17 @@ const RenewalPage = () => {
     setLoading(true);
     setError("");
     setRenewalData([]);
-  
+
     try {
       const axiosInstance = createAxiosInstance();
-      const response = await axiosInstance.get(`/api/v1/admin/kit_renewals?kit_number=${kitNumber}`);
-  
+      const response = await axiosInstance.get(
+        `/api/v1/admin/kit_renewals?kit_number=${kitNumber}`
+      );
+
       if (response.data.length > 0) {
-        const sortedData = response.data.sort((a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal));
+        const sortedData = response.data.sort(
+          (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
+        );
         setRenewalData(sortedData);
       } else {
         setError("No records found.");
@@ -63,38 +66,37 @@ const RenewalPage = () => {
       setLoading(false);
     }
   };
-  
+
   const handleCreateRecord = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-      
+
       const url = formData.id
         ? `/api/v1/admin/kit_renewals/${formData.id}`
         : `/api/v1/admin/kit_renewals`;
-  
+
       const method = formData.id ? "patch" : "post"; // Use POST for creating, PATCH for updating
-  
+
       const response = await axiosInstance[method](url, {
         ...formData,
         kit_number: formData.kit_number,
       });
-  console.log(FormData)
-      console.log("Response:", response);
-  
-      // Refresh the records after successful creation/update
       handleSearch();
-  
+
       setShowModal(false);
     } catch (error) {
       setError("Failed to save the record. Please try again.");
       console.error("Error:", error);
     }
   };
-  
+
   const handleEditRecord = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-      await axiosInstance.patch(`/api/v1/admin/kit_renewals/${selectedRecordId}`, formData);
+      await axiosInstance.patch(
+        `/api/v1/admin/kit_renewals/${selectedRecordId}`,
+        formData
+      );
       alert("Renewal updated successfully!");
       setShowModal(false);
       setEditMode(false);
@@ -102,10 +104,11 @@ const RenewalPage = () => {
     } catch (err) {
       setError("Failed to update renewal. Please try again.");
     }
-  };const openModal = (type, transaction = null) => {
+  };
+  const openModal = (type, transaction = null) => {
     setRecordType(type);
     setShowModal(true);
-  
+
     if (transaction) {
       setEditMode(true);
       setSelectedRecordId(transaction.id);
@@ -138,22 +141,21 @@ const RenewalPage = () => {
       });
     }
   };
-  
-  
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => {
       if (name.startsWith("kit_renewal.")) {
         const field = name.split(".")[1];
-        return { ...prev, kit_renewal: { ...prev.kit_renewal, [field]: value } };
+        return {
+          ...prev,
+          kit_renewal: { ...prev.kit_renewal, [field]: value },
+        };
       } else {
         return { ...prev, [name]: value };
       }
     });
   };
-
-  console.log(FormData)
-  
 
   return (
     <div className="wallet-container">
@@ -168,12 +170,19 @@ const RenewalPage = () => {
               value={kitNumber || ""}
               onChange={(e) => setkitNumber(e.target.value)}
             />
-            <button className="funding-search-button" onClick={handleSearch} disabled={loading}>
+            <button
+              className="funding-search-button"
+              onClick={handleSearch}
+              disabled={loading}
+            >
               {loading ? "Searching..." : "Search"}
             </button>
           </div>
           <div className="renew-flex">
-            <button className="create-funds-button" onClick={() => openModal("invoice")}>
+            <button
+              className="create-funds-button"
+              onClick={() => openModal("invoice")}
+            >
               Create Renewal
             </button>
           </div>
