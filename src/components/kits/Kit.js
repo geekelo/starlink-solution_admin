@@ -3,6 +3,8 @@ import { createAxiosInstance } from "../../config/axios";
 import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
+import KitModal from "./kitModal";
+import Modal from "./transferModal";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -15,6 +17,10 @@ const KitPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef(null);
+
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [transferEmail, setTransferEmail] = useState("");
+  
   const [formData, setFormData] = useState({
     kit_number: selectedKit?.kit_number || "",
     address: selectedKit?.address || "",
@@ -44,8 +50,7 @@ const KitPage = () => {
           nin: kit.nin,
           status: kit.is_active ? "Active" : "Inactive",
           plan: "N/A",
-          serviceNo: kit.service_line_number
-          || "N/A",
+          serviceNo: kit.service_line_number || "N/A",
           dateAdded: kit.created_at.split("T")[0],
         }));
 
@@ -73,28 +78,36 @@ const KitPage = () => {
       });
     }
   }, [selectedKit]);
-  
+
   const filteredKits = useMemo(() => {
     if (!Array.isArray(kits)) return [];
     if (!searchQuery) return kits;
-  
+
     return kits.filter((kit) => {
       if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
       if (searchType === "month") {
-        const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(new Date(kit.dateAdded).getMonth() + 1).padStart(2, "0")}`;
+        const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
+          new Date(kit.dateAdded).getMonth() + 1
+        ).padStart(2, "0")}`;
         return kitMonth === searchQuery;
       }
       if (searchType === "year") return kit.dateAdded.startsWith(searchQuery);
-  
-      return kit[searchType]?.toString().toLowerCase().includes(searchQuery.toLowerCase());
+
+      return kit[searchType]
+        ?.toString()
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
     });
   }, [searchQuery, searchType, kits]);
-  
-  const metrics = useMemo(() => ({
-    total: filteredKits.length,
-    active: filteredKits.filter((kit) => kit.status === "Active").length,
-    inactive: filteredKits.filter((kit) => kit.status === "Inactive").length,
-  }), [filteredKits]);
+
+  const metrics = useMemo(
+    () => ({
+      total: filteredKits.length,
+      active: filteredKits.filter((kit) => kit.status === "Active").length,
+      inactive: filteredKits.filter((kit) => kit.status === "Inactive").length,
+    }),
+    [filteredKits]
+  );
 
   const openModal = (kit) => {
     setSelectedKit({ ...kit });
@@ -110,34 +123,81 @@ const KitPage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  
 
   const handleSave = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-    const res =  await axiosInstance.patch(`/api/v1/admin/kit_records/${selectedKit.kitId}`, {
-        starlink_kit: formData,
-      });
-  console.log(res)
-      // Update kits state with the modified kit
+      const res = await axiosInstance.patch(
+        `/api/v1/admin/kit_records/${selectedKit.kitId}`,
+        {
+          starlink_kit: formData,
+        }
+      );
+      console.log(res)
+
       setKits((prevKits) =>
         prevKits.map((kit) =>
-          kit.kitId === selectedKit.kitId ? { ...kit, ...formData, status: formData.status.charAt(0).toUpperCase() + formData.status.slice(1) } : kit
+          
+          kit.kitId === selectedKit.kitId
+            ? {
+                ...kit,
+                ...formData,
+                status:
+                  formData.status.charAt(0).toUpperCase() +
+                  formData.status.slice(1),
+              }
+            : kit
         )
       );
-  
       closeModal();
     } catch (err) {
       setError("Failed to update kit. Please try again.");
     }
   };
-  
+
   const indexOfLastKit = currentPage * kitsPerPage;
   const indexOfFirstKit = indexOfLastKit - kitsPerPage;
   const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
 
   const goToRenewals = (kit) => {
     navigate(`/renewals?kitNumber=${kit.kitNo}`);
+  };
+  const handleTransferKit = async () => {
+    if (!transferEmail) {
+      setError("New owner email is required.");
+      return;
+    }
+    console.log(transferEmail)
+    console.log(selectedKit.kitNo)
+    try {
+      const axiosInstance = createAxiosInstance();
+   const res = await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
+        kit_number: selectedKit.kitNo,
+        new_owner_email: transferEmail,
+      });
+     
+      setKits((prevKits) =>
+        prevKits.map((kit) =>
+          kit.kitNo === selectedKit.kitNo
+            ? { ...kit, email: transferEmail }
+            : kit
+        )
+      );
+
+      closeTransferModal();
+    } catch (err) {
+      setError("Failed to transfer kit. Please try again.");
+    }
+  };
+
+  const openTransferModal = (kit) => {
+    setSelectedKit(kit);
+    setIsTransferModalOpen(true);
+   
+  };
+  const closeTransferModal = () => {
+    setIsTransferModalOpen(false);
+    setTransferEmail("");
   };
 
 
@@ -169,7 +229,11 @@ const KitPage = () => {
         <div className="search-filter">
           <div className="filter-box">
             <Filter size={24} color="#b6bbc1" />
-            <select value={searchType} onChange={(e) => setSearchType(e.target.value)} className="custom-select">
+            <select
+              value={searchType}
+              onChange={(e) => setSearchType(e.target.value)}
+              className="custom-select"
+            >
               <option value="kitNo">Kit No</option>
               <option value="dateAdded">Date Added</option>
               <option value="month">Month</option>
@@ -180,13 +244,33 @@ const KitPage = () => {
           <div className="search-box">
             <Search size={24} color="#b6bbc1" />
             {searchType === "dateAdded" ? (
-              <input type="date" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input
+                type="date"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             ) : searchType === "month" ? (
-              <input type="month" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input
+                type="month"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             ) : searchType === "year" ? (
-              <input type="number" min="2000" max={new Date().getFullYear()} placeholder="Enter Year" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input
+                type="number"
+                min="2000"
+                max={new Date().getFullYear()}
+                placeholder="Enter Year"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             ) : (
-              <input type="text" placeholder={`Search by ${searchType}`} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+              <input
+                type="text"
+                placeholder={`Search by ${searchType}`}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             )}
           </div>
         </div>
@@ -328,54 +412,78 @@ const KitPage = () => {
               <div className="kit-info-text">
                 <strong>Date:</strong> {kit.dateAdded}
               </div>
+              
+               <button
+                className="kittransfer-btn"
+                onClick={() => openTransferModal(kit)}
+              >
+                Transfer
+              </button>
             </div>
           </div>
         ))
       )}
     </div>
     
-    
 
-     
       <div className="pagination">
-      <button onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))} disabled={currentPage === 1}>Previous</button>
-      
-        <button onClick={() => setCurrentPage((prev) => (prev * kitsPerPage < filteredKits.length ? prev + 1 : prev))} disabled={currentPage * kitsPerPage >= filteredKits.length}>Next</button>
-       </div>
-      {isModalOpen && (
-        <div className="modal-overlay" >
-         <div className="user-modal-container">
-         
-          <h3 className="user-modal-title">Edit Kit</h3>
-  
-          {error && <p className="error-message">{error}</p>}
-          <div className="user-modal-content">
-          <label className="user-modal-label">Kit Number:</label>
-          <input type="text"  className="user-modal-input" name="kit_number" value={formData.kit_number} onChange={handleChange} placeholder="Kit Number" />
-          <label className="user-modal-label">Address:</label>
-          <input type="text"  className="user-modal-input" name="address" value={formData.address} onChange={handleChange} placeholder="Address" />
-          <label className="user-modal-label">Comapny Name:</label>
-          <input type="text"  className="user-modal-input" name="company_name" value={formData.company_name} onChange={handleChange} placeholder="Company Name" />
-          <label className="user-modal-label">Company Number:</label>
-          <input type="text"  className="user-modal-input" name="company_number" value={formData.company_number} onChange={handleChange} placeholder="Company Number" />
-          <label className="user-modal-label">Nin:</label>
-          <input type="text"  className="user-modal-input" name="nin" value={formData.nin} onChange={handleChange} placeholder="NIN" />
-          <label className="user-modal-label">Status:</label>
-          <select name="status"  className="user-modal-input" value={formData.status}  onChange={handleChange}>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-          <label className="user-modal-label">Service Line Number:</label>
-          <input type="text"  className="user-modal-input" name="service_line_number" value={formData.service_line_number} onChange={handleChange} placeholder="Service Line Number" />
-          <div className="user-modal-actions">
-        <button className="user-modal-button save" onClick={handleSave}>Save</button>
-        <button className="user-modal-button cancel" onClick={() => setIsModalOpen(false)}>Cancel</button>
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
+
+        <button
+          onClick={() =>
+            setCurrentPage((prev) =>
+              prev * kitsPerPage < filteredKits.length ? prev + 1 : prev
+            )
+          }
+          disabled={currentPage * kitsPerPage >= filteredKits.length}
+        >
+          Next
+        </button>
       </div>
-         
+
+      <KitModal
+        isOpen={isModalOpen}
+        formData={formData}
+        handleChange={handleChange}
+        handleSave={handleSave}
+        closeModal={closeModal}
+        error={error}
+      />
+      <Modal
+        title="Transfer Kit"
+        isOpen={isTransferModalOpen}
+        onClose={closeTransferModal}
+      >
+        {error && <p className="error-message">{error}</p>}
+
+        <label className="user-modal-label">New Owner's Email:</label>
+        <input
+          type="email"
+          className="user-modal-input"
+          value={transferEmail}
+          onChange={(e) => setTransferEmail(e.target.value)}
+          placeholder="Enter new owner's email"
+        />
+        <div className="user-modal-actions">
+          <button
+            className="user-modal-button save"
+            onClick={handleTransferKit}
+          >
+            Transfer
+          </button>
+          <button
+            className="user-modal-button cancel"
+            onClick={closeTransferModal}
+          >
+            Cancel
+          </button>
         </div>
-        </div>
-      </div>
-      )}
+      </Modal>
     </div>
   );
 };

@@ -106,7 +106,7 @@ function App() {
               <Route path="/funding" element={<FundingPage />} />
               <Route path="/renewals" element={<RenewalPage />} />
               <Route path="/wallet" element={<Wallet />} />
-              <Route path="wallet-history" element={<WalletPage />} />
+              <Route path="wallet-history" element={<Wallet />} />
               <Route path="wallet-withdrawal" element={<WithdrawalPage />} />
               <Route path="kits" element={<KitPage />} />
               <Route path="users" element={<Users />} />
