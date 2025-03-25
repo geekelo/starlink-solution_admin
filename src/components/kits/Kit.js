@@ -11,6 +11,8 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
+import KitModal from "./kitModal";
+import Modal from "./transferModal";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -21,6 +23,9 @@ const KitPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedKit, setSelectedKit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [transferEmail, setTransferEmail] = useState("");
+
   const [formData, setFormData] = useState({
     kit_number: selectedKit?.kit_number || "",
     address: selectedKit?.address || "",
@@ -133,6 +138,7 @@ const KitPage = () => {
           starlink_kit: formData,
         }
       );
+      console.log(res)
 
       setKits((prevKits) =>
         prevKits.map((kit) =>
@@ -147,6 +153,7 @@ const KitPage = () => {
             : kit
         )
       );
+      console.log(kits)
       closeModal();
     } catch (err) {
       setError("Failed to update kit. Please try again.");
@@ -159,6 +166,43 @@ const KitPage = () => {
 
   const goToRenewals = (kit) => {
     navigate(`/renewals?kitNumber=${kit.kitNo}`);
+  };
+  const handleTransferKit = async () => {
+    if (!transferEmail) {
+      setError("New owner email is required.");
+      return;
+    }
+    console.log(transferEmail)
+    console.log(selectedKit.kitNo)
+    try {
+      const axiosInstance = createAxiosInstance();
+   const res = await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
+        kit_number: selectedKit.kitNo,
+        new_owner_email: transferEmail,
+      });
+     
+      setKits((prevKits) =>
+        prevKits.map((kit) =>
+          kit.kitNo === selectedKit.kitNo
+            ? { ...kit, email: transferEmail }
+            : kit
+        )
+      );
+
+      closeTransferModal();
+    } catch (err) {
+      setError("Failed to transfer kit. Please try again.");
+    }
+  };
+
+  const openTransferModal = (kit) => {
+    setSelectedKit(kit);
+    setIsTransferModalOpen(true);
+   
+  };
+  const closeTransferModal = () => {
+    setIsTransferModalOpen(false);
+    setTransferEmail("");
   };
 
   return (
@@ -286,6 +330,12 @@ const KitPage = () => {
               <button className="edit-btn" onClick={() => openModal(kit)}>
                 <Edit2 size={16} />
               </button>
+              <button
+                className="kittransfer-btn"
+                onClick={() => openTransferModal(kit)}
+              >
+                Transfer
+              </button>
             </div>
           ))
         )}
@@ -310,92 +360,45 @@ const KitPage = () => {
           Next
         </button>
       </div>
-      {isModalOpen && (
-        <div className="modal-overlay">
-          <div className="user-modal-container">
-            <h3 className="user-modal-title">Edit Kit</h3>
 
-            {error && <p className="error-message">{error}</p>}
-            <div className="user-modal-content">
-              <label className="user-modal-label">Kit Number:</label>
-              <input
-                type="text"
-                className="user-modal-input"
-                name="kit_number"
-                value={formData.kit_number}
-                onChange={handleChange}
-                placeholder="Kit Number"
-              />
-              <label className="user-modal-label">Address:</label>
-              <input
-                type="text"
-                className="user-modal-input"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                placeholder="Address"
-              />
-              <label className="user-modal-label">Comapny Name:</label>
-              <input
-                type="text"
-                className="user-modal-input"
-                name="company_name"
-                value={formData.company_name}
-                onChange={handleChange}
-                placeholder="Company Name"
-              />
-              <label className="user-modal-label">Company Number:</label>
-              <input
-                type="text"
-                className="user-modal-input"
-                name="company_number"
-                value={formData.company_number}
-                onChange={handleChange}
-                placeholder="Company Number"
-              />
-              <label className="user-modal-label">Nin:</label>
-              <input
-                type="text"
-                className="user-modal-input"
-                name="nin"
-                value={formData.nin}
-                onChange={handleChange}
-                placeholder="NIN"
-              />
-              <label className="user-modal-label">Status:</label>
-              <select
-                name="status"
-                className="user-modal-input"
-                value={formData.status}
-                onChange={handleChange}
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
-              <label className="user-modal-label">Service Line Number:</label>
-              <input
-                type="text"
-                className="user-modal-input"
-                name="service_line_number"
-                value={formData.service_line_number}
-                onChange={handleChange}
-                placeholder="Service Line Number"
-              />
-              <div className="user-modal-actions">
-                <button className="user-modal-button save" onClick={handleSave}>
-                  Save
-                </button>
-                <button
-                  className="user-modal-button cancel"
-                  onClick={() => setIsModalOpen(false)}
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
+      <KitModal
+        isOpen={isModalOpen}
+        formData={formData}
+        handleChange={handleChange}
+        handleSave={handleSave}
+        closeModal={closeModal}
+        error={error}
+      />
+      <Modal
+        title="Transfer Kit"
+        isOpen={isTransferModalOpen}
+        onClose={closeTransferModal}
+      >
+        {error && <p className="error-message">{error}</p>}
+
+        <label className="user-modal-label">New Owner's Email:</label>
+        <input
+          type="email"
+          className="user-modal-input"
+          value={transferEmail}
+          onChange={(e) => setTransferEmail(e.target.value)}
+          placeholder="Enter new owner's email"
+        />
+        <div className="user-modal-actions">
+          <button
+            className="user-modal-button save"
+            onClick={handleTransferKit}
+          >
+            Transfer
+          </button>
+          <button
+            className="user-modal-button cancel"
+            onClick={closeTransferModal}
+          >
+            Cancel
+          </button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };
