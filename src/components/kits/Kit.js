@@ -83,7 +83,17 @@ const KitPage = () => {
       });
     }
   }, [selectedKit]);
-
+  
+  const handleRenewKit = async (kitId) => {
+    console.log(`Simulating API call to renew kit with ID: ${kitId}`);
+  
+    // Simulating API response delay
+    setTimeout(() => {
+      console.log(`Kit with ID: ${kitId} successfully renewed!`);
+      alert(`Kit with ID: ${kitId} successfully renewed!`);
+    }, 1000);
+  };
+  
   const filteredKits = useMemo(() => {
     if (!Array.isArray(kits)) return [];
     if (!searchQuery) return kits;
@@ -336,6 +346,9 @@ const KitPage = () => {
               >
                 Transfer
               </button>
+              <button className="renew-btn" onClick={() => handleRenewKit(kit.kitId)}>
+    Renew
+  </button>
             </div>
           ))
         )}
