@@ -11,11 +11,12 @@ const Requests = () => {
 
   const [fundingData, setFundingData] = useState([]);
   const [kits, setKits] = useState([]);
-  const plans = ["Basic", "Standard", "Premium"];
+  const [plans, setPlans] = useState([]); // Store Starlink plans from API
 
   useEffect(() => {
     fetchFundingRequests();
     fetchStarlinkKits();
+    fetchStarlinkPlans(); // Fetch available plans
   }, []);
 
   const fetchFundingRequests = async () => {
@@ -28,7 +29,6 @@ const Requests = () => {
       const sortedData = response.data.sort(
         (a, b) => new Date(b.created_at) - new Date(a.created_at)
       );
-
       setFundingData(sortedData);
     } catch (err) {
       setError("Failed to fetch funding requests.");
@@ -44,10 +44,7 @@ const Requests = () => {
       const response = await axiosInstance.get(
         "/api/v1/admin/funding_kit_requests/pending_starlink_kits"
       );
-      const sortedKits = response.data.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-      setKits(sortedKits);
+      setKits(response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
     } catch (err) {
       setError("Failed to fetch Starlink kits.");
     } finally {
@@ -55,42 +52,19 @@ const Requests = () => {
     }
   };
 
-  // Handle Auto-Renew Subscriptions
-  const handleAutoRenew = async () => {
-    setLoading(true);
-    setMessage("");
-    setError("");
+  const fetchStarlinkPlans = async () => {
     try {
       const axiosInstance = createAxiosInstance();
-      await axiosInstance.post("/api/v1/admin/auto_renews"); // POST request
-      setMessage("Auto-renewal triggered successfully!"); // Show success message
+      const response = await axiosInstance.get("/api/v1/starlink_plans");
+      setPlans(response.data); // Store the plans in state
     } catch (err) {
-      setError("Failed to trigger auto-renewal."); // Show error message
-    } finally {
-      setLoading(false);
+      setError("Failed to fetch Starlink plans.");
     }
-  };
-  // Function to handle status change
-  const handleStatusChange = (id, newStatus) => {
-    setKits((prevKits) =>
-      prevKits.map((kit) =>
-        kit.id === id ? { ...kit, status: newStatus } : kit
-      )
-    );
-  };
-
-  // Function to handle plan change
-  const handlePlanChange = (id, newPlan) => {
-    setKits((prevKits) =>
-      prevKits.map((kit) => (kit.id === id ? { ...kit, plan: newPlan } : kit))
-    );
   };
 
   return (
     <div className="requests-section">
-      {/* Auto-Renew Button */}
       <InvoiceReminder />
-
       {message && <p className="success-message">{message}</p>}
 
       <div className="tabs">
@@ -117,18 +91,10 @@ const Requests = () => {
               {fundingData.length > 0 ? (
                 fundingData.map((item, index) => (
                   <div key={index} className="funding-card">
-                    <p>
-                      <strong>Date:</strong> {item.date}
-                    </p>
-                    <p>
-                      <strong>Amount:</strong> {item.amount}
-                    </p>
-                    <p>
-                      <strong>Reference:</strong> {item.reference}
-                    </p>
-                    <p>
-                      <strong>Payment Type:</strong> {item.type}
-                    </p>
+                    <p><strong>Date:</strong> {new Date(item.created_at).toLocaleDateString("en-US")}</p>
+                    <p><strong>Amount:</strong> {item.amount}</p>
+                    <p><strong>Reference:</strong> {item.reference}</p>
+                    <p><strong>Payment Type:</strong> {item.type}</p>
                     <div className="cta">
                       <select>
                         <option value="Pending">Pending</option>
@@ -150,45 +116,21 @@ const Requests = () => {
               {kits.length > 0 ? (
                 kits.map((kit) => (
                   <div key={kit.id} className="funding-card">
-                    <p>
-                      <strong>NIN:</strong> {kit.nin}
-                    </p>
-                    <p>
-                      <strong>Address:</strong> {kit.address}
-                    </p>
-                    <p>
-                      <strong>Id:</strong> {kit.id}
-                    </p>
-                    <p>
-                      <strong>Kit No:</strong> {kit.kit_number}
-                    </p>
-                    <p>
-                      <strong>Company Name:</strong> {kit.company_name}
-                    </p>
-
-                    <p>
-                      <strong>Date:</strong>
-                      {new Date(kit.created_at).toLocaleDateString("en-US")}
-                    </p>
+                    <p><strong>NIN:</strong> {kit.nin}</p>
+                    <p><strong>Address:</strong> {kit.address}</p>
+                    <p><strong>Id:</strong> {kit.id}</p>
+                    <p><strong>Kit No:</strong> {kit.kit_number}</p>
+                    <p><strong>Company Name:</strong> {kit.company_name}</p>
+                    <p><strong>Date:</strong> {new Date(kit.created_at).toLocaleDateString("en-US")}</p>
                     <div className="cta">
-                      <select
-                        value={kit.status}
-                        onChange={(e) =>
-                          handleStatusChange(kit.id, e.target.value)
-                        }
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="Approved">Approved</option>
+                      <select value={kit.status}>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
                       </select>
-                      <select
-                        value={kit.plan}
-                        onChange={(e) =>
-                          handlePlanChange(kit.id, e.target.value)
-                        }
-                      >
+                      <select value={kit.plan}>
                         {plans.map((plan) => (
-                          <option key={plan} value={plan}>
-                            {plan}
+                          <option key={plan.id} value={plan.id}>
+                            {plan.name} {/* Display name, but value is ID */}
                           </option>
                         ))}
                       </select>
@@ -197,9 +139,7 @@ const Requests = () => {
                   </div>
                 ))
               ) : (
-                <p className="req-message">
-                  No Starlink kit requests available.
-                </p>
+                <p className="req-message">No Starlink kit requests available.</p>
               )}
             </div>
           )}
