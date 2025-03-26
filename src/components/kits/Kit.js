@@ -1,14 +1,6 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { createAxiosInstance } from "../../config/axios";
-import {
-  Package,
-  CheckCircle,
-  XCircle,
-  Search,
-  Filter,
-  Edit2,
-  X,
-} from "lucide-react";
+import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
 import KitModal from "./kitModal";
@@ -23,9 +15,12 @@ const KitPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedKit, setSelectedKit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const dropdownRef = useRef(null);
+
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferEmail, setTransferEmail] = useState("");
-
+  
   const [formData, setFormData] = useState({
     kit_number: selectedKit?.kit_number || "",
     address: selectedKit?.address || "",
@@ -215,6 +210,25 @@ const KitPage = () => {
     setTransferEmail("");
   };
 
+
+
+  const toggleDropdown = (kitId, e) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === kitId ? null : kitId);
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !event.target.closest('.menu-dots')) {
+        setActiveDropdown(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }; }, [dropdownRef]);
   return (
     <div className="kit-container">
       <div className="kit-nav">
@@ -298,49 +312,118 @@ const KitPage = () => {
           <p>{metrics.inactive}</p>
         </div>
       </div>
-
       <div className="kit-grid">
-        {loading ? (
-          <p>Loading kits...</p>
-        ) : (
-          currentKits.map((kit) => (
-            <div
-              key={kit.kitId}
-              className={`kit-card ${kit.status.toLowerCase()}`}
-            >
-              <h3>Kit No: {kit.kitNo}</h3>
-              <p>
+      {loading ? (
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
+        </div>
+      ) : (
+        currentKits.map((kit) => (
+          <div key={kit.kitId} className={`kit-card ${kit.status.toLowerCase()}`}>
+            <h3>
+              Kit No: {kit.kitNo}
+              <div 
+                className="menu-dots" 
+                onClick={(e) => toggleDropdown(kit.kitId, e)}
+              >
+                <MoreVertical size={20} />
+              </div>
+            </h3>
+            
+            {/* Dropdown Menu */}
+            {activeDropdown === kit.kitId && (
+              <div className="dropdown-menu" ref={dropdownRef}>
+                <div 
+                  className="dropdown-item" 
+                  onClick={() => {
+                    openModal(kit);
+                    setActiveDropdown(null);
+                  }}
+                >
+                  <Edit2 size={16} />
+                  Edit
+                </div>
+                <div 
+                  className="dropdown-item" 
+                  onClick={() => {
+                    goToRenewals(kit);
+                    setActiveDropdown(null);
+                  }}
+                >
+                  <RefreshCw size={16} />
+                  Renewals
+                </div>
+              </div>
+            )}
+            
+            {/* Grid layout with icons for each field */}
+            <div className="kit-info-grid">
+              {/* Address */}
+              <div className="kit-info-icon">
+                <MapPin size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>Address:</strong> {kit.address}
-              </p>
-              <p>
+              </div>
+              
+              {/* NIN */}
+              <div className="kit-info-icon">
+                <CreditCard size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>NIN:</strong> {kit.nin}
-              </p>
-              <p>
+              </div>
+              
+              {/* Company */}
+              <div className="kit-info-icon">
+                <Building size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>Company:</strong> {kit.companyName}
-              </p>
-              <p>
-                <strong>Status:</strong> {kit.status}
-              </p>
-              <p>
+              </div>
+              
+              {/* Status */}
+              <div className="kit-info-icon">
+                {kit.status === "active" ? <CheckCircle size={16} /> : <XCircle size={16} />}
+              </div>
+              <div className="kit-info-text">
+                <strong>Status:</strong> 
+                <span className={`status-badge ${kit.status}`}>{kit.status}</span>
+              </div>
+              
+              {/* Plan */}
+              <div className="kit-info-icon">
+                <Tag size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>Plan:</strong> {kit.plan}
-              </p>
-              <p>
+              </div>
+              
+              {/* Service No */}
+              <div className="kit-info-icon">
+                <Phone size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>Service No:</strong> {kit.serviceNo}
-              </p>
-              <p>
+              </div>
+              
+              {/* Username */}
+              <div className="kit-info-icon">
+                <User size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>Username:</strong> {kit.username}
-              </p>
-              <p>
+              </div>
+              
+              {/* Date */}
+              <div className="kit-info-icon">
+                <CalendarDays size={16} />
+              </div>
+              <div className="kit-info-text">
                 <strong>Date:</strong> {kit.dateAdded}
-              </p>
-              <button className="edit-btn" onClick={() => goToRenewals(kit)}>
-                Renewals
-              </button>
-
-              <button className="edit-btn" onClick={() => openModal(kit)}>
-                <Edit2 size={16} />
-              </button>
-              <button
+              </div>
+              
+               <button
                 className="kittransfer-btn"
                 onClick={() => openTransferModal(kit)}
               >
@@ -350,9 +433,11 @@ const KitPage = () => {
     Renew
   </button>
             </div>
-          ))
-        )}
-      </div>
+          </div>
+        ))
+      )}
+    </div>
+    
 
       <div className="pagination">
         <button
