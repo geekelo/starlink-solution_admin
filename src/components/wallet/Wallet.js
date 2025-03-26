@@ -47,11 +47,11 @@ console.log(token)
           "/api/v1/admin/wallet_histories"
         );
 
-        console.log("API Response:", response.data); // ✅ Log API response to debug
+      
 
-        const { fundings, renewals } = response.data;
+        const { fundings, renewals, withdrawals } = response.data;
 
-        if (!fundings || !renewals) {
+        if (!fundings || !renewals || !withdrawals) {
           throw new Error("Missing fundings or renewals data");
         }
 
@@ -59,6 +59,7 @@ console.log(token)
           items.map((item) => ({
             id: item.id,
             type,
+            status: item.status,
             amount: parseFloat(item.amount),
             date: new Date(item.created_at).toISOString().split("T")[0], // Format date
             email: item.user_email || item.email, // Ensure email is included
@@ -67,8 +68,9 @@ console.log(token)
 
         const formattedFundings = formatTransactions(fundings, "Funding");
         const formattedRenewals = formatTransactions(renewals, "Renewal");
+        const formattedWithdrawals = formatTransactions(withdrawals, "Withdrawal");
 
-        setWalletHistory([...formattedFundings, ...formattedRenewals]);
+        setWalletHistory([...formattedFundings, ...formattedRenewals, ...formattedWithdrawals]);
       } catch (err) {
         console.error("Failed to fetch wallet history:", err);
         setError("Failed to load wallet history.");
@@ -79,6 +81,8 @@ console.log(token)
 
     fetchWalletHistory();
   }, []);
+console.log( walletHistory
+  .filter((item) => item.type === "Funding"));
 
   // Calculate totals
   const totalFunding = walletHistory
@@ -89,7 +93,9 @@ console.log(token)
     .filter((item) => item.type === "Renewal")
     .reduce((sum, item) => sum + parseFloat(item.amount), 0);
     
-  const totalWithdrawal = 0; // No withdrawal transactions in this example
+  const totalWithdrawal = walletHistory
+  .filter((item) => item.type === "Withdrawal")
+  .reduce((sum, item) => sum + parseFloat(item.amount), 0);
     
   const totalInSystem = totalFunding - totalRenewal;
 
