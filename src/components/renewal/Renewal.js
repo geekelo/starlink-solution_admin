@@ -116,11 +116,12 @@ const Renewal = ({ transaction, openModal }) => {
           <CheckCircle size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Status:</strong> 
-          <span className="status-badge renewal">
-            {transaction?.status || "Pending"}
-          </span>
-        </div>
+  <strong>Status:</strong> 
+  <span className={`status-badge ${transaction?.status?.toLowerCase()}`}>
+    {transaction?.status || "N/A"}
+  </span>
+</div>
+
         
         {/* Amount */}
         <div className="kit-info-icon">
