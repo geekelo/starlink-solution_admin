@@ -181,7 +181,7 @@ const KitPage = () => {
     console.log(selectedKit.kitNo)
     try {
       const axiosInstance = createAxiosInstance();
-   const res = await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
+   await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
         kit_number: selectedKit.kitNo,
         new_owner_email: transferEmail,
       });
