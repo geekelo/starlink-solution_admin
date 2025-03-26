@@ -36,7 +36,7 @@ import {
   CheckCircle, 
   FileText,
   MoreVertical,
-  Edit2,
+
   Eye
 } from 'lucide-react';
 
@@ -64,11 +64,11 @@ const Renewal = ({ transaction, openModal }) => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleEditClick = (e) => {
-    e.stopPropagation();
-    setShowDropdown(false);
-    openModal("edit", transaction);
-  };
+  // const handleEditClick = (e) => {
+  //   e.stopPropagation();
+  //   setShowDropdown(false);
+  //   openModal("edit", transaction);
+  // };
 
   const handleViewClick = (e) => {
     e.stopPropagation();
@@ -91,10 +91,10 @@ const Renewal = ({ transaction, openModal }) => {
       {/* Dropdown Menu */}
       {showDropdown && (
         <div className="dropdown-menu" ref={dropdownRef}>
-          <div className="dropdown-item" onClick={handleEditClick}>
+          {/* <div className="dropdown-item" onClick={handleEditClick}>
             <Edit2 size={16} />
             Edit
-          </div>
+          </div> */}
           <div className="dropdown-item" onClick={handleViewClick}>
             <Eye size={16} />
             View Details

@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import { createAxiosInstance } from "../../config/axios";
+import { useEffect, useState } from "react";
+
 import {
   ChevronLeft,
   ChevronRight,
@@ -7,14 +7,9 @@ import {
   RefreshCw,
   ArrowDownCircle,
   Database,
-  Edit2,
-  Send,
-  EyeIcon,
-  DollarSign,
-  CreditCard,
-  User,
+
   CalendarDays,
-  MoreVertical,
+
 } from "lucide-react";
 import "../../styles/Wallet.css";
 import Funding from "../funding/funding";
@@ -22,8 +17,9 @@ import Renewal from "../renewal/Renewal";
 import WalletBalance from "./WalletBalance";
 
 import { ViewRenewalModal } from "../renewal/ViewRenewal";
-import EditRenewalModal from "../renewal/EditKitRenewal";
+
 import Withdrawal from "./Withdrawal";
+import { createAxiosInstance } from "../../config/axios";
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +35,50 @@ const WalletPage = () => {
   
   const itemsPerPage = 6;
 
+  useEffect(() => {
+    const fetchWalletHistory = async () => {
+      setLoading(true);
+      setError("");
+      const token = localStorage.getItem("candra");
+console.log(token)
+      try {
+        const axiosInstance = createAxiosInstance();
+        const response = await axiosInstance.get(
+          "/api/v1/admin/wallet_histories"
+        );
 
+        console.log("API Response:", response.data); // ✅ Log API response to debug
+
+        const { fundings, renewals } = response.data;
+
+        if (!fundings || !renewals) {
+          throw new Error("Missing fundings or renewals data");
+        }
+
+        const formatTransactions = (items, type) =>
+          items.map((item) => ({
+            id: item.id,
+            type,
+            amount: parseFloat(item.amount),
+            date: new Date(item.created_at).toISOString().split("T")[0], // Format date
+            email: item.user_email || item.email, // Ensure email is included
+            reference: item.kit_number || item.reference, // Handle missing reference
+          }));
+
+        const formattedFundings = formatTransactions(fundings, "Funding");
+        const formattedRenewals = formatTransactions(renewals, "Renewal");
+
+        setWalletHistory([...formattedFundings, ...formattedRenewals]);
+      } catch (err) {
+        console.error("Failed to fetch wallet history:", err);
+        setError("Failed to load wallet history.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWalletHistory();
+  }, []);
 
   // Calculate totals
   const totalFunding = walletHistory
@@ -75,35 +114,35 @@ const WalletPage = () => {
     }
   };
 
-  const handleSaveRenewal = (updatedTransaction) => {
-    // Update the transaction in the history
-    const updatedHistory = walletHistory.map(item => 
-      item.id === updatedTransaction.id ? updatedTransaction : item
-    );
+  // const handleSaveRenewal = (updatedTransaction) => {
+  //   // Update the transaction in the history
+  //   const updatedHistory = walletHistory.map(item => 
+  //     item.id === updatedTransaction.id ? updatedTransaction : item
+  //   );
     
-    setWalletHistory(updatedHistory);
-    setEditModalOpen(false);
+  //   setWalletHistory(updatedHistory);
+  //   setEditModalOpen(false);
     
-    // In a real app, you would also send this update to your API
-    // For example:
-    /*
-    const updateRenewal = async () => {
-      try {
-        const axiosInstance = createAxiosInstance();
-        await axiosInstance.patch(
-          `/api/v1/admin/renewals/${updatedTransaction.id}`, 
-          updatedTransaction
-        );
-        // Success handling
-      } catch (err) {
-        console.error("Failed to update renewal:", err);
-        setError("Failed to update renewal.");
-      }
-    };
+  //   // In a real app, you would also send this update to your API
+  //   // For example:
+  //   /*
+  //   const updateRenewal = async () => {
+  //     try {
+  //       const axiosInstance = createAxiosInstance();
+  //       await axiosInstance.patch(
+  //         `/api/v1/admin/renewals/${updatedTransaction.id}`, 
+  //         updatedTransaction
+  //       );
+  //       // Success handling
+  //     } catch (err) {
+  //       console.error("Failed to update renewal:", err);
+  //       setError("Failed to update renewal.");
+  //     }
+  //   };
     
-    updateRenewal();
-    */
-  };
+  //   updateRenewal();
+  //   */
+  // };
 
   return (
     <div className="kit-container">
@@ -245,14 +284,14 @@ const WalletPage = () => {
       )}
 
       {/* Edit Renewal Modal */}
-      {editModalOpen && selectedTransaction && (
+      {/* {editModalOpen && selectedTransaction && (
         <EditRenewalModal
           isOpen={editModalOpen}
           closeModal={() => setEditModalOpen(false)}
           transaction={selectedTransaction}
           onSave={handleSaveRenewal}
         />
-      )}
+      )} */}
 
    
     </div>
