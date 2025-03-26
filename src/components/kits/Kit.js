@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createAxiosInstance } from "../../config/axios";
-import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays } from "lucide-react";
+import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
 import KitModal from "./kitModal";
@@ -229,6 +229,10 @@ const KitPage = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     }; }, [dropdownRef]);
+    const itemsPerPage = currentKits.length - 1;
+    const indexOfLastItem = currentPage * itemsPerPage;
+
+
   return (
     <div className="kit-container">
       <div className="kit-nav">
@@ -293,7 +297,7 @@ const KitPage = () => {
             <Package size={40} color="#b6bbc1" />
             <h4>Total Kits</h4>
           </div>
-          <p>{metrics.total}</p>
+          <p>{loading ? '-' : metrics.total}</p>
         </div>
 
         <div className="kitmetric-box">
@@ -301,7 +305,7 @@ const KitPage = () => {
             <CheckCircle size={40} color="green" />
             <h4>Active Kits</h4>
           </div>
-          <p>{metrics.active}</p>
+          <p>{loading ? '-' : metrics.active}</p>
         </div>
 
         <div className="kitmetric-box">
@@ -309,7 +313,7 @@ const KitPage = () => {
             <XCircle size={40} color="#ff1500b8" />
             <h4>Inactive Kits</h4>
           </div>
-          <p>{metrics.inactive}</p>
+          <p>{loading ? '-' : metrics.inactive}</p>
         </div>
       </div>
       <div className="kit-grid">
@@ -353,6 +357,14 @@ const KitPage = () => {
                   <RefreshCw size={16} />
                   Renewals
                 </div>
+                <div 
+                  className="dropdown-item" 
+                  onClick={() => openTransferModal(kit)}
+                >
+                  <Send size={16} />
+                  Transfer
+                </div>
+          
               </div>
             )}
             
@@ -432,13 +444,33 @@ const KitPage = () => {
               <button className="renew-btn" onClick={() => handleRenewKit(kit.kitId)}>
     Renew
   </button>
+
             </div>
           </div>
         ))
       )}
     </div>
-    
 
+    <div className="pagination">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) =>
+                indexOfLastItem < currentKits.length ? prev + 1 : prev
+              )
+            }
+            disabled={indexOfLastItem >= currentKits.length}
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
+    
+{/* 
       <div className="pagination">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -457,7 +489,7 @@ const KitPage = () => {
         >
           Next
         </button>
-      </div>
+      </div> */}
 
       <KitModal
         isOpen={isModalOpen}

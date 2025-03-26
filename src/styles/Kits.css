@@ -122,14 +122,14 @@
   background: #0056b3;
 }
 
-.kit-metrics {
+/* .kit-metrics {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
   flex-wrap: wrap;
   padding: 30px;
   border-radius: 8px;
-}
+} */
 
 .kitmetric-box {
   display: flex;
