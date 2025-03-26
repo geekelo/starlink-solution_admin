@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createAxiosInstance } from "../../config/axios";
-import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays, Send, ChevronLeft, ChevronRight } from "lucide-react";
+import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays, Send, ChevronLeft, ChevronRight, Repeat2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
 import KitModal from "./kitModal";
@@ -78,7 +78,17 @@ const KitPage = () => {
       });
     }
   }, [selectedKit]);
-
+  
+  const handleRenewKit = async (kitId) => {
+    console.log(`Simulating API call to renew kit with ID: ${kitId}`);
+  
+    // Simulating API response delay
+    setTimeout(() => {
+      console.log(`Kit with ID: ${kitId} successfully renewed!`);
+      alert(`Kit with ID: ${kitId} successfully renewed!`);
+    }, 1000);
+  };
+  
   const filteredKits = useMemo(() => {
     if (!Array.isArray(kits)) return [];
     if (!searchQuery) return kits;
@@ -354,6 +364,13 @@ const KitPage = () => {
                   <Send size={16} />
                   Transfer
                 </div>
+                <div 
+                  className="dropdown-item" 
+                  onClick={() => handleRenewKit(kit.kitId)}
+                >
+                  <Repeat2 size={16} />
+                  Renew
+                </div>
           
               </div>
             )}
@@ -425,7 +442,8 @@ const KitPage = () => {
                 <strong>Date:</strong> {kit.dateAdded}
               </div>
               
-      
+          
+
             </div>
           </div>
         ))
