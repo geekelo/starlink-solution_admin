@@ -597,7 +597,7 @@ background-color: #0a1930}
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 .kit-card {
@@ -621,14 +621,18 @@ background-color: #0a1930}
   border-left: 4px solid #16a34a;
 }
 
-.kit-card.inactive {
+/* .kit-card.inactive {
   border-left: 4px solid #dc2626;
-}
+} */
 
 .kit-card.renewal {
   border-left: 4px solid #eab308;
 }
 
+.kit-card.withdrawal {
+  border-left: 4px solid #f8d7da;
+ 
+}
 /* Header styling */
 .kit-card h3 {
   margin-bottom: 15px;
