@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createAxiosInstance } from "../../config/axios";
-import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays, Send, ChevronLeft, ChevronRight, Repeat2 } from "lucide-react";
+import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays,  ChevronLeft, ChevronRight, Repeat2, FolderOpenDot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
 import KitModal from "./kitModal";
@@ -361,7 +361,8 @@ const KitPage = () => {
                   className="dropdown-item" 
                   onClick={() => openTransferModal(kit)}
                 >
-                  <Send size={16} />
+              
+                  <FolderOpenDot size={16} />
                   Transfer
                 </div>
                 <div 
@@ -468,27 +469,6 @@ const KitPage = () => {
             <ChevronRight size={18} />
           </button>
         </div>
-    
-{/* 
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              prev * kitsPerPage < filteredKits.length ? prev + 1 : prev
-            )
-          }
-          disabled={currentPage * kitsPerPage >= filteredKits.length}
-        >
-          Next
-        </button>
-      </div> */}
 
       <KitModal
         isOpen={isModalOpen}
