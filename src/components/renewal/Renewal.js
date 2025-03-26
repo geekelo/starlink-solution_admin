@@ -52,6 +52,7 @@ const Renewal = ({ transaction, openModal }) => {
         setShowDropdown(false);
       }
     };
+    console.log(transaction)
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -118,7 +119,7 @@ const Renewal = ({ transaction, openModal }) => {
         <div className="kit-info-text">
   <strong>Status:</strong> 
   <span className={`status-badge ${transaction?.status?.toLowerCase()}`}>
-    {transaction?.status || "N/A"}
+    {transaction?.status || "receipt"}
   </span>
 </div>
 
