@@ -7,7 +7,7 @@ import { ArrowDownCircle, CalendarDays, FileText } from "lucide-react";
 
 const Withdrawal = ({ transaction }) => {
   return (
-    <div className="kit-card inactive">
+    <div className="kit-card withdrawal">
       <h3>Withdrawal</h3>
       
       <div className="kit-info-grid">
