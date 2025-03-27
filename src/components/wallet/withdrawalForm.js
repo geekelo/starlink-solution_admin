@@ -29,7 +29,6 @@ const WithdrawalFormModal = ({ isOpen, onClose }) => {
         }
       );
 
-      console.log("Withdrawal Response:", response.data);
       setMessage("✅ Withdrawal request submitted successfully!");
       setAmount("");
       setPurpose("");

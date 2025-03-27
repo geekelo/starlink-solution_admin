@@ -35,17 +35,15 @@ const Withdrawal = ({ transaction = {} }) => {
               : "0"}
           </div>
 
-          {/* Purpose (only if available) */}
-          {transaction.purpose && (
-            <>
+          
               <div className="kit-info-icon">
                 <FileText size={16} />
               </div>
               <div className="kit-info-text">
-                <strong>Purpose:</strong> {transaction.purpose}
+                <strong>Purpose:</strong> {transaction.purpose || 'N/A'}
               </div>
             </>
-          )}
+        
 
           {/* Date */}
           <div className="kit-info-icon">

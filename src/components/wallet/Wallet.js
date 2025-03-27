@@ -39,9 +39,7 @@ const WalletPage = () => {
     const fetchWalletHistory = async () => {
       setLoading(true);
       setError("");
-      const token = localStorage.getItem("candra");
-      console.log(token);
-      
+      const token = localStorage.getItem("candra"); 
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get(
@@ -86,9 +84,6 @@ const WalletPage = () => {
     fetchWalletHistory();
   }, []);
   
- 
-console.log( walletHistory
-  .filter((item) => item.type === "Funding"));
 
   // Calculate totals
   const totalFunding = walletHistory
