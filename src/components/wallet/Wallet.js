@@ -34,43 +34,47 @@ const WalletPage = () => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   
   const itemsPerPage = 6;
-
+ 
   useEffect(() => {
     const fetchWalletHistory = async () => {
       setLoading(true);
       setError("");
       const token = localStorage.getItem("candra");
-console.log(token)
+      console.log(token);
+      
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get(
           "/api/v1/admin/wallet_histories"
         );
-
-      
-
+  
         const { fundings, renewals, withdrawals } = response.data;
-
+  
         if (!fundings || !renewals || !withdrawals) {
           throw new Error("Missing fundings or renewals data");
         }
-
+  
         const formatTransactions = (items, type) =>
           items.map((item) => ({
             id: item.id,
             type,
             status: item.status,
             amount: parseFloat(item.amount),
-            date: new Date(item.created_at).toISOString().split("T")[0], // Format date
-            email: item.user_email || item.email, // Ensure email is included
-            reference: item.kit_number || item.reference, // Handle missing reference
+            date: new Date(item.created_at), // Store as Date object for sorting
+            email: item.user_email || item.email,
+            reference: item.kit_number || item.reference,
           }));
-
+  
         const formattedFundings = formatTransactions(fundings, "Funding");
         const formattedRenewals = formatTransactions(renewals, "Renewal");
         const formattedWithdrawals = formatTransactions(withdrawals, "Withdrawal");
-
-        setWalletHistory([...formattedFundings, ...formattedRenewals, ...formattedWithdrawals]);
+  
+        // Merge and sort transactions by date (recent first)
+        const sortedTransactions = [...formattedFundings, ...formattedRenewals, ...formattedWithdrawals].sort(
+          (a, b) => b.date - a.date
+        );
+  
+        setWalletHistory(sortedTransactions);
       } catch (err) {
         console.error("Failed to fetch wallet history:", err);
         setError("Failed to load wallet history.");
@@ -78,9 +82,11 @@ console.log(token)
         setLoading(false);
       }
     };
-
+  
     fetchWalletHistory();
   }, []);
+  
+ 
 console.log( walletHistory
   .filter((item) => item.type === "Funding"));
 

@@ -1,7 +1,7 @@
 .withdrawal-container {
-    max-width: 450px;
+    max-width: 650px;
     margin: 60px auto;
-    padding: 20px;
+    padding: 20px ;
     background: #fff;
     border-radius: 12px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
@@ -64,7 +64,18 @@
     cursor: pointer;
     transition: background 0.3s;
   }
-  
+  .create-withdrawal-btn{
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: #1a3a5f;
+    color: #fff;
+    margin: 12px 0;
+    margin-right: 1px;
+    cursor: pointer;
+  }
   .withdraw-btn:disabled {
     background: #ccc;
     cursor: not-allowed;
