@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/User.css";
-import { Edit, User2, Wallet } from "lucide-react";
+import { ChevronLeft, ChevronRight, Edit, Edit2, KeyIcon, Mail, MoreVertical, Package, Phone, PhoneIncoming, Search, User2, Wallet, WalletCards, WalletMinimal } from "lucide-react";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -11,6 +11,8 @@ const Users = () => {
   const [error, setError] = useState("");
   const [selectedUser, setSelectedUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState(null);
+  const dropdownRef = useRef(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 12;
@@ -82,6 +84,7 @@ const Users = () => {
       alert("Failed to update user. Please try again.");
     }
   };
+  console.log(users);
   
   
 
@@ -96,17 +99,31 @@ const Users = () => {
       (user.walletID && user.walletID.includes(query))
     );
   });
-  const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= Math.ceil(filteredUsers.length / usersPerPage)) {
-      setCurrentPage(newPage);
-    }
-  };
 
+  const toggleDropdown = (userId, e) => {
+    e.stopPropagation();
+    setActiveDropdown(activeDropdown === userId ? null : userId);
+  };
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !event.target.closest('.menu-dots')) {
+        setActiveDropdown(null);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }; }, [dropdownRef]);
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
-
+  const indexOfLastKit = currentPage * totalPages;
+  const indexOfFirstKit = indexOfLastKit - totalPages;
+  const currentKits = filteredUsers.slice(indexOfFirstKit, indexOfLastKit);
+  const indexOfLastItem = currentPage * totalPages;
   return (
     <div className="kit-container">
       <div className="kit-nav">
@@ -114,14 +131,15 @@ const Users = () => {
 
         {error && <p className="error-message">{error}</p>}
 
-        <div className="search-filter">
+        <div className="search-box">
+           <Search size={24} color="#b6bbc1" />
           <input
             type="text"
             placeholder="Search by Name, Email, Phone, WhatsApp, Wallet ID, or OTP"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
-          <button className="search-btn">Search</button>
+        
         </div>
       </div>
 
@@ -131,39 +149,94 @@ const Users = () => {
             <User2 size={40} color="#b6bbc1" />
             <h4>Total Users</h4>
           </div>
-          <p>{filteredUsers.length}</p>
+          <p>{loading ? '-' : filteredUsers.length}</p>
         </div>
       </div>
 
       <div className="kit-grid">
         {loading ? (
-          <p className="no-results">Loading users...</p>
+        <div className="loading-spinner-container">
+        <div className="loading-spinner"></div>
+      </div>
         ) : currentUsers.length > 0 ? (
           currentUsers.map((user) => (
-            <div key={user.id} className="user-card">
-              <h3>{user.name}</h3>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Phone:</strong> {user.phone}</p>
-              <p><strong>WhatsApp:</strong> {user.whatsapp}</p>
-              <p><strong>Wallet ID:</strong> {user.walletID}</p>
-              <p><strong>Wallet Balance:</strong> ₦{user.walletBalance}</p>
-              <p><strong>No Of Kits:</strong> {user.otp}</p>
+            <div key={user.id}  className={`user-card active`}>
+               
+              <h3>{user.name}      <div 
+                className="menu-dots" 
+                onClick={(e) => toggleDropdown(user.id, e)}
+              >
+                <MoreVertical size={20} />
+              </div></h3>
+                {/* Dropdown Menu */}
+                {activeDropdown === user.id && (
+              <div className="dropdown-menu" ref={dropdownRef}>
+                     <div 
+                  className="dropdown-item" 
+                  onClick={() => handleEditClick(user)}
+                >
               
-              {/* Fund Button */}
-              <div
-                className="fund-btn" 
-                onClick={() => navigate(`/funding?email=${user.email}`)}
-              >
-                <Wallet size={24} color="#007bff" /> Fundings
+                  <Edit2 size={16} />
+                  Edit
+                </div>
+                <div 
+                  className="dropdown-item" 
+                  onClick={() => navigate(`/funding?email=${user.email}`)}
+                >
+                  <Wallet size={16} />
+                Fundings
+                </div>
+           
+           
+      
+          
               </div>
+            )}
+                {/* Grid layout with icons for each field */}
+                <div className="kit-info-grid">
+                <div className="kit-info-icon">
+                <Mail size={16} />
+              </div>
+              <div className="kit-info-text">
+                <strong>Email:</strong> {user.email}
+              </div>
+              <div className="kit-info-icon">
+                <Phone size={16} />
+              </div>
+              <div className="kit-info-text">
+                <strong>Phone:</strong> {user.phone}
+              </div>
+              <div className="kit-info-icon">
 
-              {/* Edit Button */}
-              <button 
-                className="fundedit-button" 
-                onClick={() => handleEditClick(user)}
-              >
-                <Edit size={20} color="#fff" />
-              </button>
+                <PhoneIncoming size={16} />
+              </div>
+              <div className="kit-info-text">
+                <strong>WhatsApp:</strong> {user.whatsapp}
+              </div>
+              <div className="kit-info-icon">
+           
+                <WalletMinimal size={16} />
+              </div>
+              <div className="kit-info-text">
+                <strong>Wallet ID:</strong> {user.walletID}
+              </div>
+              
+              <div className="kit-info-icon">
+          
+                <WalletCards size={16} />
+              </div>
+              <div className="kit-info-text">
+                <strong>Wallet Balance:</strong> {user.walletBalance}
+              </div>
+              <div className="kit-info-icon">
+                <Package size={16} />
+              </div>
+              <div className="kit-info-text">
+                <strong>No Of Kits:</strong> {user.otp}
+              </div>
+      
+              </div>
+           
             </div>
           ))
         ) : (
@@ -171,22 +244,23 @@ const Users = () => {
         )}
       </div>
       <div className="pagination">
-        <button
-          className="pagination-button"
-          disabled={currentPage === 1}
-          onClick={() => handlePageChange(currentPage - 1)}
-        >
-          Previous
-        </button>
-      
-        <button
-          className="pagination-button"
-          disabled={currentPage === totalPages}
-          onClick={() => handlePageChange(currentPage + 1)}
-        >
-          Next
-        </button>
-      </div>
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            <ChevronLeft size={18} />
+          </button>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) =>
+                indexOfLastItem < currentKits.length ? prev + 1 : prev
+              )
+            }
+            disabled={indexOfLastItem >= currentKits.length}
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       {isModalOpen && selectedUser && (
   <>
     <div className="user-modal-overlay" onClick={() => setIsModalOpen(false)}></div>
