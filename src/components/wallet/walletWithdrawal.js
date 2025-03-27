@@ -1,0 +1,77 @@
+import { useEffect, useState } from "react";
+import { createAxiosInstance } from "../../config/axios";
+import Withdrawal from "./Withdrawal";
+import WithdrawalFormModal from "./withdrawalForm";
+
+const WithdrawalsList = () => {
+  const [walletHistory, setWalletHistory] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+  useEffect(() => {
+    const fetchWalletHistory = async () => {
+      setLoading(true);
+      setError("");
+      try {
+        const axiosInstance = createAxiosInstance();
+        const response = await axiosInstance.get("/api/v1/admin/wallet_histories");
+    
+        const { withdrawals } = response.data;
+
+        if (!withdrawals) {
+          throw new Error("Missing withdrawal data");
+        }
+
+        const formattedWithdrawals = withdrawals.map((item) => ({
+          id: item.id,
+          status: item.status,
+          amount: parseFloat(item.amount),
+          date: item.created_at ? new Date(item.created_at) : null,
+          email: item.user_email || item.email,
+          reference: item.kit_number || item.reference,
+        }));
+
+        setWalletHistory(formattedWithdrawals);
+      } catch (err) {
+        console.error("Failed to fetch wallet history:", err);
+        setError("Failed to load wallet history.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWalletHistory();
+  }, []);
+
+  if (loading) return <p>Loading withdrawals...</p>;
+  if (error) return <p>{error}</p>;
+
+  return (
+    <div>
+        <button
+        className="create-withdrawal-btn"
+        onClick={() => setIsModalOpen(true)}
+      >
+        Create Withdrawal
+      </button>
+   
+        {/* Withdrawal Modal */}
+        <WithdrawalFormModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+    
+      {walletHistory.length === 0 ? (
+        <p>No withdrawals found.</p>
+      ) : (
+        walletHistory.map((transaction) => (
+          <Withdrawal key={transaction.id} transaction={transaction} />
+        ))
+      )}
+    </div>
+  );
+};
+
+export default WithdrawalsList;
