@@ -38,14 +38,12 @@ const WalletPage = () => {
   useEffect(() => {
     const fetchWalletHistory = async () => {
       setLoading(true);
-      setError("");
-      const token = localStorage.getItem("candra"); 
+      setError(""); 
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get(
           "/api/v1/admin/wallet_histories"
         );
-  
         const { fundings, renewals, withdrawals } = response.data;
   
         if (!fundings || !renewals || !withdrawals) {
