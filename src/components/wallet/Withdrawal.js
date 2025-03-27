@@ -42,7 +42,7 @@ const Withdrawal = ({ transaction = {} }) => {
               <div className="kit-info-text">
                 <strong>Purpose:</strong> {transaction.purpose || 'N/A'}
               </div>
-            </>
+          
         
 
           {/* Date */}
