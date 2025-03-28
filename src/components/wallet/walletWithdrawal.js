@@ -31,9 +31,13 @@ const WithdrawalsList = () => {
           date: item.created_at ? new Date(item.created_at) : null,
           email: item.user_email || item.email,
           reference: item.kit_number || item.reference,
+          purpose: item.purpose
         }));
-
-        setWalletHistory(formattedWithdrawals);
+        const sortedTransactions = [ ...formattedWithdrawals].sort(
+          (a, b) => b.date - a.date
+        );
+  
+        setWalletHistory(sortedTransactions);
       } catch (err) {
         console.error("Failed to fetch wallet history:", err);
         setError("Failed to load wallet history.");

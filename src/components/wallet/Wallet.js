@@ -59,12 +59,13 @@ const WalletPage = () => {
             date: new Date(item.created_at), // Store as Date object for sorting
             email: item.user_email || item.email,
             reference: item.kit_number || item.reference,
+            purpose: item.purpose
           }));
   
         const formattedFundings = formatTransactions(fundings, "Funding");
         const formattedRenewals = formatTransactions(renewals, "Renewal");
         const formattedWithdrawals = formatTransactions(withdrawals, "Withdrawal");
-  
+  console.log(formattedWithdrawals)
         // Merge and sort transactions by date (recent first)
         const sortedTransactions = [...formattedFundings, ...formattedRenewals, ...formattedWithdrawals].sort(
           (a, b) => b.date - a.date

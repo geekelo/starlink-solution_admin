@@ -5,7 +5,7 @@ import WithdrawalFormModal from "./withdrawalForm";
 
 const Withdrawal = ({ transaction = {} }) => {
  
-
+console.log(transaction)
   return (
     <div>
      
