@@ -77,7 +77,7 @@ const RenewalPage = () => {
 
       const method = formData.id ? "patch" : "post"; // Use POST for creating, PATCH for updating
 
-      const response = await axiosInstance[method](url, {
+    await axiosInstance[method](url, {
         ...formData,
         kit_number: formData.kit_number,
       });
