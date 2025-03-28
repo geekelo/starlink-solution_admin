@@ -38,32 +38,37 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
-
-        const formattedKits = response.data.map((kit) => ({
-          kitId: kit.id,
-          kitNo: kit.kit_number,
-          username: kit.owner_name,
-          email: kit.owner_email,
-          phoneNumber: kit.owner_phone_number,
-          address: kit.address,
-          companyName: kit.company_name || "N/A",
-          nin: kit.nin,
-          status: kit.is_active ? "Active" : "Inactive",
-          plan: "N/A",
-          serviceNo: kit.service_line_number || "N/A",
-          dateAdded: kit.created_at.split("T")[0],
-        }));
-
+  
+        const formattedKits = response.data
+          .map((kit) => ({
+            kitId: kit.id,
+            kitNo: kit.kit_number,
+            username: kit.owner_name,
+            email: kit.owner_email,
+            phoneNumber: kit.owner_phone_number,
+            address: kit.address,
+            companyName: kit.company_name || "N/A",
+            nin: kit.nin,
+            status: kit.is_active ? "Active" : "Inactive",
+            plan: "N/A",
+            serviceNo: kit.service_line_number || "N/A",
+            dateAdded: kit.created_at.split("T")[0],
+            createdAt: new Date(kit.created_at), // Convert to Date for sorting
+          }))
+          .sort((a, b) => b.createdAt - a.createdAt); // Sort from newest to oldest
+  
         setKits(formattedKits);
       } catch (err) {
+        console.error("Error fetching kits:", err);
         setError("Failed to load kits. Please try again.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchKits();
   }, []);
+  
 
   useEffect(() => {
     if (selectedKit) {
