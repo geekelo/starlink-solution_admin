@@ -7,15 +7,15 @@ const KitModal = ({ isOpen, formData, handleChange, handleSave, closeModal, erro
 
   return (
     <div className="modal-overlay">
-      <div className="user-modal-container">
-        <div className="modal-header">
+      <div className="funding-modal">
+        <div className="funding-modal-header">
           <h3 className="user-modal-title">Edit Kit</h3>
           <X size={20} className="close-icon" onClick={closeModal} />
         </div>
 
         {error && <p className="error-message">{error}</p>}
 
-        <div className="user-modal-content">
+        <div className="funding-modal-body">
           <label className="user-modal-label">Kit Number:</label>
           <input
             type="text"
