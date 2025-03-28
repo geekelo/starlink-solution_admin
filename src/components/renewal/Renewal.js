@@ -37,14 +37,22 @@ import {
   FileText,
   MoreVertical,
 
-  Eye
+  Eye,
+  Edit2
 } from 'lucide-react';
+import { useLocation } from "react-router-dom";
 
 // Renewal Component with dropdown menu for edit and view options
 const Renewal = ({ transaction, openModal }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
+  const location = useLocation();
+  const isManageRenewalsPath = location.pathname.includes('/manage-renewal');
+  
 
+  
+
+  
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -52,6 +60,7 @@ const Renewal = ({ transaction, openModal }) => {
         setShowDropdown(false);
       }
     };
+  
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
@@ -64,11 +73,11 @@ const Renewal = ({ transaction, openModal }) => {
     setShowDropdown(!showDropdown);
   };
 
-  // const handleEditClick = (e) => {
-  //   e.stopPropagation();
-  //   setShowDropdown(false);
-  //   openModal("edit", transaction);
-  // };
+  const handleEditClick = (e) => {
+    e.stopPropagation();
+    setShowDropdown(false);
+    openModal("edit", transaction);
+  };
 
   const handleViewClick = (e) => {
     e.stopPropagation();
@@ -91,14 +100,16 @@ const Renewal = ({ transaction, openModal }) => {
       {/* Dropdown Menu */}
       {showDropdown && (
         <div className="dropdown-menu" ref={dropdownRef}>
-          {/* <div className="dropdown-item" onClick={handleEditClick}>
-            <Edit2 size={16} />
-            Edit
-          </div> */}
+      
+       
           <div className="dropdown-item" onClick={handleViewClick}>
             <Eye size={16} />
             View Details
           </div>
+          {isManageRenewalsPath &&    <div className="dropdown-item" onClick={handleEditClick}>
+            <Edit2 size={16} />
+            Edit
+          </div>}
         </div>
       )}
       
@@ -116,11 +127,12 @@ const Renewal = ({ transaction, openModal }) => {
           <CheckCircle size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Status:</strong> 
-          <span className="status-badge renewal">
-            {transaction?.status || "Pending"}
-          </span>
-        </div>
+  <strong>Status:</strong> 
+  <span className={`status-badge ${transaction?.status?.toLowerCase()}`}>
+    {transaction?.status || "Receipt"}
+  </span>
+</div>
+
         
         {/* Amount */}
         <div className="kit-info-icon">

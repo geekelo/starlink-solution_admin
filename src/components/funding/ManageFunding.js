@@ -2,7 +2,10 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Wallet.css";
-import { Edit, X, CheckCircle } from "lucide-react";
+import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import Funding from "./funding";
+import CreateFundingModal from "./CreateFunding";
+import SuccessModal from "./Success-Modal";
 
 const FundingPage = () => {
   const location = useLocation();
@@ -15,9 +18,9 @@ const FundingPage = () => {
   const [fundingData, setFundingData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
-
+  const [searchResult, setSearchResult] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [showSuccessModal, setShowSuccessModal] = useState(false); // Success modal state
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [newFunding, setNewFunding] = useState({
     email: "",
@@ -27,17 +30,28 @@ const FundingPage = () => {
     status: "pending",
   });
 
+  // Handle URL parameters for automatic search
   useEffect(() => {
     if (userEmail) {
+      setEmail(userEmail);
       handleSearch();
     }
   }, [userEmail]);
 
+  // Reset search result state when email is cleared
+  useEffect(() => {
+    if (!email) {
+      setSearchResult(false);
+    }
+  }, [email]);
+
   const handleSearch = async () => {
     if (!email) return;
+    
     setLoading(true);
     setError("");
     setFundingData([]);
+    setSearchResult(true); // Set search result to true when search is performed
 
     try {
       const axiosInstance = createAxiosInstance();
@@ -84,7 +98,7 @@ const FundingPage = () => {
       });
 
       setShowModal(false);
-      setShowSuccessModal(true); // Show success modal
+      setShowSuccessModal(true);
       setNewFunding({
         email: "",
         amount: "",
@@ -92,7 +106,11 @@ const FundingPage = () => {
         payment_method: "",
         status: "pending",
       });
-      handleSearch();
+      
+      // If the created funding matches the current search, refresh results
+      if (newFunding.email === email) {
+        handleSearch();
+      }
     } catch (err) {
       setError("Failed to create funding.");
     } finally {
@@ -105,184 +123,136 @@ const FundingPage = () => {
   const currentFunding = fundingData.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div className="wallet-container">
-      <div className="wallet-nav">
-        <h2 className="wallet-header">Manage Funding Request</h2>
-        <div className="funding-search-container">
-          <div className="funding-search-bar">
+    <div className="kit-container-renewal">
+      {/* Actions bar - search and create button in one line */}
+      <div className="kit-actions-bar">
+        <div className="kit-search-wrapper">
+          <div className="kit-search-input-container">
+            <Search size={24} color="#b6bbc1" className="kit-search-icon"/>
             <input
               type="email"
-              className="funding-search-input"
+              className="kit-search-input"
               placeholder="Enter user email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button
-              className="funding-search-button"
-              onClick={handleSearch}
-              disabled={loading}
-            >
-              {loading ? "Searching..." : "Search"}
-            </button>
           </div>
           <button
-            className="create-funds-button"
+            className="kit-search-button"
+            onClick={handleSearch}
+            disabled={loading}
+          >
+            {loading ? "Searching..." : "Search"}
+          </button>
+        </div>
+        <div className="kit-action-wrapper">
+          <button
+            className="kit-create-button funding"
             onClick={() => setShowModal(true)}
           >
-            Create fundings
+            Create Funding
           </button>
         </div>
       </div>
-
-      {error && <p className="error-message">{error}</p>}
-
-      <div className="wallet-history">
-        {currentFunding.length > 0 ? (
-          currentFunding.map((funding, index) => (
-            <div key={index} className="history-box funding">
-              <p>
-                <strong>Date:</strong>{" "}
-                {new Date(funding.date).toLocaleDateString()}
-              </p>
-              <p>
-                <strong>Amount:</strong> ₦
-                {Number(funding.amount).toLocaleString()}
-              </p>
-              <p>
-                <strong>Reference:</strong> {funding.reference}
-              </p>
-              <p>
-                <strong>Payment Type:</strong> {funding.type}
-              </p>
-              <p>
-                <strong>Status:</strong>
-                <span className={`status ${funding.status}`}>
-                  {funding.status}
-                </span>
-              </p>
-              <button className="fundedit-button">
-                <Edit size={20} color="#fff" />
-              </button>
+    
+      {/* Header stands alone */}
+      <div className="kit-header-wrapper">
+        <h2 className="kit-header-title">Manage Funding Request</h2>
+      </div>
+    
+      {/* Content area */}
+      <div className="kit-content-area">
+        {error && <p className="kit-error-message">{error}</p>}
+    
+        {/* Loading indicator */}
+        {loading && (
+          <div className="kit-loading-container">
+            <div className="kit-spinner-large"></div>
+            <p>Loading records...</p>
+          </div>
+        )}
+    
+        {/* Show results based on search state */}
+        {searchResult && !loading && (
+          <>
+            {currentFunding.length > 0 ? (
+              <div className="kit-grid">
+                {currentFunding.map((funding) => (
+                  <Funding key={funding.id} transaction={funding} />
+                ))}
+              </div>
+            ) : (
+              <div className="kit-empty-state">
+                <div className="kit-empty-icon">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  </svg>
+                </div>
+                <h3 className="kit-empty-title">No Records Found</h3>
+                <p className="kit-empty-message">We couldn't find any funding records for email: <span className="kit-highlight">{email}</span></p>
+                <p className="kit-empty-suggestion">Try searching with a different email or create a new funding request.</p>
+              </div>
+            )}
+          </>
+        )}
+    
+        {/* Initial state shown when no search has been performed */}
+        {!searchResult && !loading && (
+          <div className="kit-initial-state">
+            <div className="kit-initial-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
             </div>
-          ))
-        ) : (
-          <p className="no-records">No funding records found.</p>
+            <h3 className="kit-initial-title">Ready to Search</h3>
+            <p className="kit-initial-message">Enter a user email above and click Search to view funding records.</p>
+          </div>
+        )}
+    
+        {/* Pagination */}
+        {fundingData.length > itemsPerPage && (
+        <div className="pagination">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <button
+          onClick={() => 
+            setCurrentPage((prev) => 
+              indexOfLastItem < fundingData.length ? prev + 1 : prev
+            )
+          }
+          disabled={indexOfLastItem >= fundingData.length}
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
         )}
       </div>
-
-      {fundingData.length > itemsPerPage && (
-        <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            &lt; Prev
-          </button>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) =>
-                indexOfLastItem < fundingData.length ? prev + 1 : prev
-              )
-            }
-            disabled={indexOfLastItem >= fundingData.length}
-          >
-            Next &gt;
-          </button>
-        </div>
-      )}
-
+    
+      {/* Modals */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="funding-modal">
-            <div className="funding-modal-header">
-              <h3>Create Funding Request</h3>
-              <button onClick={() => setShowModal(false)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="funding-modal-body">
-              <label>User Email</label>
-              <input
-                type="email"
-                value={newFunding.email}
-                onChange={(e) =>
-                  setNewFunding({ ...newFunding, email: e.target.value })
-                }
-              />
-
-              <label>Funding Amount</label>
-              <input
-                type="number"
-                value={newFunding.amount}
-                onChange={(e) =>
-                  setNewFunding({ ...newFunding, amount: e.target.value })
-                }
-              />
-
-              <label>Transaction Type</label>
-              <select
-                value={newFunding.type}
-                onChange={(e) =>
-                  setNewFunding({ ...newFunding, type: e.target.value })
-                }
-              >
-                <option value="">Select Transaction Type</option>
-                <option value="Card">Card</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-              </select>
-
-              <label>Status</label>
-              <select
-                value={newFunding.status}
-                onChange={(e) =>
-                  setNewFunding({ ...newFunding, status: e.target.value })
-                }
-              >
-                <option value="pending">Pending</option>
-                <option value="awaiting-approval">Awaiting Approval</option>
-                <option value="approved">Approved</option>
-                <option value="unapproved">Unapproved</option>
-                <option value="expired">Expired</option>
-              </select>
-
-              <label>Payment Method</label>
-              <select
-                value={newFunding.payment_method}
-                onChange={(e) =>
-                  setNewFunding({
-                    ...newFunding,
-                    payment_method: e.target.value,
-                  })
-                }
-              >
-                <option value="">Select Payment Method</option>
-                <option value="online">Online</option>
-                <option value="offline">Offline</option>
-              </select>
-            </div>
-
-            <div className="funding-modal-footer">
-              <button onClick={handleCreateFunding} disabled={loading}>
-                {loading ? "Processing..." : "Submit Funding Request"}
-              </button>
-              <button onClick={() => setShowModal(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
+        <CreateFundingModal
+          newFunding={newFunding}
+          setNewFunding={setNewFunding}
+          handleCreateFunding={handleCreateFunding}
+          closeModal={() => setShowModal(false)}
+          loading={loading}
+        />
       )}
-
+    
       {showSuccessModal && (
-        <div className="modal-overlay">
-          <div className="success-modal">
-            <CheckCircle size={50} color="green" />
-            <h3>Funding Request Created Successfully!</h3>
-            <button onClick={() => setShowSuccessModal(false)}>OK</button>
-          </div>
-        </div>
+        <SuccessModal
+          message="Funding Request Created Successfully!"
+          onClose={() => setShowSuccessModal(false)}
+        />
       )}
     </div>
   );
 };
+
 
 export default FundingPage;

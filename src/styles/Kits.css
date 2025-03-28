@@ -122,14 +122,14 @@
   background: #0056b3;
 }
 
-.kit-metrics {
+/* .kit-metrics {
   display: flex;
   justify-content: space-around;
   margin-bottom: 20px;
   flex-wrap: wrap;
   padding: 30px;
   border-radius: 8px;
-}
+} */
 
 .kitmetric-box {
   display: flex;
@@ -170,7 +170,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
-  padding: 20px;
+  /* padding: 20px; */
 }
 
 
@@ -482,7 +482,7 @@
   .kit-grid {
     grid-template-columns: 1fr;
     gap: 15px;
-    padding: 10px;
+    /* padding: 10px; */
   }
   
   .search-filter {

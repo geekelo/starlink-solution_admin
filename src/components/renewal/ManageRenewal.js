@@ -5,6 +5,8 @@ import "../../styles/Wallet.css";
 import KitRenewalModal from "./KitRenewalModal";
 import Renewal from "./Renewal";
 import EditKitRenewalModal from "./EditKitRenewal";
+import { Search } from "lucide-react";
+import { ViewRenewalModal } from "./ViewRenewal";
 
 const RenewalPage = () => {
   const location = useLocation();
@@ -19,7 +21,10 @@ const RenewalPage = () => {
   const [recordType, setRecordType] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [selectedRecordId, setSelectedRecordId] = useState(null);
-
+const [searchResult, setSearchResult] = useState(false)
+const [viewModalOpen, setViewModalOpen] = useState(false);
+const [editModalOpen, setEditModalOpen] = useState(false);
+const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [formData, setFormData] = useState({
     kit_number: "",
     status: "",
@@ -43,6 +48,7 @@ const RenewalPage = () => {
   const handleSearch = async () => {
     if (!kitNumber) return;
     setLoading(true);
+    setSearchResult(true)
     setError("");
     setRenewalData([]);
 
@@ -89,6 +95,11 @@ const RenewalPage = () => {
       console.error("Error:", error);
     }
   };
+  useEffect(() => {
+    if (!kitNumber) {
+      setSearchResult(false);
+    }
+  }, [kitNumber]);
 
   const handleEditRecord = async () => {
     try {
@@ -156,61 +167,179 @@ const RenewalPage = () => {
       }
     });
   };
+  const handleOpenModal = (type, transaction) => {
+    setSelectedTransaction(transaction);
+    
+    if (type === "view") {
+      setViewModalOpen(true);
+    } else if (type === "edit") {
+      setEditModalOpen(true);
+    }
+  };
 
   return (
-    <div className="wallet-container">
-      <div className="wallet-nav">
-        <h2 className="wallet-header">Manage Kit Renewals</h2>
-        <div className="funding-search-container">
-          <div className="funding-search-bar">
-            <input
-              type="text"
-              className="funding-search-input"
-              placeholder="Enter kit number"
-              value={kitNumber || ""}
-              onChange={(e) => setkitNumber(e.target.value)}
-            />
-            <button
-              className="funding-search-button"
-              onClick={handleSearch}
-              disabled={loading}
-            >
-              {loading ? "Searching..." : "Search"}
-            </button>
-          </div>
-          <div className="renew-flex">
-            <button
-              className="create-funds-button"
-              onClick={() => openModal("invoice")}
-            >
-              Create Renewal
-            </button>
-          </div>
-        </div>
+    
+<div className="kit-container-renewal">
+  {/* Actions bar - search and create button in one line */}
+  <div className="kit-actions-bar">
+    <div className="kit-search-wrapper">
+      <div className="kit-search-input-container ">
+        <Search size={24} color="#b6bbc1" className="kit-search-icon"/>
+        <input
+          type="text"
+          className="kit-search-input"
+          placeholder="Enter kit number"
+          value={kitNumber || ""}
+          onChange={(e) => setkitNumber(e.target.value)}
+        />
       </div>
+      <button
+        className="kit-search-button"
+        onClick={handleSearch}
+        disabled={loading}
+      >
+        {loading ? "Searching..." : "Search"}
+      </button>
+    </div>
+    <div className="kit-action-wrapper">
+      <button
+        className="kit-create-button"
+        onClick={() => openModal("invoice")}
+      >
+        Create Renewal
+      </button>
+    </div>
+  </div>
 
-      {error && <p className="error-message">{error}</p>}
+  {/* Header stands alone */}
+  <div className="kit-header-wrapper">
+    <h2 className="kit-header-title">Manage Kit Renewals</h2>
+  </div>
 
-      {renewalData.length > 0 ? (
-        renewalData.map((item) => (
-          <Renewal key={item.id} transaction={item} openModal={openModal} />
-        ))
-      ) : (
-        <p className="error-message">No records found.</p>
-      )}
+  {/* Content area */}
+  <div className="kit-content-area">
+    {/* {error && <p className="kit-error-message">{error}</p>} */}
 
-      {showModal && (
-        <EditKitRenewalModal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          recordType={recordType}
-          formData={formData}
-          handleInputChange={handleInputChange}
-          handleCreateRecord={editMode ? handleEditRecord : handleCreateRecord}
-          editMode={editMode}
+    {/* Loading indicator now appears below search results */}
+    {loading && (
+      <div className="kit-loading-container">
+        <div className="kit-spinner-large"></div>
+        <p>Loading records...</p>
+      </div>
+    )}
+
+    {/* Show results only after a search has been performed (searchResultflag) */}
+    {searchResult && !loading && (
+      <>
+        {renewalData.length > 0 ? (
+          <div className="kit-grid">
+            {renewalData.map((item) => (
+              <Renewal key={item.id} transaction={item}   openModal={handleOpenModal}  />
+            ))}
+          </div>
+        ) : (
+          <div className="kit-empty-state">
+            <div className="kit-empty-icon">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+              </svg>
+            </div>
+            <h3 className="kit-empty-title">No Records Found</h3>
+            <p className="kit-empty-message">We couldn't find any renewals for kit number: <span className="kit-highlight">{kitNumber}</span></p>
+            <p className="kit-empty-suggestion">Try searching with a different kit number or create a new renewal.</p>
+          </div>
+        )}
+      </>
+    )}
+
+    {/* Initial state shown when no search has been performed */}
+    {!searchResult && !loading && (
+      <div className="kit-initial-state">
+        <div className="kit-initial-icon">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+        </div>
+        <h3 className="kit-initial-title">Ready to Search</h3>
+        <p className="kit-initial-message">Enter a kit number above and click Search to view renewal records.</p>
+      </div>
+    )}
+  </div>
+  {viewModalOpen && selectedTransaction && (
+        <ViewRenewalModal
+          isOpen={viewModalOpen}
+          closeModal={() => setViewModalOpen(false)}
+          transaction={selectedTransaction}
         />
       )}
-    </div>
+  {editModalOpen && selectedTransaction && (
+    <EditKitRenewalModal
+    isOpen={editModalOpen}
+    closeModal={() => setEditModalOpen(false)}
+    transaction={selectedTransaction}
+    onSave={handleEditRecord}
+      // recordType={recordType}
+      // formData={formData}
+      // handleInputChange={handleInputChange}
+      // handleCreateRecord={editMode ? handleEditRecord : handleCreateRecord}
+      // editMode={editMode}
+    />
+  )}
+</div>
+    // <div className="wallet-container">
+    //   <div className="wallet-nav">
+    //     <h2 className="wallet-header">Manage Kit Renewals</h2>
+    //     <div className="funding-search-container">
+    //       <div className="funding-search-bar">
+    //         <input
+    //           type="text"
+    //           className="funding-search-input"
+    //           placeholder="Enter kit number"
+    //           value={kitNumber || ""}
+    //           onChange={(e) => setkitNumber(e.target.value)}
+    //         />
+    //         <button
+    //           className="funding-search-button"
+    //           onClick={handleSearch}
+    //           disabled={loading}
+    //         >
+    //           {loading ? "Searching..." : "Search"}
+    //         </button>
+    //       </div>
+    //       <div className="renew-flex">
+    //         <button
+    //           className="create-funds-button"
+    //           onClick={() => openModal("invoice")}
+    //         >
+    //           Create Renewal
+    //         </button>
+    //       </div>
+    //     </div>
+    //   </div>
+
+    //   {error && <p className="error-message">{error}</p>}
+
+    //   {renewalData.length > 0 ? (
+    //     renewalData.map((item) => (
+    //       <Renewal key={item.id} transaction={item} openModal={openModal} />
+    //     ))
+    //   ) : (
+    //     <p className="error-message">No records found.</p>
+    //   )}
+
+    //   {showModal && (
+    //     <EditKitRenewalModal
+    //       showModal={showModal}
+    //       setShowModal={setShowModal}
+    //       recordType={recordType}
+    //       formData={formData}
+    //       handleInputChange={handleInputChange}
+    //       handleCreateRecord={editMode ? handleEditRecord : handleCreateRecord}
+    //       editMode={editMode}
+    //     />
+    //   )}
+    // </div>
   );
 };
 
