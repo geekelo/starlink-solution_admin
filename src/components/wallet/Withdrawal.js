@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { createAxiosInstance } from "../../config/axios";
-import { FaMoneyBillWave, FaRegStickyNote, FaCalendarAlt } from "react-icons/fa";
+
 import "../../styles/Withdrawal.css";
 import { ArrowDownCircle, CalendarDays, FileText } from "lucide-react";
 
 
 const Withdrawal = ({ transaction }) => {
+  console.log(transaction);
+  
   return (
     <div className="kit-card withdrawal">
       <h3>Withdrawal</h3>
@@ -16,17 +16,17 @@ const Withdrawal = ({ transaction }) => {
           <ArrowDownCircle size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Amount:</strong> ₦{transaction.amount ? parseFloat(transaction.amount).toLocaleString() : "0"}
+          <strong>Amount:</strong> ₦{transaction?.amount ? parseFloat(transaction?.amount).toLocaleString() : "0"}
         </div>
         
         {/* Purpose */}
-        {transaction.purpose && (
+        {transaction?.purpose && (
           <>
             <div className="kit-info-icon">
               <FileText size={16} />
             </div>
             <div className="kit-info-text">
-              <strong>Purpose:</strong> {transaction.purpose}
+              <strong>Purpose:</strong> {transaction?.purpose}
             </div>
           </>
         )}
@@ -36,7 +36,7 @@ const Withdrawal = ({ transaction }) => {
           <CalendarDays size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Date:</strong> {transaction.date ? new Date(transaction.date).toLocaleDateString() : "N/A"}
+          <strong>Date:</strong> {transaction?.date ? new Date(transaction?.date).toLocaleDateString() : "N/A"}
         </div>
       </div>
     </div>
