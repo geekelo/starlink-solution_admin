@@ -49,7 +49,7 @@ const Funding = ({ transaction }) => {
         </div>
         <div className="kit-info-text">
           <strong>Status:</strong> 
-          <span className="status-badge active">
+          <span className={`status-badge ${transaction.status }`}>
             {transaction.status || "Pending"}
           </span>
         </div>
