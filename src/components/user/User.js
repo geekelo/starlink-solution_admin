@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/User.css";
 import {
+  Calendar,
   ChevronLeft,
   ChevronRight,
   Edit,
@@ -38,23 +39,25 @@ const Users = () => {
     const fetchUsers = async () => {
       setLoading(true);
       setError("");
-
+  
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/user_records");
-
-        const formattedUsers = response.data.map((user) => ({
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone_number,
-          whatsapp: user.whatsapp_number,
-          walletID: user.wallet_id || "N/A",
-          walletBalance: user.wallet_balance || 0,
-          otp: user.kit_count || 0,
-          createdAt: user.created_at ? user.created_at.split("T")[0] : "N/A",
-        }));
-
+  
+        const formattedUsers = response.data
+          .map((user) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone_number,
+            whatsapp: user.whatsapp_number,
+            walletID: user.wallet_id || "N/A",
+            walletBalance: user.wallet_balance || 0,
+            otp: user.kit_count || 0,
+            createdAt: user.created_at ? new Date(user.created_at) : null, // Convert to Date object
+          }))
+          .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); // Sort from latest to oldest
+  
         setUsers(formattedUsers);
       } catch (err) {
         console.error(
@@ -66,9 +69,10 @@ const Users = () => {
         setLoading(false);
       }
     };
-
+  
     fetchUsers();
   }, []);
+  
   const handleEditClick = (users) => {
     setSelectedUser(users); // Set user details in state
     setIsModalOpen(true); // Open modal
@@ -110,12 +114,13 @@ const Users = () => {
     return (
       user.name.toLowerCase().includes(query) ||
       user.email.toLowerCase().includes(query) ||
-      user.createdAt.toLowerCase().includes(query) ||
+      (user.createdAt && user.createdAt.toISOString().toLowerCase().includes(query)) ||
       (user.phone && user.phone.includes(query)) ||
       (user.whatsapp && user.whatsapp.includes(query)) ||
       (user.walletID && user.walletID.includes(query))
     );
   });
+  
 
   const toggleDropdown = (userId, e) => {
     e.stopPropagation();
@@ -249,6 +254,13 @@ const Users = () => {
                 <div className="kit-info-text">
                   <strong>No Of Kits:</strong> {user.otp}
                 </div>
+                <div className="kit-info-icon">
+  <Calendar size={16} />
+</div>
+<div className="kit-info-text">
+  <strong>Date:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}
+</div>
+
               </div>
             </div>
           ))
