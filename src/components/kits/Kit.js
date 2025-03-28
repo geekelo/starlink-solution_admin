@@ -80,9 +80,6 @@ const KitPage = () => {
   }, [selectedKit]);
   
   const handleRenewKit = async (kitId) => {
-    console.log(`Simulating API call to renew kit with ID: ${kitId}`);
-  
-    // Simulating API response delay
     setTimeout(() => {
       console.log(`Kit with ID: ${kitId} successfully renewed!`);
       alert(`Kit with ID: ${kitId} successfully renewed!`);
@@ -143,8 +140,6 @@ const KitPage = () => {
           starlink_kit: formData,
         }
       );
-      console.log(res)
-
       setKits((prevKits) =>
         prevKits.map((kit) =>
           
@@ -177,8 +172,6 @@ const KitPage = () => {
       setError("New owner email is required.");
       return;
     }
-    console.log(transferEmail)
-    console.log(selectedKit.kitNo)
     try {
       const axiosInstance = createAxiosInstance();
    await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
