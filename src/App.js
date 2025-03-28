@@ -12,11 +12,12 @@ import Wallet from "./components/wallet/Wallet";
 import WalletPage from "./components/wallet/WalletPage";
 import KitPage from "./components/kits/Kit";
 import Users from "./components/user/User";
-import WithdrawalPage from "./components/wallet/Withdrawal";
 import Renewal from "./components/renewal/Renewal";
 import { AdminSidebar } from "./components/nav/Sidebar";
 import { MobileHeader } from "./components/nav/header";
 import MobileDrawer from "./components/nav/Nav";
+import Withdrawal from "./components/wallet/walletWithdrawal";
+import WithdrawalsList from "./components/wallet/walletWithdrawal";
 
 const AdminLayout = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -107,7 +108,7 @@ function App() {
               <Route path="/renewals" element={<RenewalPage />} />
               <Route path="/wallet" element={<Wallet />} />
               <Route path="wallet-history" element={<Wallet />} />
-              <Route path="wallet-withdrawal" element={<WithdrawalPage />} />
+              <Route path="wallet-withdrawal" element={<WithdrawalsList />} />
               <Route path="kits" element={<KitPage />} />
               <Route path="users" element={<Users />} />
               <Route path="manage-funds" element={<FundingPage />} />
