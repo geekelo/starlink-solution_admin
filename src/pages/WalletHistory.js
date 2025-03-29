@@ -18,6 +18,7 @@ import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 
 import Withdrawal from "../components/wallet/Withdrawal";
 import { createAxiosInstance } from "../config/axios";
+import { AppLoader } from "../components/Loader/loader";
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -185,9 +186,7 @@ const WalletPage = () => {
       {/* Transactions Grid */}
       <div className="kit-grid">
         {loading ? (
-          <div className="loading-spinner-container">
-            <div className="loading-spinner"></div>
-          </div>
+         <AppLoader/>
         ) : currentTransactions.length === 0 ? (
           <div className="no-transactions">
             <p>No transactions found.</p>

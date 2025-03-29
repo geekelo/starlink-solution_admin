@@ -5,6 +5,7 @@ import InvoiceReminder from "../components/reminders/InvoiceReminder";
 import KitCard from "../components/request/KitCard";
 import FundingCard from "../components/request/FundCard";
 import { Box, HandCoins } from "lucide-react";
+import { AppLoader } from "../components/Loader/loader";
 
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("funding");
@@ -88,10 +89,7 @@ const Requests = () => {
       </div>
       
       {loading ? (
-         <div className="kit-loading-container">
-         <div className="kit-spinner-large"></div>
-        
-       </div>
+         <AppLoader />
       ) : (
         <>
           {activeTab === "funding" && (

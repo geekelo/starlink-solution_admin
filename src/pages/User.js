@@ -20,6 +20,7 @@ import {
   WalletCards,
   WalletMinimal,
 } from "lucide-react";
+import { AppLoader } from "../components/Loader/loader";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -181,9 +182,7 @@ const Users = () => {
 
       <div className="kit-grid">
         {loading ? (
-          <div className="loading-spinner-container">
-            <div className="loading-spinner"></div>
-          </div>
+        <AppLoader/>
         ) : currentUsers.length > 0 ? (
           currentUsers.map((user) => (
             <div key={user.id} className={`user-card active`}>

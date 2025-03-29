@@ -2,10 +2,13 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
-import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import Funding from "../components/funding/funding";
 import CreateFundingModal from "../components/funding/CreateFunding";
 import SuccessModal from "../components/funding/Success-Modal";
+import { FormInput } from "../components/FormInput/Input";
+import AppButton from "../components/AppButton/Button";
+import { AppLoader } from "../components/Loader/loader";
 
 const FundingPage = () => {
   const location = useLocation();
@@ -136,7 +139,10 @@ const FundingPage = () => {
       <div className="kit-actions-bar">
         <div className="kit-search-wrapper">
           <div className="kit-search-input-container">
+       
+     
             <Search size={24} color="#b6bbc1" className="kit-search-icon"/>
+
             <input
               type="email"
               className="kit-search-input"
@@ -145,6 +151,8 @@ const FundingPage = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+        
+      
           <button
             className="kit-search-button"
             onClick={handleSearch}
@@ -154,12 +162,22 @@ const FundingPage = () => {
           </button>
         </div>
         <div className="kit-action-wrapper">
-          <button
+        <AppButton   variant="custom"
+          backgroundColor="#eab308"
+          leftIcon={<Plus/>}
+          textColor="#ffffff"
+          loading={loading}
+          loadingText="Creating..."
+          disabled={loading}
+        onClick={() => setShowModal(true)}>
+ Create Funding
+          </AppButton>
+          {/* <button
             className="kit-create-button funding"
             onClick={() => setShowModal(true)}
           >
             Create Funding
-          </button>
+          </button> */}
         </div>
       </div>
     
@@ -175,10 +193,7 @@ const FundingPage = () => {
     
         {/* Loading indicator */}
         {loading && (
-          <div className="kit-loading-container">
-            <div className="kit-spinner-large"></div>
-            <p>Loading records...</p>
-          </div>
+        <AppLoader/>
         )}
     
         {/* Show results based on search state */}

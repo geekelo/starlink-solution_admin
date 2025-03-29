@@ -5,8 +5,10 @@ import "../styles/Wallet.css";
 import KitRenewalModal from "../components/renewal/KitRenewalModal";
 import Renewal from "../components/renewal/Renewal";
 import EditKitRenewalModal from "../components/renewal/EditKitRenewal";
-import { Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
+import AppButton from "../components/AppButton/Button";
+import { AppLoader } from "../components/Loader/loader";
 
 const RenewalPage = () => {
   const location = useLocation();
@@ -175,6 +177,9 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
     } else if (type === "edit") {
       setEditModalOpen(true);
     }
+    else {
+      
+    }
   };
 
   return (
@@ -202,12 +207,22 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
       </button>
     </div>
     <div className="kit-action-wrapper">
-      <button
+      <AppButton     
+      variant="custom"
+              backgroundColor="#eab308"
+              textColor="#ffffff"
+         
+              leftIcon={<Plus/>}
+              onClick={() => openModal("invoice")}
+              >
+      Create Renewal
+      </AppButton>
+      {/* <button
         className="kit-create-button"
         onClick={() => openModal("invoice")}
       >
-        Create Renewal
-      </button>
+       
+      </button> */}
     </div>
   </div>
 
@@ -222,10 +237,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
 
     {/* Loading indicator now appears below search results */}
     {loading && (
-      <div className="kit-loading-container">
-        <div className="kit-spinner-large"></div>
-
-      </div>
+   <AppLoader/>
     )}
 
     {/* Show results only after a search has been performed (searchResultflag) */}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createAxiosInstance } from "../config/axios";
 import Withdrawal from "../components/wallet/Withdrawal";
 import WithdrawalFormModal from "../components/wallet/withdrawalForm";
+import { AppLoader } from "../components/Loader/loader";
 
 const WithdrawalsList = () => {
   const [walletHistory, setWalletHistory] = useState([]);
@@ -64,9 +65,7 @@ const WithdrawalsList = () => {
       
       {/* Loading Spinner */}
       {loading && (
-        <div className="loading-spinner-container">
-          <div className="loading-spinner"></div>
-        </div>
+     <AppLoader/>
       )}
       
       {/* Error Message */}
