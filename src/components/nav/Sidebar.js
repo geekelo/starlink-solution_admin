@@ -19,7 +19,7 @@ export const AdminSidebar = ({ expanded, onMouseEnter, onMouseLeave }) => {
     { icon: <Package size={20} />, name: 'Kits', path: '/kits' },
     { icon: <Users size={20} />, name: 'Users', path: '/users' },
     { icon: <DollarSign size={20} />, name: 'Manage Funding', path: '/manage-funds' },
-    { icon: <RefreshCw size={20} />, name: 'Manage Renewals', path: '/manage-renewal' },
+    { icon: <RefreshCw size={20} />, name: 'Manage Renewals', path: '/monthly-renewals' },
   ];
   
   return (

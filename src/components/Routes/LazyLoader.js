@@ -4,6 +4,7 @@ import { lazy } from "react";
 export const Login = lazy(() => import("../../pages/Login"));
 export const SignUp = lazy(() => import("../../pages/SignUp"));
 export const AdminLayout = lazy(() => import("../AppLayout/layout"));
+export const Dashboard = lazy(() => import("../../pages/dashboard"));
 export const Requests = lazy(() => import("../../pages/Request"));
 export const UserDetails = lazy(() => import("../../pages/Userdetail"));
 export const FundingPage = lazy(() => import("../../pages/ManageFunding"));

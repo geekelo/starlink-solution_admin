@@ -1,7 +1,7 @@
 import { Suspense, } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SuspenseLoader } from "./Suspense";
-import { AdminLayout, FundingPage, KitPage, Login, RenewalPage, Requests, SignUp, UserDetails, Users, Wallet, WalletHistory, WithdrawalsList } from "./LazyLoader";
+import { AdminLayout, Dashboard, FundingPage, KitPage, Login, RenewalPage, Requests, SignUp, UserDetails, Users, Wallet, WalletHistory, WithdrawalsList } from "./LazyLoader";
 
 
 
@@ -29,7 +29,8 @@ const AppRouter = () => {
               
               {/* Protected Routes with AdminLayout */}
               <Route element={<AdminLayout />}>
-                <Route path="/" element={<Requests />} />
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/requests" element={<Requests />} />
                 <Route path="/user/:id" element={<UserDetails />} />
                 <Route path="/funding" element={<FundingPage />} />
                 <Route path="/renewals" element={<RenewalPage />} />

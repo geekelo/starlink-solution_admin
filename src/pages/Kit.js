@@ -1,6 +1,27 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { createAxiosInstance } from "../config/axios";
-import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays,  ChevronLeft, ChevronRight, Repeat2, FolderOpenDot } from "lucide-react";
+import {
+  Package,
+  CheckCircle,
+  XCircle,
+  Search,
+  Filter,
+  Edit2,
+  MoreVertical,
+  RefreshCw,
+  MapPin,
+  CreditCard,
+  Building,
+  Tag,
+  Phone,
+  User,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  Repeat2,
+  FolderOpenDot,
+  MailIcon,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Kits.css";
 import KitModal from "../components/kits/kitModal";
@@ -20,7 +41,7 @@ const KitPage = () => {
 
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferEmail, setTransferEmail] = useState("");
-  
+
   const [formData, setFormData] = useState({
     kit_number: selectedKit?.kit_number || "",
     address: selectedKit?.address || "",
@@ -38,7 +59,8 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
-  
+       
+
         const formattedKits = response.data
           .map((kit) => ({
             kitId: kit.id,
@@ -49,14 +71,14 @@ const KitPage = () => {
             address: kit.address,
             companyName: kit.company_name || "N/A",
             nin: kit.nin,
-            status: kit.is_active ? "Active" : "Inactive",
+            status: kit.status,
             plan: "N/A",
             serviceNo: kit.service_line_number || "N/A",
             dateAdded: kit.created_at.split("T")[0],
             createdAt: new Date(kit.created_at), // Convert to Date for sorting
           }))
           .sort((a, b) => b.createdAt - a.createdAt); // Sort from newest to oldest
-  
+
         setKits(formattedKits);
       } catch (err) {
         console.error("Error fetching kits:", err);
@@ -65,10 +87,9 @@ const KitPage = () => {
         setLoading(false);
       }
     };
-  
+
     fetchKits();
   }, []);
-  
 
   useEffect(() => {
     if (selectedKit) {
@@ -83,14 +104,14 @@ const KitPage = () => {
       });
     }
   }, [selectedKit]);
-  
+
   const handleRenewKit = async (kitId) => {
     setTimeout(() => {
       console.log(`Kit with ID: ${kitId} successfully renewed!`);
       alert(`Kit with ID: ${kitId} successfully renewed!`);
     }, 1000);
   };
-  
+
   const filteredKits = useMemo(() => {
     if (!Array.isArray(kits)) return [];
     if (!searchQuery) return kits;
@@ -104,6 +125,9 @@ const KitPage = () => {
         return kitMonth === searchQuery;
       }
       if (searchType === "year") return kit.dateAdded.startsWith(searchQuery);
+      if (searchType === "email") {
+        return kit.email?.toLowerCase().includes(searchQuery.toLowerCase());
+      }
 
       return kit[searchType]
         ?.toString()
@@ -147,7 +171,6 @@ const KitPage = () => {
       );
       setKits((prevKits) =>
         prevKits.map((kit) =>
-          
           kit.kitId === selectedKit.kitId
             ? {
                 ...kit,
@@ -179,11 +202,11 @@ const KitPage = () => {
     }
     try {
       const axiosInstance = createAxiosInstance();
-   await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
+      await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
         kit_number: selectedKit.kitNo,
         new_owner_email: transferEmail,
       });
-     
+
       setKits((prevKits) =>
         prevKits.map((kit) =>
           kit.kitNo === selectedKit.kitNo
@@ -201,14 +224,11 @@ const KitPage = () => {
   const openTransferModal = (kit) => {
     setSelectedKit(kit);
     setIsTransferModalOpen(true);
-   
   };
   const closeTransferModal = () => {
     setIsTransferModalOpen(false);
     setTransferEmail("");
   };
-
-
 
   const toggleDropdown = (kitId, e) => {
     e.stopPropagation();
@@ -218,18 +238,22 @@ const KitPage = () => {
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) && !event.target.closest('.menu-dots')) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        !event.target.closest(".menu-dots")
+      ) {
         setActiveDropdown(null);
       }
     };
-    
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    }; }, [dropdownRef]);
-    const itemsPerPage = currentKits.length - 1;
-    const indexOfLastItem = currentPage * itemsPerPage;
 
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
+  const itemsPerPage = currentKits.length - 1;
+  const indexOfLastItem = currentPage * itemsPerPage;
 
   return (
     <div className="kit-container">
@@ -251,6 +275,7 @@ const KitPage = () => {
               <option value="month">Month</option>
               <option value="year">Year</option>
               <option value="username">User</option>
+              <option value="email">Email</option>
             </select>
           </div>
           <div className="search-box">
@@ -295,7 +320,7 @@ const KitPage = () => {
             <Package size={40} color="#b6bbc1" />
             <h4>Total Kits</h4>
           </div>
-          <p>{loading ? '-' : metrics.total}</p>
+          <p>{loading ? "-" : metrics.total}</p>
         </div>
 
         <div className="kitmetric-box">
@@ -303,7 +328,7 @@ const KitPage = () => {
             <CheckCircle size={40} color="green" />
             <h4>Active Kits</h4>
           </div>
-          <p>{loading ? '-' : metrics.active}</p>
+          <p>{loading ? "-" : metrics.active}</p>
         </div>
 
         <div className="kitmetric-box">
@@ -311,162 +336,172 @@ const KitPage = () => {
             <XCircle size={40} color="#ff1500b8" />
             <h4>Inactive Kits</h4>
           </div>
-          <p>{loading ? '-' : metrics.inactive}</p>
+          <p>{loading ? "-" : metrics.inactive}</p>
         </div>
       </div>
       <div className="kit-grid">
-      {loading ? (
-        <div className="loading-spinner-container">
-          <div className="loading-spinner"></div>
-        </div>
-      ) : (
-        currentKits.map((kit) => (
-          <div key={kit.kitId} className={`kit-card ${kit.status.toLowerCase()}`}>
-            <h3>
-              Kit No: {kit.kitNo}
-              <div 
-                className="menu-dots" 
-                onClick={(e) => toggleDropdown(kit.kitId, e)}
-              >
-                <MoreVertical size={20} />
-              </div>
-            </h3>
-            
-            {/* Dropdown Menu */}
-            {activeDropdown === kit.kitId && (
-              <div className="dropdown-menu" ref={dropdownRef}>
-                <div 
-                  className="dropdown-item" 
-                  onClick={() => {
-                    openModal(kit);
-                    setActiveDropdown(null);
-                  }}
-                >
-                  <Edit2 size={16} />
-                  Edit
-                </div>
-                <div 
-                  className="dropdown-item" 
-                  onClick={() => {
-                    goToRenewals(kit);
-                    setActiveDropdown(null);
-                  }}
-                >
-                  <RefreshCw size={16} />
-                  Renewals
-                </div>
-                <div 
-                  className="dropdown-item" 
-                  onClick={() => openTransferModal(kit)}
-                >
-              
-                  <FolderOpenDot size={16} />
-                  Transfer
-                </div>
-                <div 
-                  className="dropdown-item" 
-                  onClick={() => handleRenewKit(kit.kitId)}
-                >
-                  <Repeat2 size={16} />
-                  Renew
-                </div>
-          
-              </div>
-            )}
-            
-            {/* Grid layout with icons for each field */}
-            <div className="kit-info-grid">
-              {/* Address */}
-              <div className="kit-info-icon">
-                <MapPin size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>Address:</strong> {kit.address}
-              </div>
-              
-              {/* NIN */}
-              <div className="kit-info-icon">
-                <CreditCard size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>NIN:</strong> {kit.nin}
-              </div>
-              
-              {/* Company */}
-              <div className="kit-info-icon">
-                <Building size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>Company:</strong> {kit.companyName}
-              </div>
-              
-              {/* Status */}
-              <div className="kit-info-icon">
-                {kit.status === "active" ? <CheckCircle size={16} /> : <XCircle size={16} />}
-              </div>
-              <div className="kit-info-text">
-                <strong>Status:</strong> 
-                <span className={`status-badge ${kit.status}`}>{kit.status}</span>
-              </div>
-              
-              {/* Plan */}
-              <div className="kit-info-icon">
-                <Tag size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>Plan:</strong> {kit.plan}
-              </div>
-              
-              {/* Service No */}
-              <div className="kit-info-icon">
-                <Phone size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>Service No:</strong> {kit.serviceNo}
-              </div>
-              
-              {/* Username */}
-              <div className="kit-info-icon">
-                <User size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>Username:</strong> {kit.username}
-              </div>
-              
-              {/* Date */}
-              <div className="kit-info-icon">
-                <CalendarDays size={16} />
-              </div>
-              <div className="kit-info-text">
-                <strong>Date:</strong> {kit.dateAdded}
-              </div>
-              
-          
-
-            </div>
+        {loading ? (
+          <div className="loading-spinner-container">
+            <div className="loading-spinner"></div>
           </div>
-        ))
-      )}
-    </div>
+        ) : (
+          currentKits.map((kit) => (
+            <div
+              key={kit.kitId}
+              className={`kit-card ${kit.status.toLowerCase()}`}
+            >
+              <h3>
+                Kit No: {kit.kitNo}
+                <div
+                  className="menu-dots"
+                  onClick={(e) => toggleDropdown(kit.kitId, e)}
+                >
+                  <MoreVertical size={20} />
+                </div>
+              </h3>
 
-    <div className="pagination">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) =>
-                indexOfLastItem < currentKits.length ? prev + 1 : prev
-              )
-            }
-            disabled={indexOfLastItem >= currentKits.length}
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
+              {/* Dropdown Menu */}
+              {activeDropdown === kit.kitId && (
+                <div className="dropdown-menu" ref={dropdownRef}>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => {
+                      openModal(kit);
+                      setActiveDropdown(null);
+                    }}
+                  >
+                    <Edit2 size={16} />
+                    Edit
+                  </div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => {
+                      goToRenewals(kit);
+                      setActiveDropdown(null);
+                    }}
+                  >
+                    <RefreshCw size={16} />
+                    Renewals
+                  </div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => openTransferModal(kit)}
+                  >
+                    <FolderOpenDot size={16} />
+                    Transfer
+                  </div>
+                  <div
+                    className="dropdown-item"
+                    onClick={() => handleRenewKit(kit.kitId)}
+                  >
+                    <Repeat2 size={16} />
+                    Renew
+                  </div>
+                </div>
+              )}
+
+              {/* Grid layout with icons for each field */}
+              <div className="kit-info-grid">
+                {/* Address */}
+                <div className="kit-info-icon">
+                  <MapPin size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Address:</strong> {kit.address}
+                </div>
+
+                {/* NIN */}
+                <div className="kit-info-icon">
+                  <CreditCard size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>NIN:</strong> {kit.nin}
+                </div>
+
+                {/* Company */}
+                <div className="kit-info-icon">
+                  <Building size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Company:</strong> {kit.companyName}
+                </div>
+
+                {/* Status */}
+                <div className="kit-info-icon">
+                  {kit.status === "active" ? (
+                    <CheckCircle size={16} />
+                  ) : (
+                    <XCircle size={16} />
+                  )}
+                </div>
+                <div className="kit-info-text">
+                  <strong>Status:</strong>
+                  <span className={`status-badge ${kit.status}`}>
+                    {kit.status}
+                  </span>
+                </div>
+
+                {/* Plan */}
+                <div className="kit-info-icon">
+                  <Tag size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Plan:</strong> {kit.plan}
+                </div>
+
+                {/* Service No */}
+                <div className="kit-info-icon">
+                  <Phone size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Service No:</strong> {kit.serviceNo}
+                </div>
+
+                {/* Username */}
+                <div className="kit-info-icon">
+                  <User size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Owner's Name:</strong> {kit.username}
+                </div>
+                <div className="kit-info-icon">
+                  <MailIcon size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Owner's Email:</strong> {kit.email}
+                </div>
+
+                {/* Date */}
+                <div className="kit-info-icon">
+                  <CalendarDays size={16} />
+                </div>
+                <div className="kit-info-text">
+                  <strong>Date:</strong> {kit.dateAdded}
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      <div className="pagination">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+        >
+          <ChevronLeft size={18} />
+        </button>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) =>
+              indexOfLastItem < currentKits.length ? prev + 1 : prev
+            )
+          }
+          disabled={indexOfLastItem >= currentKits.length}
+        >
+          <ChevronRight size={18} />
+        </button>
+      </div>
 
       <KitModal
         isOpen={isModalOpen}
