@@ -28,6 +28,7 @@ const FundingPage = () => {
     type: "",
     payment_method: "",
     status: "pending",
+    date:""
   });
 
   // Handle URL parameters for automatic search
@@ -51,17 +52,21 @@ const FundingPage = () => {
     setLoading(true);
     setError("");
     setFundingData([]);
-    setSearchResult(true); // Set search result to true when search is performed
+    setSearchResult(true); 
 
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get(
         `/api/v1/admin/user_fundings?email=${email}`
-      );
 
-      const sortedData = response.data.sort(
-        (a, b) => new Date(b.date) - new Date(a.date)
       );
+    
+      const sortedData = response.data.map((funding) => ({
+        ...funding,
+        email: funding.user_email || "N/A",
+        date: funding.created_at ? new Date(funding.created_at).toLocaleString() : "N/A",
+      }));
+      
       setFundingData(sortedData);
       setCurrentPage(1);
     } catch (err) {
@@ -77,7 +82,8 @@ const FundingPage = () => {
       !newFunding.amount ||
       !newFunding.type ||
       !newFunding.payment_method ||
-      !newFunding.status
+      !newFunding.status ||
+      !newFunding.date
     ) {
       setError("Please fill all fields.");
       return;
@@ -94,6 +100,7 @@ const FundingPage = () => {
           amount: Number(newFunding.amount),
           payment_method: newFunding.payment_method,
           status: newFunding.status,
+          date: newFunding.date
         },
       });
 
@@ -105,6 +112,7 @@ const FundingPage = () => {
         type: "",
         payment_method: "",
         status: "pending",
+        date:""
       });
       
       // If the created funding matches the current search, refresh results
@@ -157,7 +165,7 @@ const FundingPage = () => {
     
       {/* Header stands alone */}
       <div className="kit-header-wrapper">
-        <h2 className="kit-header-title">Manage Funding Request</h2>
+        <h2 className="kit-header-title"> Funding </h2>
       </div>
     
       {/* Content area */}
