@@ -107,7 +107,7 @@ const Renewal = ({ transaction, openModal }) => {
           <FileText size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Kit Number:</strong> {transaction?.reference || "N/A"}
+          <strong>Kit Number:</strong> {transaction?.reference || transaction?.kit_number || "N/A"}
         </div>
 
         {/* Status */}
@@ -139,11 +139,14 @@ const Renewal = ({ transaction, openModal }) => {
           <CalendarDays size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Date:</strong>{" "}
-          {transaction?.date
-            ? new Date(transaction.date).toLocaleDateString()
-            : "N/A"}
-        </div>
+  <strong>Date:</strong>{" "}
+  {transaction?.date
+    ? new Date(transaction.date).toLocaleDateString()
+    : transaction?.date_of_renewal
+    ? new Date(transaction.date_of_renewal).toLocaleDateString()
+    : "N/A"}
+</div>
+
       </div>
     </div>
   );
