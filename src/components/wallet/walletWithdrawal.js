@@ -49,33 +49,42 @@ const WithdrawalsList = () => {
     fetchWalletHistory();
   }, []);
 
-  if (loading) return <p>Loading withdrawals...</p>;
-  if (error) return <p>{error}</p>;
-
   return (
     <div>
-        <button
+      <button
         className="create-withdrawal-btn"
         onClick={() => setIsModalOpen(true)}
       >
         Create Withdrawal
       </button>
-   
-        {/* Withdrawal Modal */}
-        <WithdrawalFormModal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-        />
-    
-      {walletHistory.length === 0 ? (
-        <p>No withdrawals found.</p>
-      ) : (
-        walletHistory.map((transaction) => (
-          <Withdrawal key={transaction.id} transaction={transaction} />
-        ))
+      
+      {/* Loading Spinner */}
+      {loading && (
+        <div className="loading-spinner-container">
+          <div className="loading-spinner"></div>
+        </div>
       )}
+      
+      {/* Error Message */}
+      {error && <p className="kit-error-message">{error}</p>}
+      
+      {/* Withdrawal Modal */}
+      <WithdrawalFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
+      
+      <div className="kit-grid">
+        {!loading && walletHistory.length === 0 ? (
+          <p>No withdrawals found.</p>
+        ) : (
+          walletHistory.map((transaction) => (
+            <Withdrawal key={transaction.id} transaction={transaction} />
+          ))
+        )}
+      </div>
     </div>
   );
-};
+}
 
 export default WithdrawalsList;

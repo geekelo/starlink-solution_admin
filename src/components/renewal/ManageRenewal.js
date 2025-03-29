@@ -287,59 +287,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
     />
   )}
 </div>
-    // <div className="wallet-container">
-    //   <div className="wallet-nav">
-    //     <h2 className="wallet-header">Manage Kit Renewals</h2>
-    //     <div className="funding-search-container">
-    //       <div className="funding-search-bar">
-    //         <input
-    //           type="text"
-    //           className="funding-search-input"
-    //           placeholder="Enter kit number"
-    //           value={kitNumber || ""}
-    //           onChange={(e) => setkitNumber(e.target.value)}
-    //         />
-    //         <button
-    //           className="funding-search-button"
-    //           onClick={handleSearch}
-    //           disabled={loading}
-    //         >
-    //           {loading ? "Searching..." : "Search"}
-    //         </button>
-    //       </div>
-    //       <div className="renew-flex">
-    //         <button
-    //           className="create-funds-button"
-    //           onClick={() => openModal("invoice")}
-    //         >
-    //           Create Renewal
-    //         </button>
-    //       </div>
-    //     </div>
-    //   </div>
 
-    //   {error && <p className="error-message">{error}</p>}
-
-    //   {renewalData.length > 0 ? (
-    //     renewalData.map((item) => (
-    //       <Renewal key={item.id} transaction={item} openModal={openModal} />
-    //     ))
-    //   ) : (
-    //     <p className="error-message">No records found.</p>
-    //   )}
-
-    //   {showModal && (
-    //     <EditKitRenewalModal
-    //       showModal={showModal}
-    //       setShowModal={setShowModal}
-    //       recordType={recordType}
-    //       formData={formData}
-    //       handleInputChange={handleInputChange}
-    //       handleCreateRecord={editMode ? handleEditRecord : handleCreateRecord}
-    //       editMode={editMode}
-    //     />
-    //   )}
-    // </div>
   );
 };
 

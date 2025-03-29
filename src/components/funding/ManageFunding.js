@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Wallet.css";
-import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import {  Search, ChevronLeft, ChevronRight } from "lucide-react";
 import Funding from "./funding";
 import CreateFundingModal from "./CreateFunding";
 import SuccessModal from "./Success-Modal";

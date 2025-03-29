@@ -5,8 +5,8 @@ import WithdrawalFormModal from "./withdrawalForm";
 
 const Withdrawal = ({ transaction = {} }) => {
   return (
-    <div>
-      <div className="kit-card withdrawal">
+    <div className="kit-grid">
+      <div className=" kit-card withdrawal">
         <h3>Withdrawal</h3>
 
         <div className="kit-info-grid">

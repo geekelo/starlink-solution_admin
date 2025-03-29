@@ -51,61 +51,67 @@ const WithdrawalFormModal = ({ isOpen, onClose }) => {
   return (
     <Modal onClose={onClose}>
       <div className="withdrawal-container">
-        <h2> Withdrawal Funds</h2>
+        <div className="withdrawal-header">
+          <h2>Withdrawal Funds</h2>
+          <button className="close-btn" onClick={onClose}>×</button>
+        </div>
+        
         <p className="withdrawal-info">
           Enter details below to request a withdrawal.
         </p>
-
-        <form className="withdrawal-form" onSubmit={handleWithdraw}>
-          <div className="form-group">
-            <label htmlFor="amount">
-              <FaMoneyBillWave className="icon" /> Amount (₦)
-            </label>
-            <input
-              id="amount"
-              type="number"
-              step="0.01"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              required
-              placeholder="Enter amount"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="purpose">
-              <FaRegStickyNote className="icon" /> Purpose
-            </label>
-            <input
-              id="purpose"
-              type="text"
-              value={purpose}
-              onChange={(e) => setPurpose(e.target.value)}
-              required
-              placeholder="Reason for withdrawal"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="withdrawalDate">
-              <FaCalendarAlt className="icon" /> Withdrawal Date
-            </label>
-            <input
-              id="withdrawalDate"
-              type="date"
-              value={withdrawalDate}
-              onChange={(e) => setWithdrawalDate(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" disabled={loading} className="withdraw-btn">
-            {loading ? "Processing..." : "Withdraw Funds ➔"}
-          </button>
-
-          {message && <p className="withdrawal-message success">{message}</p>}
-          {error && <p className="withdrawal-message error">{error}</p>}
-        </form>
+        
+        <div className="withdrawal-form-container">
+          <form className="withdrawal-form" onSubmit={handleWithdraw}>
+            <div className="form-group">
+              <label htmlFor="amount">
+                <FaMoneyBillWave className="icon" /> Amount (₦)
+              </label>
+              <input
+                id="amount"
+                type="number"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                required
+                placeholder="Enter amount"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="purpose">
+                <FaRegStickyNote className="icon" /> Purpose
+              </label>
+              <input
+                id="purpose"
+                type="text"
+                value={purpose}
+                onChange={(e) => setPurpose(e.target.value)}
+                required
+                placeholder="Reason for withdrawal"
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="withdrawalDate">
+                <FaCalendarAlt className="icon" /> Withdrawal Date
+              </label>
+              <input
+                id="withdrawalDate"
+                type="date"
+                value={withdrawalDate}
+                onChange={(e) => setWithdrawalDate(e.target.value)}
+                required
+              />
+            </div>
+            
+            {message && <p className="withdrawal-message success">{message}</p>}
+            {error && <p className="withdrawal-message error">{error}</p>}
+            
+            <button type="submit" disabled={loading} className="withdraw-btn">
+              {loading ? "Processing..." : "Withdraw Funds ➔"}
+            </button>
+          </form>
+        </div>
       </div>
     </Modal>
   );
