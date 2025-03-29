@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { createAxiosInstance } from "../../config/axios";
-import "../../styles/Wallet.css";
-import KitRenewalModal from "./KitRenewalModal";
-import Renewal from "./Renewal";
-import EditKitRenewalModal from "./EditKitRenewal";
+import { createAxiosInstance } from "../config/axios";
+import "../styles/Wallet.css";
+import KitRenewalModal from "../components/renewal/KitRenewalModal";
+import Renewal from "../components/renewal/Renewal";
+import EditKitRenewalModal from "../components/renewal/EditKitRenewal";
 import { Search } from "lucide-react";
-import { ViewRenewalModal } from "./ViewRenewal";
+import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 
 const RenewalPage = () => {
   const location = useLocation();
@@ -83,7 +83,7 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
 
       const method = formData.id ? "patch" : "post"; // Use POST for creating, PATCH for updating
 
-      const response = await axiosInstance[method](url, {
+    await axiosInstance[method](url, {
         ...formData,
         kit_number: formData.kit_number,
       });
@@ -218,13 +218,13 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   {/* Content area */}
   <div className="kit-content-area">
-    {/* {error && <p className="kit-error-message">{error}</p>} */}
+    {error && <p className="kit-error-message">{error}</p>}
 
     {/* Loading indicator now appears below search results */}
     {loading && (
       <div className="kit-loading-container">
         <div className="kit-spinner-large"></div>
-        <p>Loading records...</p>
+
       </div>
     )}
 
@@ -287,7 +287,59 @@ const [selectedTransaction, setSelectedTransaction] = useState(null);
     />
   )}
 </div>
+    // <div className="wallet-container">
+    //   <div className="wallet-nav">
+    //     <h2 className="wallet-header">Manage Kit Renewals</h2>
+    //     <div className="funding-search-container">
+    //       <div className="funding-search-bar">
+    //         <input
+    //           type="text"
+    //           className="funding-search-input"
+    //           placeholder="Enter kit number"
+    //           value={kitNumber || ""}
+    //           onChange={(e) => setkitNumber(e.target.value)}
+    //         />
+    //         <button
+    //           className="funding-search-button"
+    //           onClick={handleSearch}
+    //           disabled={loading}
+    //         >
+    //           {loading ? "Searching..." : "Search"}
+    //         </button>
+    //       </div>
+    //       <div className="renew-flex">
+    //         <button
+    //           className="create-funds-button"
+    //           onClick={() => openModal("invoice")}
+    //         >
+    //           Create Renewal
+    //         </button>
+    //       </div>
+    //     </div>
+    //   </div>
 
+    //   {error && <p className="error-message">{error}</p>}
+
+    //   {renewalData.length > 0 ? (
+    //     renewalData.map((item) => (
+    //       <Renewal key={item.id} transaction={item} openModal={openModal} />
+    //     ))
+    //   ) : (
+    //     <p className="error-message">No records found.</p>
+    //   )}
+
+    //   {showModal && (
+    //     <EditKitRenewalModal
+    //       showModal={showModal}
+    //       setShowModal={setShowModal}
+    //       recordType={recordType}
+    //       formData={formData}
+    //       handleInputChange={handleInputChange}
+    //       handleCreateRecord={editMode ? handleEditRecord : handleCreateRecord}
+    //       editMode={editMode}
+    //     />
+    //   )}
+    // </div>
   );
 };
 

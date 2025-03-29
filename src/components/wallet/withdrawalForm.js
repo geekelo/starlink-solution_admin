@@ -108,7 +108,7 @@ const WithdrawalFormModal = ({ isOpen, onClose }) => {
             {error && <p className="withdrawal-message error">{error}</p>}
             
             <button type="submit" disabled={loading} className="withdraw-btn">
-              {loading ? "Processing..." : "Withdraw Funds ➔"}
+              {loading ? "Processing..." : "Withdraw ➔"}
             </button>
           </form>
         </div>

@@ -12,9 +12,10 @@
   padding: 12px 0;
   color: #002147; /* Deep Blue */
 }
+
 .auto-renew-container {
   display: flex;
-  margin:  0;
+  margin: 0;
   align-items: center;
   gap: 12px;
 }
@@ -45,17 +46,17 @@
   margin-top: 10px;
 }
 
-
-
 /* Tabs */
 .tabs {
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
 }
-.req-message{
+
+.req-message {
   color: #002147;
 }
+
 .tabs button {
   padding: 10px 15px;
   border: none;
@@ -66,6 +67,10 @@
   transition: all 0.3s;
   width: 10em;
   color: #002147;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .tabs button:hover {
@@ -77,16 +82,16 @@
   color: white;
 }
 
-/* Funding List */
-.funding-list {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  
+/* Funding List and Kit Grid */
+.funding-list,
+.kit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
 }
 
-/* Funding Card */
-.funding-card {
+/* Card Styles */
+.kit-card {
   background-color: white;
   padding: 15px;
   border-radius: 5px;
@@ -94,16 +99,81 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  position: relative;
+}
+
+.renewal {
   border-left: 5px solid #0056b3; /* Blue accent */
 }
 
-.funding-card p {
+.kit-card h3 {
+  margin: 0 0 15px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #002147;
+  font-size: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.menu-dots {
+  cursor: pointer;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.menu-dots:hover {
+  color: #0056b3;
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  position: absolute;
+  right: 15px;
+  top: 40px;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  min-width: 150px;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f8ff;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-item p {
   margin: 0;
   font-size: 14px;
   color: #333;
+  flex: 1;
 }
 
-.funding-card strong {
+.info-item strong {
   color: #002147; /* Deep Blue */
 }
 
@@ -116,15 +186,16 @@
 }
 
 .cta select {
-  padding: 5px;
+  padding: 8px;
   border-radius: 4px;
   border: 1px solid #0056b3;
   background: #eef4fa; /* Light Blue */
+  flex: 1;
 }
 
 /* Save Button */
 .cta .save-btn {
-  padding: 7px 12px;
+  padding: 8px 12px;
   background-color: #0a1930;
   color: white;
   border: none;
@@ -132,17 +203,22 @@
   cursor: pointer;
   font-weight: bold;
   transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .save-btn:hover {
   background-color: #0056b3;
 }
-.invoice{
+
+.invoice {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.invoice button{
+
+.invoice button {
   padding: 14px;
   border-radius: 12px;
   background: #0a1930;
@@ -154,7 +230,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3px;
+  gap: 8px;
+}
+
+/* Loading State */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #0056b3;
+}
+
+.loading-icon {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (max-width: 768px) {
@@ -162,7 +261,12 @@
     font-size: 24px;
   }
 
-  .funding-card p {
+  .funding-list,
+  .kit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item p {
     font-size: 12px;
   }
 
@@ -183,9 +287,7 @@
     text-align: center;
   }
 
-
-
-  .funding-card {
+  .kit-card {
     padding: 10px;
   }
 
@@ -193,7 +295,8 @@
     font-size: 12px;
     padding: 10px;
   }
-  .invoice{
+  
+  .invoice {
     padding: 20px 0;
   }
 }

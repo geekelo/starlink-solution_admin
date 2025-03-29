@@ -9,15 +9,15 @@ import {
   Database,
   CalendarDays,
 } from "lucide-react";
-import "../../styles/Wallet.css";
-import Funding from "../funding/funding";
-import Renewal from "../renewal/Renewal";
-import WalletBalance from "./WalletBalance";
+import "../styles/Wallet.css";
+import Funding from "../components/funding/funding";
+import Renewal from "../components/renewal/Renewal";
+import WalletBalance from "../components/wallet/WalletBalance";
 
-import { ViewRenewalModal } from "../renewal/ViewRenewal";
+import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 
-import Withdrawal from "./Withdrawal";
-import { createAxiosInstance } from "../../config/axios";
+import Withdrawal from "../components/wallet/Withdrawal";
+import { createAxiosInstance } from "../config/axios";
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);
   const [loading, setLoading] = useState(true);

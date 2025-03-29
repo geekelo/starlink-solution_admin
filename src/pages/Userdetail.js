@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import users from "../../assets/User"; // Import user data
-import "../../styles/User.css";
+import users from "../assets/User"; // Import user data
+import "../styles/User.css";
 
 const UserDetails = () => {
   const { id } = useParams();
@@ -17,9 +17,6 @@ const UserDetails = () => {
   }
 
   const handleSave = () => {
-    // Simulate updating user details
-    console.log("Updated Phone:", phone);
-    console.log("Updated WhatsApp:", whatsappNo);
     setIsModalOpen(false);
   };
 
@@ -33,11 +30,21 @@ const UserDetails = () => {
       </div>
 
       <div className="user-card">
-        <p><strong>Email:</strong> {user.email}</p>
-        <p><strong>Phone:</strong> {user.phone}</p>
-        <p><strong>WhatsApp:</strong> {user.whatsappNo}</p>
-        <p><strong>Wallet ID:</strong> {user.walletID}</p>
-        <p><strong>Wallet Balance:</strong> ₦{user.walletBalance}</p>
+        <p>
+          <strong>Email:</strong> {user.email}
+        </p>
+        <p>
+          <strong>Phone:</strong> {user.phone}
+        </p>
+        <p>
+          <strong>WhatsApp:</strong> {user.whatsappNo}
+        </p>
+        <p>
+          <strong>Wallet ID:</strong> {user.walletID}
+        </p>
+        <p>
+          <strong>Wallet Balance:</strong> ₦{user.walletBalance}
+        </p>
       </div>
 
       {/* Modal Overlay */}
@@ -58,8 +65,15 @@ const UserDetails = () => {
               onChange={(e) => setWhatsappNo(e.target.value)}
             />
             <div className="modal-buttons">
-              <button className="save-btn" onClick={handleSave}>Save</button>
-              <button className="cancel-btn" onClick={() => setIsModalOpen(false)}>Cancel</button>
+              <button className="save-btn" onClick={handleSave}>
+                Save
+              </button>
+              <button
+                className="cancel-btn"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>

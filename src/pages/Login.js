@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/Login.css";
-import { createAxiosInstance } from "../../config/axios";
+import "../styles/Login.css";
+import { createAxiosInstance } from "../config/axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,9 +23,6 @@ const Login = () => {
         },
       });
 
-      console.log("Login successful:", response.data);
-
-      // Store the token
       localStorage.setItem("candra", response.data.token);
 
       // Redirect to home AFTER token is set

@@ -1,10 +1,10 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { createAxiosInstance } from "../../config/axios";
+import { createAxiosInstance } from "../config/axios";
 import { Package, CheckCircle, XCircle, Search, Filter, Edit2, MoreVertical, RefreshCw, MapPin, CreditCard, Building, Tag, Phone, User, CalendarDays,  ChevronLeft, ChevronRight, Repeat2, FolderOpenDot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/Kits.css";
-import KitModal from "./kitModal";
-import Modal from "./transferModal";
+import "../styles/Kits.css";
+import KitModal from "../components/kits/kitModal";
+import Modal from "../components/kits/transferModal";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -38,32 +38,37 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
-
-        const formattedKits = response.data.map((kit) => ({
-          kitId: kit.id,
-          kitNo: kit.kit_number,
-          username: kit.owner_name,
-          email: kit.owner_email,
-          phoneNumber: kit.owner_phone_number,
-          address: kit.address,
-          companyName: kit.company_name || "N/A",
-          nin: kit.nin,
-          status: kit.is_active ? "Active" : "Inactive",
-          plan: "N/A",
-          serviceNo: kit.service_line_number || "N/A",
-          dateAdded: kit.created_at.split("T")[0],
-        }));
-
+  
+        const formattedKits = response.data
+          .map((kit) => ({
+            kitId: kit.id,
+            kitNo: kit.kit_number,
+            username: kit.owner_name,
+            email: kit.owner_email,
+            phoneNumber: kit.owner_phone_number,
+            address: kit.address,
+            companyName: kit.company_name || "N/A",
+            nin: kit.nin,
+            status: kit.is_active ? "Active" : "Inactive",
+            plan: "N/A",
+            serviceNo: kit.service_line_number || "N/A",
+            dateAdded: kit.created_at.split("T")[0],
+            createdAt: new Date(kit.created_at), // Convert to Date for sorting
+          }))
+          .sort((a, b) => b.createdAt - a.createdAt); // Sort from newest to oldest
+  
         setKits(formattedKits);
       } catch (err) {
+        console.error("Error fetching kits:", err);
         setError("Failed to load kits. Please try again.");
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchKits();
   }, []);
+  
 
   useEffect(() => {
     if (selectedKit) {
@@ -80,9 +85,6 @@ const KitPage = () => {
   }, [selectedKit]);
   
   const handleRenewKit = async (kitId) => {
-    console.log(`Simulating API call to renew kit with ID: ${kitId}`);
-  
-    // Simulating API response delay
     setTimeout(() => {
       console.log(`Kit with ID: ${kitId} successfully renewed!`);
       alert(`Kit with ID: ${kitId} successfully renewed!`);
@@ -143,8 +145,6 @@ const KitPage = () => {
           starlink_kit: formData,
         }
       );
-      console.log(res)
-
       setKits((prevKits) =>
         prevKits.map((kit) =>
           
@@ -177,8 +177,6 @@ const KitPage = () => {
       setError("New owner email is required.");
       return;
     }
-    console.log(transferEmail)
-    console.log(selectedKit.kitNo)
     try {
       const axiosInstance = createAxiosInstance();
    await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {

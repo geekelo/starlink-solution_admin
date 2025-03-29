@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { createAxiosInstance } from "../../config/axios";
-import Withdrawal from "./Withdrawal";
-import WithdrawalFormModal from "./withdrawalForm";
+import { createAxiosInstance } from "../config/axios";
+import Withdrawal from "../components/wallet/Withdrawal";
+import WithdrawalFormModal from "../components/wallet/withdrawalForm";
 
 const WithdrawalsList = () => {
   const [walletHistory, setWalletHistory] = useState([]);
@@ -51,6 +51,10 @@ const WithdrawalsList = () => {
 
   return (
     <div>
+        <div className="kit-header-wrapper">
+    <h2 className="kit-header-title">Manage Withdrawal </h2>
+  </div>
+
       <button
         className="create-withdrawal-btn"
         onClick={() => setIsModalOpen(true)}

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { createAxiosInstance } from "../../config/axios";
-import "../../styles/Wallet.css";
-import WalletBalance from "./WalletBalance";
-import Funding from "../funding/funding";
-import Renewal from "../renewal/Renewal";
+import { createAxiosInstance } from "../config/axios";
+import "../styles/Wallet.css";
+import WalletBalance from "../components/wallet/WalletBalance";
+import Funding from "../components/funding/funding";
+import Renewal from "../components/renewal/Renewal";
 
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);

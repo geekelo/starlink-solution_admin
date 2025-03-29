@@ -14,7 +14,6 @@ const WalletBalance = ({ onBalanceFetched }) => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/wallet_histories/admin_balance");
-console.log(response)
         const balance = parseFloat(response.data.admin_balance) || 0; // Ensure it's a valid number
         setWalletBalance(balance);
         onBalanceFetched(balance); // Pass balance to parent component
