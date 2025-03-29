@@ -43,7 +43,6 @@ const Users = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/user_records");
-  
         const formattedUsers = response.data
           .map((user) => ({
             id: user.id,
@@ -53,12 +52,13 @@ const Users = () => {
             whatsapp: user.whatsapp_number,
             walletID: user.wallet_id || "N/A",
             walletBalance: user.wallet_balance || 0,
-            otp: user.kit_count || 0,
+            otp: user.kits_owned ,
             createdAt: user.created_at ? new Date(user.created_at) : null, // Convert to Date object
           }))
           .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); // Sort from latest to oldest
   
         setUsers(formattedUsers);
+      
       } catch (err) {
         console.error(
           "Error fetching users:",
