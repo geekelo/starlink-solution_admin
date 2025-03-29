@@ -19,6 +19,7 @@ import MobileDrawer from "./components/nav/Nav";
 import Withdrawal from "./components/wallet/walletWithdrawal";
 import WithdrawalsList from "./components/wallet/walletWithdrawal";
 import MonthlyRenewalsTracking from "./components/renewal/monthRenewal";
+import Dashboard from "./components/dashboard/dashboard";
 
 const AdminLayout = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -115,6 +116,7 @@ function App() {
               <Route path="users" element={<Users />} />
               <Route path="manage-funds" element={<FundingPage />} />
               <Route path="manage-renewal" element={<RenewalPage />} />
+              <Route path="/dashboard" element={<Dashboard />} />
 
             </Route>
 
