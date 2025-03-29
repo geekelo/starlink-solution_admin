@@ -59,6 +59,7 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
+       
 
         const formattedKits = response.data
           .map((kit) => ({
@@ -70,7 +71,7 @@ const KitPage = () => {
             address: kit.address,
             companyName: kit.company_name || "N/A",
             nin: kit.nin,
-            status: kit.is_active ? "Active" : "Inactive",
+            status: kit.status,
             plan: "N/A",
             serviceNo: kit.service_line_number || "N/A",
             dateAdded: kit.created_at.split("T")[0],
@@ -461,13 +462,13 @@ const KitPage = () => {
                   <User size={16} />
                 </div>
                 <div className="kit-info-text">
-                  <strong>Username:</strong> {kit.username}
+                  <strong>Owner's Name:</strong> {kit.username}
                 </div>
                 <div className="kit-info-icon">
                   <MailIcon size={16} />
                 </div>
                 <div className="kit-info-text">
-                  <strong>Email:</strong> {kit.email}
+                  <strong>Owner's Email:</strong> {kit.email}
                 </div>
 
                 {/* Date */}
