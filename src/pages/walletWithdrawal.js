@@ -3,6 +3,10 @@ import { createAxiosInstance } from "../config/axios";
 import Withdrawal from "../components/wallet/Withdrawal";
 import WithdrawalFormModal from "../components/wallet/withdrawalForm";
 import { AppLoader } from "../components/Loader/loader";
+import EmptyState from "../components/EmptyState/EmptyState";
+import PageHeader from "../components/PageHeader/PageHeader";
+import AppButton from "../components/AppButton/Button";
+import { Plus } from "lucide-react";
 
 const WithdrawalsList = () => {
   const [walletHistory, setWalletHistory] = useState([]);
@@ -52,16 +56,8 @@ const WithdrawalsList = () => {
 
   return (
     <div>
-        <div className="kit-header-wrapper">
-    <h2 className="kit-header-title">Manage Withdrawal </h2>
-  </div>
-
-      <button
-        className="create-withdrawal-btn"
-        onClick={() => setIsModalOpen(true)}
-      >
-        Create Withdrawal
-      </button>
+      <PageHeader title="Manage Withdrawal " rightElement={<AppButton variant="custom" backgroundColor="error" onClick={() => setIsModalOpen(true)} leftIcon={<Plus/>}>Create Withdrawal</AppButton>}/>
+    
       
       {/* Loading Spinner */}
       {loading && (
@@ -79,7 +75,8 @@ const WithdrawalsList = () => {
       
       <div className="kit-grid">
         {!loading && walletHistory.length === 0 ? (
-          <p>No withdrawals found.</p>
+          <EmptyState message="No withdrawals found."/>
+       
         ) : (
           walletHistory.map((transaction) => (
             <Withdrawal key={transaction.id} transaction={transaction} />

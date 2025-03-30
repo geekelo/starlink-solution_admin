@@ -1,0 +1,67 @@
+
+
+.tab-group {
+    display: flex;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 20px;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+  }
+  
+  .tab-group::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+  
+  .tab-button {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  
+  .tab-button:hover {
+    color: #495057;
+    background-color: #f8f9fa;
+  }
+  
+  .tab-button.active {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+    font-weight: 600;
+  }
+  
+  /* Optional: Custom tab colors */
+  .tab-button.tab-all.active {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+  }
+  
+  .tab-button.tab-funding.active {
+    color: #198754;
+    border-bottom-color: #198754;
+  }
+  
+  .tab-button.tab-renewal.active {
+    color: #fd7e14;
+    border-bottom-color: #fd7e14;
+  }
+  
+  .tab-button.tab-withdrawal.active {
+    color: #dc3545;
+    border-bottom-color: #dc3545;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 576px) {
+    .tab-button {
+      padding: 10px 15px;
+      font-size: 13px;
+    }
+  }

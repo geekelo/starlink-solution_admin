@@ -35,12 +35,12 @@ const AppRouter = () => {
                 <Route path="/funding" element={<FundingPage />} />
                 <Route path="/renewals" element={<RenewalPage />} />
                 <Route path="/wallet" element={<Wallet />} />
-                <Route path="wallet-history" element={<WalletHistory />} />
-                <Route path="wallet-withdrawal" element={<WithdrawalsList />} />
-                <Route path="kits" element={<KitPage />} />
-                <Route path="users" element={<Users />} />
+                <Route path="/wallet-history" element={<WalletHistory />} />
+                <Route path="/wallet-withdrawal" element={<WithdrawalsList />} />
+                <Route path="/kits" element={<KitPage />} />
+                <Route path="/users" element={<Users />} />
                 <Route path="manage-funds" element={<FundingPage />} />
-                <Route path="manage-renewal" element={<RenewalPage />} />
+                <Route path="/renewals" element={<RenewalPage />} />
               </Route>
               
               {/* Redirect unknown routes to home */}

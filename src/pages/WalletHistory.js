@@ -7,7 +7,7 @@ import {
   RefreshCw,
   ArrowDownCircle,
   Database,
-  CalendarDays,
+
 } from "lucide-react";
 import "../styles/Wallet.css";
 import Funding from "../components/funding/funding";
@@ -19,6 +19,11 @@ import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import Withdrawal from "../components/wallet/Withdrawal";
 import { createAxiosInstance } from "../config/axios";
 import { AppLoader } from "../components/Loader/loader";
+import MetricBox from "../components/MetricsBox/MetricsBox";
+import PageHeader from "../components/PageHeader/PageHeader";
+import TabGroup from "../components/TabGroup/Tab";
+import EmptyState from "../components/EmptyState/EmptyState";
+import Pagination from "../components/Pagination/Pagination";
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -129,68 +134,56 @@ const WalletPage = () => {
 
   return (
     <div className="kit-container">
-      <div className="kit-nav">
-        <h2 className="kit-header">Wallet History</h2>
-        <WalletBalance onBalanceFetched={setWalletBalance} />
-      </div>
+    <PageHeader 
+        title="Wallet History" 
+        rightElement={ <WalletBalance onBalanceFetched={setWalletBalance} />}
+      />
 
       {/* Metrics Section */}
       <div className="kit-metrics">
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <ArrowUpCircle size={40} color="#b6bbc1" />
-            <h4>Total Funding</h4>
-          </div>
-          <p>{loading ? "-" : `₦${totalFunding.toLocaleString()}`}</p>
-        </div>
+      <MetricBox
+          icon={<ArrowUpCircle size={40} color="#4c6ef5" />}
+          title="Total Funding"
+          value={`₦${totalFunding.toLocaleString()}`}
+          loading={loading}
+        />
+      
+      <MetricBox
+          icon={<RefreshCw size={40} color="#4c6ef5" />}
+          title="Total Renewal"
+          value={`₦${totalRenewal.toLocaleString()}`}
+          loading={loading}
+        />
+        <MetricBox
+          icon={<ArrowDownCircle size={40} color="#4c6ef5" />}
+          title="Total Withdrawal"
+          value={`₦${totalWithdrawal.toLocaleString()}`}
+          loading={loading}
+        />
+  <MetricBox
+          icon={<Database size={40} color="#4c6ef5" />}
+          title="Total in System"
+          value={`₦${totalInSystem.toLocaleString()}`}
+          loading={loading}
+        />
+      
 
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <RefreshCw size={40} color="#b6bbc1" />
-            <h4>Total Renewal</h4>
-          </div>
-          <p>{loading ? "-" : `₦${totalRenewal.toLocaleString()}`}</p>
-        </div>
-
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <ArrowDownCircle size={40} color="#ff1500b8" />
-            <h4>Total Withdrawal</h4>
-          </div>
-          <p>{loading ? "-" : `₦${totalWithdrawal.toLocaleString()}`}</p>
-        </div>
-
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <Database size={40} color="green" />
-            <h4>Total in System</h4>
-          </div>
-          <p>{loading ? "-" : `₦${totalInSystem.toLocaleString()}`}</p>
-        </div>
+       
       </div>
 
       {/* Tab Buttons */}
-      <div className="wallettabs">
-        {["All", "Funding", "Renewal", "Withdrawal"].map((tab) => (
-          <button
-            key={tab}
-            className={`wallettab-button tab-${tab.toLowerCase()} ${
-              activeTab === tab ? "active" : ""
-            }`}
-            onClick={() => setActiveTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+      <TabGroup
+        tabs={['All', 'Funding', 'Renewal', 'Withdrawal']}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        tabPrefix="tab"
+      />
       {/* Transactions Grid */}
       <div className="kit-grid">
         {loading ? (
          <AppLoader/>
         ) : currentTransactions.length === 0 ? (
-          <div className="no-transactions">
-            <p>No transactions found.</p>
-          </div>
+          <EmptyState message="No transactions found." />
         ) : (
           currentTransactions.map((transaction) => {
             if (transaction.type === "Funding") {
@@ -207,52 +200,20 @@ const WalletPage = () => {
               return (
                 <Withdrawal key={transaction.id} transaction={transaction} />
               );
-            } else {
-              return (
-                <div key={transaction.id} className="kit-card inactive">
-                  <h3>{transaction.type}</h3>
-                  <div className="kit-info-grid">
-                    <div className="kit-info-icon">
-                      <ArrowDownCircle size={16} />
-                    </div>
-                    <div className="kit-info-text">
-                      <strong>Amount:</strong> ₦
-                      {transaction.amount.toLocaleString()}
-                    </div>
-                    <div className="kit-info-icon">
-                      <CalendarDays size={16} />
-                    </div>
-                    <div className="kit-info-text">
-                      <strong>Date:</strong>{" "}
-                      {new Date(transaction.date).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-              );
-            }
+            } 
           })
         )}
       </div>
 
       {/* Pagination Controls */}
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              indexOfLastItem < filteredHistory.length ? prev + 1 : prev
-            )
-          }
-          disabled={indexOfLastItem >= filteredHistory.length}
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        totalItems={filteredHistory.length}
+        itemsPerPage={itemsPerPage}
+        showPageNumbers={true}
+      />
+   
 
       {/* View Transaction Modal */}
       {viewModalOpen && selectedTransaction && (

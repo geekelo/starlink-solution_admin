@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
-import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight, Plus, Mail } from "lucide-react";
 import Funding from "../components/funding/funding";
 import CreateFundingModal from "../components/funding/CreateFunding";
 import SuccessModal from "../components/funding/Success-Modal";
 import { FormInput } from "../components/FormInput/Input";
 import AppButton from "../components/AppButton/Button";
 import { AppLoader } from "../components/Loader/loader";
+import SearchWithButton from "../components/SearchInput/SearchInput";
 
 const FundingPage = () => {
   const location = useLocation();
@@ -136,34 +137,23 @@ const FundingPage = () => {
   return (
     <div className="kit-container-renewal">
       {/* Actions bar - search and create button in one line */}
-      <div className="kit-actions-bar">
-        <div className="kit-search-wrapper">
-          <div className="kit-search-input-container">
-       
      
-            <Search size={24} color="#b6bbc1" className="kit-search-icon"/>
-
-            <input
-              type="email"
-              className="kit-search-input"
-              placeholder="Enter user email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-        
-      
-          <button
-            className="kit-search-button"
-            onClick={handleSearch}
-            disabled={loading}
-          >
-            {loading ? "Searching..." : "Search"}
-          </button>
-        </div>
+      <div className="kit-actions-bar">
+      <SearchWithButton
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter user email"
+        icon={<Mail size={24} />}
+        loading={loading}
+        onSearch={handleSearch}
+        withButton={true}
+        buttonText="Search"
+        loadingText="Searching..."
+      />
         <div className="kit-action-wrapper">
         <AppButton   variant="custom"
-          backgroundColor="#eab308"
+          backgroundColor="primary"
           leftIcon={<Plus/>}
           textColor="#ffffff"
           loading={loading}
@@ -172,12 +162,7 @@ const FundingPage = () => {
         onClick={() => setShowModal(true)}>
  Create Funding
           </AppButton>
-          {/* <button
-            className="kit-create-button funding"
-            onClick={() => setShowModal(true)}
-          >
-            Create Funding
-          </button> */}
+         
         </div>
       </div>
     
@@ -189,7 +174,7 @@ const FundingPage = () => {
     
       {/* Content area */}
       <div className="kit-content-area">
-        {error && <p className="kit-error-message">{error}</p>}
+      
     
         {/* Loading indicator */}
         {loading && (

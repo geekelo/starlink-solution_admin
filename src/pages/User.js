@@ -21,6 +21,7 @@ import {
   WalletMinimal,
 } from "lucide-react";
 import { AppLoader } from "../components/Loader/loader";
+import SearchWithButton from "../components/SearchInput/SearchInput";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -158,16 +159,18 @@ const Users = () => {
         <h2 className="kit-header">User Management</h2>
 
         {error && <p className="error-message">{error}</p>}
+          <SearchWithButton
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by Name, Email, Phone, WhatsApp, Wallet ID, or OTP"
+                icon={<Mail size={24} />}
+               withButton={false}
+                
+            
+              />
 
-        <div className="search-box">
-          <Search size={24} color="#b6bbc1" />
-          <input
-            type="text"
-            placeholder="Search by Name, Email, Phone, WhatsApp, Wallet ID, or OTP"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+       
       </div>
 
       <div className="kit-metrics">

@@ -9,14 +9,14 @@ import logo from "../../assets/logo.png";
   
   // Menu items with icons and paths
   const menuItems = [
-    { icon: <Home size={20} />, name: 'Dashboard', path: '/dashboard' },
+    { icon: <Home size={20} />, name: 'Dashboard', path: '/' },
     { icon: <FileText size={20} />, name: 'Requests', path: '/requests' },
     { icon: <CreditCard size={20} />, name: 'Wallet History', path: '/wallet-history' },
     { icon: <History size={20} />, name: 'Wallet Withdrawal', path: '/wallet-withdrawal' },
     { icon: <Package size={20} />, name: 'Kits', path: '/kits' },
     { icon: <Users size={20} />, name: 'Users', path: '/users' },
     { icon: <DollarSign size={20} />, name: 'Manage Funding', path: '/manage-funds' },
-    { icon: <RefreshCw size={20} />, name: 'Manage Renewals', path: '/manage-renewal' },
+    { icon: <RefreshCw size={20} />, name: 'Manage Renewals', path: '/renewal' },
   ];
   
   return (

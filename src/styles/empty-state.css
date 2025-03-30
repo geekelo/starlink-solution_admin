@@ -1,0 +1,48 @@
+/* EmptyState.css */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    min-height: 200px;
+  }
+  
+  .empty-state-icon {
+    margin-bottom: 16px;
+    color: #6c757d;
+  }
+  
+  .empty-state-message {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    color: #6c757d;
+    font-weight: 500;
+  }
+  
+  .empty-state-action {
+    margin-top: 8px;
+  }
+  
+  /* Variations */
+  .empty-state.compact {
+    min-height: 120px;
+    padding: 24px 16px;
+  }
+  
+  .empty-state.bordered {
+    border: 1px dashed #dee2e6;
+    background-color: transparent;
+  }
+  
+  /* Responsive */
+  @media (max-width: 576px) {
+    .empty-state {
+      padding: 30px 16px;
+      min-height: 160px;
+    }
+  }

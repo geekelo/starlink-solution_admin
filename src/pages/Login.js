@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import { createAxiosInstance } from "../config/axios";
 import { FormGroup } from "../components/FormGroups/Form";
 import { FormLabel } from "../components/FormLabel/Label";
 import { FormInput } from "../components/FormInput/Input";
-import ErrorMessage from "../components/ErrorMessage/Error";
+import ErrorMessage from "../components/FormErrorMessage/Error";
 import { Lock, Mail } from "lucide-react";
 import AppButton from "../components/AppButton/Button";
 const Login = () => {
@@ -105,11 +105,7 @@ navigate('/')
         </AppButton>
 
         </form>
-        <div className="auth-subtitle">
-              Don't have an account?
-              {' '}
-              <Link to="/signup" className="link">Sign Up</Link>
-            </div>
+     
       </div>
     </div>
   );
