@@ -9,6 +9,7 @@ export const Requests = lazy(() => import("../../pages/Request"));
 export const UserDetails = lazy(() => import("../../pages/Userdetail"));
 export const FundingPage = lazy(() => import("../../pages/ManageFunding"));
 export const RenewalPage = lazy(() => import("../../pages/ManageRenewal"));
+export const MonthlyRenewalPage = lazy(() => import("../../pages/monthRenewal"));
 export const Wallet = lazy(() => import("../../pages/WalletPage"));
 export const WalletHistory = lazy(() => import("../../pages/WalletHistory"));
 export const WithdrawalsList = lazy(() => import("../../pages/walletWithdrawal"));

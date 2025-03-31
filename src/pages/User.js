@@ -166,6 +166,7 @@ const Users = () => {
                 placeholder="Search by Name, Email, Phone, WhatsApp, Wallet ID, or OTP"
                 icon={<Mail size={24} />}
                withButton={false}
+               style={{ maxWidth: '300px' }}
                 
             
               />

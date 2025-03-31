@@ -1,7 +1,7 @@
 import { Suspense, } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { SuspenseLoader } from "./Suspense";
-import { AdminLayout, Dashboard, FundingPage, KitPage, Login, RenewalPage, Requests, SignUp, UserDetails, Users, Wallet, WalletHistory, WithdrawalsList } from "./LazyLoader";
+import { AdminLayout, Dashboard, FundingPage, KitPage, Login, MonthlyRenewalPage, RenewalPage, Requests, SignUp, UserDetails, Users, Wallet, WalletHistory, WithdrawalsList } from "./LazyLoader";
 
 
 
@@ -40,7 +40,7 @@ const AppRouter = () => {
                 <Route path="/kits" element={<KitPage />} />
                 <Route path="/users" element={<Users />} />
                 <Route path="manage-funds" element={<FundingPage />} />
-                <Route path="/renewals" element={<RenewalPage />} />
+                <Route path="/monthly-renewals" element={<MonthlyRenewalPage />} />
               </Route>
               
               {/* Redirect unknown routes to home */}

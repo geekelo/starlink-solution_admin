@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { createAxiosInstance } from "../../config/axios";
-import "../../styles/Wallet.css";
-import Renewal from "./Renewal";
-import { ViewRenewalModal } from "./ViewRenewal";
+import { createAxiosInstance } from "../config/axios";
+import "../styles/Wallet.css";
+import Renewal from "../components/renewal/Renewal";
+import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 
 const MonthlyRenewalPage = () => {
   const navigate = useNavigate();
