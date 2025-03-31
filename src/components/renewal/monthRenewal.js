@@ -62,7 +62,6 @@ const MonthlyRenewalPage = () => {
     }
     setSelectedTransaction(transaction);
     setViewModalOpen(true);
-    console.log(transaction)
   };
   
 
@@ -101,9 +100,6 @@ const MonthlyRenewalPage = () => {
         const sortedRenewals = finalFilteredRenewals.sort(
           (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
         );
-
-        console.log("Filtered Renewals:", sortedRenewals);
-
         if (sortedRenewals.length > 0) {
           setRenewalData(sortedRenewals);
         } else {
@@ -166,7 +162,7 @@ console.log(selectedTransaction)
           {loading ? "Searching..." : "Search"}
         </button>
 
-        <button onClick={() => navigate("/create-renewal")}>Create Renewal</button>
+      
       </div>
 
       {/* Content */}
