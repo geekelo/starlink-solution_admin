@@ -9,7 +9,7 @@ import { Search } from "lucide-react";
 const RenewalPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const initialKitNumber = queryParams.get("kit") || ""; // Get 'kit' from URL
+  const initialKitNumber = queryParams.get("kit") || ""; 
 
   const [kitNumber, setKitNumber] = useState(initialKitNumber);
   const [loading, setLoading] = useState(false);

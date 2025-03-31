@@ -128,7 +128,7 @@ console.log(selectedTransaction)
                 "default",
                 { month: "long" }
               ) + ` ${selectedYear}`}{" "}
-          is {renewalData.length}
+          {renewalData.length}
         </h3>
       </div>
 
