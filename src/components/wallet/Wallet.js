@@ -48,14 +48,13 @@ const WalletPage = () => {
         if (!fundings || !renewals || !withdrawals) {
           throw new Error("Missing fundings or renewals data");
         }
-
         const formatTransactions = (items, type) =>
           items.map((item) => ({
             id: item.id,
             type,
             status: item.status,
             amount: parseFloat(item.amount),
-            date: new Date(item.created_at), // Store as Date object for sorting
+            date: new Date(item.created_at), 
             email: item.user_email || item.email,
             reference: item.kit_number || item.reference,
             purpose: item.purpose,

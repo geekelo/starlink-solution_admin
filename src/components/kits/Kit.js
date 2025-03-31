@@ -193,7 +193,7 @@ const KitPage = () => {
   const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
 
   const goToRenewals = (kit) => {
-    navigate(`/renewals?kitNumber=${kit.kitNo}`);
+    navigate(`/manage-renewal?kit=${kit.kitNo}`);
   };
   const handleTransferKit = async () => {
     if (!transferEmail) {
