@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import InvoiceReminder from "../reminders/InvoiceReminder";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ const Dashboard = () => {
         <button onClick={() => navigate("/monthly-renewals")}>
           Download Renewals
         </button>
+      </div>
+      <div>
+      <InvoiceReminder />
       </div>
     </div>
   );

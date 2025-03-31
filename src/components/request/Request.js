@@ -85,7 +85,8 @@ Kit No: ${kit.kit_number}
 
   return (
     <div className="requests-section">
-      <InvoiceReminder />
+      <h3 className="request-header">Requests</h3>
+
       {message && <p className="success-message">{message}</p>}
 
       <div className="tabs">

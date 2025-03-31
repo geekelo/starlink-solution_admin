@@ -281,7 +281,7 @@ const Users = () => {
               indexOfLastItem < currentKits.length ? prev + 1 : prev
             )
           }
-          disabled={indexOfLastItem >= currentKits.length}
+         
         >
           <ChevronRight size={18} />
         </button>
