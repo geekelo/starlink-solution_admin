@@ -158,9 +158,7 @@ console.log(selectedTransaction)
         {/* Search by Kit Number */}
         <input type="text" placeholder="Search by Kit Number" value={kitNumber} onChange={(e) => setKitNumber(e.target.value)} />
 
-        <button onClick={handleSearch} disabled={loading}>
-          {loading ? "Searching..." : "Search"}
-        </button>
+    
 
       
       </div>
