@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import AppButton from "../components/AppButton/Button";
-import '../styles/dashboard.css'
-import { Download } from "lucide-react";
+import InvoiceReminder from "../components/reminders/InvoiceReminder";
+
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -10,19 +9,16 @@ const Dashboard = () => {
       <h2>Dashboard</h2>
 
       <div className="dashboard-buttons">
-        <AppButton onClick={() => navigate("/wallet-withdrawal")}>
+        <button onClick={() => navigate("/wallet-withdrawal")}>
         Withdrawal
-        </AppButton>
-        <AppButton onClick={() => navigate("/monthly-renewals")} leftIcon={<Download />}>
-        Download Renewals
-        </AppButton>
-        {/* <button onClick={() => navigate("/wallet-withdrawal")}>
-    
         </button>
        
         <button onClick={() => navigate("/monthly-renewals")}>
-     
-        </button> */}
+          Download Renewals
+        </button>
+      </div>
+      <div>
+      <InvoiceReminder />
       </div>
     </div>
   );

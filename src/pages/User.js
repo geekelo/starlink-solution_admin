@@ -16,12 +16,13 @@ import {
   WalletCards,
   WalletMinimal,
 } from "lucide-react";
-import { AppLoader } from "../components/Loader/loader";
-import SearchWithButton from "../components/SearchInput/SearchInput";
-import MetricBox from "../components/MetricsBox/MetricsBox";
-import Pagination from "../components/Pagination/Pagination";
+import { formatDate } from "../components/utils/date";
 import PageHeader from "../components/PageHeader/PageHeader";
+import SearchWithButton from "../components/SearchInput/SearchInput";
 import EmptyState from "../components/EmptyState/EmptyState";
+import Pagination from "../components/Pagination/Pagination";
+import MetricBox from "../components/MetricsBox/MetricsBox";
+import { AppLoader } from "../components/Loader/loader";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -155,7 +156,7 @@ const Users = () => {
 
   return (
     <div className="kit-container">
-       <PageHeader 
+       <PageHeader
         title="User Management" 
         rightElement={   <SearchWithButton
           type="text"
@@ -260,7 +261,7 @@ const Users = () => {
   <Calendar size={16} />
 </div>
 <div className="kit-info-text">
-  <strong>Date:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}
+  <strong>Date:</strong> {user.createdAt ? formatDate(user.createdAt) : "N/A"}
 </div>
 
               </div>
@@ -271,13 +272,13 @@ const Users = () => {
       
         )}
       </div>
-          <Pagination
-                        currentPage={currentPage}
-                        onPageChange={setCurrentPage}
-                        totalItems={currentKits.length}
-                        itemsPerPage={usersPerPage}
-                        showPageNumbers={true}
-                      />
+         <Pagination
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+              totalItems={currentKits.length}
+              itemsPerPage={usersPerPage}
+              showPageNumbers={true}
+            />
  
       {isModalOpen && selectedUser && (
         <>

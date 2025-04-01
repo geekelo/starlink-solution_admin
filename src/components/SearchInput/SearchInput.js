@@ -64,6 +64,7 @@ export const SearchWithButton = ({
       
       {withButton && (
         <button
+        type='button'
           className="kit-search-button"
           onClick={onSearch}
           disabled={disabled || loading}

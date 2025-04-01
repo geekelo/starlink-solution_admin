@@ -9,10 +9,11 @@ import { Plus, Search } from "lucide-react";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import { AppLoader } from "../components/Loader/loader";
 
+
 const RenewalPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const initialKitNumber = queryParams.get("kit") || ""; // Get 'kit' from URL
+  const initialKitNumber = queryParams.get("kit") || ""; 
 
   const [kitNumber, setKitNumber] = useState(initialKitNumber);
   const [loading, setLoading] = useState(false);
@@ -20,13 +21,26 @@ const RenewalPage = () => {
   const [renewalData, setRenewalData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [searchResult, setSearchResult] = useState(false);
-  const [viewModalOpen, setViewModalOpen] = useState(false);
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  // Form data for the modal
+  const [formData, setFormData] = useState({
+    kit_number: "",
+    status: "",
+    kit_renewal: {
+      amount: "",
+      month: "",
+      year: "",
+      credit_admin: "",
+      start_date: "",
+      end_date: "",
+      deadline: "",
+    },
+    date_of_renewal: "",
+  });
 
   useEffect(() => {
     if (initialKitNumber) {
-      handleSearch(initialKitNumber); // Automatically search on load
+      handleSearch(initialKitNumber);
     }
   }, [initialKitNumber]);
 
@@ -54,8 +68,45 @@ const RenewalPage = () => {
     }
   };
 
+  // Handle input changes for the modal form
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name.includes("kit_renewal.")) {
+      const field = name.split(".")[1]; // Extract nested field name
+      setFormData((prevData) => ({
+        ...prevData,
+        kit_renewal: {
+          ...prevData.kit_renewal,
+          [field]: value,
+        },
+      }));
+    } else {
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+
+  // Handle create record (API call)
+  const handleCreateRecord = async () => {
+    try {
+      const axiosInstance = createAxiosInstance();
+      await axiosInstance.post("/api/v1/admin/kit_renewals", formData);
+      setShowModal(false);
+      handleSearch(kitNumber); // Refresh list after creation
+    } catch (error) {
+      console.error("Error creating renewal:", error);
+    }
+  };
+
   return (
     <div className="kit-container-renewal">
+      <button className="kit-create-button" onClick={() => setShowModal(true)}>
+        Create Renewal
+      </button>
+
       <div className="kit-actions-bar">
         <div className="kit-search-wrapper">
           <div className="kit-search-input-container">
@@ -100,6 +151,18 @@ const RenewalPage = () => {
           </>
         )}
       </div>
+
+      {/* Create Renewal Modal */}
+      {showModal && (
+        <KitRenewalModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          recordType="Kit Renewal"
+          formData={formData}
+          handleInputChange={handleInputChange}
+          handleCreateRecord={handleCreateRecord}
+        />
+      )}
     </div>
   );
 };

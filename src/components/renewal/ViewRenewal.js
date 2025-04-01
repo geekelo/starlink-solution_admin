@@ -17,8 +17,11 @@ import '../../styles/view-renewal.css'
 import AppButton from '../AppButton/Button';
 
 export const ViewRenewalModal = ({ isOpen, closeModal, transaction }) => {
-  if (!transaction) return null;
-  
+  if (!isOpen || !transaction || Object.keys(transaction).length === 0) {
+    console.log("View Modal not opening - transaction is empty or invalid", transaction);
+    return null;
+  }
+  console.log("Transaction Data:", transaction);
   // Define transaction details with icons
   const transactionDetails = [
     {
@@ -75,7 +78,7 @@ export const ViewRenewalModal = ({ isOpen, closeModal, transaction }) => {
     {
       icon: <CreditCard size={18} />,
       label: "Transaction Date",
-      value: transaction?.created_at ? new Date(transaction.created_at).toLocaleDateString() : "N/A"
+      value: transaction?.created_at ? new Date(transaction.created_at).toLocaleDateString("en-GB") : "N/A"
     }
   ];
   
@@ -113,3 +116,4 @@ export const ViewRenewalModal = ({ isOpen, closeModal, transaction }) => {
   );
 };
 
+ 

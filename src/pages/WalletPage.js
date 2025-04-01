@@ -6,6 +6,8 @@ import WalletBalance from "../components/wallet/WalletBalance";
 import Funding from "../components/funding/funding";
 import Renewal from "../components/renewal/Renewal";
 
+import { formatDate } from "../components/utils/date";
+
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -101,7 +103,7 @@ const WalletPage = () => {
                 ) : (
                   <div key={item.id} className={`history-box ${item.type.toLowerCase()}`}>
                     <p>₦{item.amount.toLocaleString()}</p>
-                    <span>{new Date(item.date).toLocaleDateString()}</span>
+                    <span>{formatDate(item.date)} </span>
                   </div>
                 )
               )

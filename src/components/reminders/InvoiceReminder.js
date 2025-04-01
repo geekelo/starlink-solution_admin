@@ -42,8 +42,7 @@ const InvoiceReminder = () => {
 
   return (
     <div className="invoice">
-      <h3 className="request-header">Requests</h3>
-
+    
       {/* Buttons Container */}
       <div className="auto-renew-container">
         <button onClick={sendInvoiceReminder} disabled={loadingReminder} className="auto-renew-btn">

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Request.css";
 import InvoiceReminder from "../reminders/InvoiceReminder";
+import { formatDate } from "../utils/date";
 
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("funding");
@@ -85,7 +86,8 @@ Kit No: ${kit.kit_number}
 
   return (
     <div className="requests-section">
-      <InvoiceReminder />
+      <h3 className="request-header">Requests</h3>
+
       {message && <p className="success-message">{message}</p>}
 
       <div className="tabs">
@@ -114,7 +116,7 @@ Kit No: ${kit.kit_number}
                   <div key={index} className="funding-card">
                     <p>
                       <strong>Date:</strong>{" "}
-                      {new Date(item.created_at).toLocaleDateString("en-US")}
+                      { formatDate(item.created_at)}
                     </p>
                     <p>
                       <strong>Amount:</strong> {item.amount}
@@ -163,7 +165,7 @@ Kit No: ${kit.kit_number}
                     </p>
                     <p>
                       <strong>Date:</strong>{" "}
-                      {new Date(kit.created_at).toLocaleDateString("en-US")}
+                      {formatDate(kit.created_at) }
                     </p>
                     <div className="cta">
                       <select

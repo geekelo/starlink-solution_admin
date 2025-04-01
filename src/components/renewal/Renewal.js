@@ -11,6 +11,7 @@ import {
 import { useLocation } from "react-router-dom";
 import InfoCard from "../InfoCard/Card";
 
+import { formatDate } from "../utils/date";
 
 const Renewal = ({ transaction, openModal }) => {
   const location = useLocation();
@@ -63,9 +64,9 @@ const Renewal = ({ transaction, openModal }) => {
           icon: <CalendarDays size={16} />,
           label: "Date",
           value: transaction?.date
-            ? new Date(transaction.date).toLocaleDateString()
+            ? formatDate(transaction.date)
             : transaction?.date_of_renewal
-            ? new Date(transaction.date_of_renewal).toLocaleDateString()
+            ? formatDate(transaction.date_of_renewal)
             : "N/A"
         }
       ]}

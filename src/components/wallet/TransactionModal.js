@@ -1,4 +1,5 @@
 import { XCircle } from "lucide-react";
+import { formatDate } from "../utils/date";
 
 export const TransactionModal = ({ isOpen, closeModal, transaction, type, error }) => {
     if (!isOpen || !transaction) return null;
@@ -18,7 +19,7 @@ export const TransactionModal = ({ isOpen, closeModal, transaction, type, error 
             <div className="transaction-details">
               <p><strong>Type:</strong> {transaction.type}</p>
               <p><strong>Amount:</strong> ₦{transaction.amount?.toLocaleString()}</p>
-              <p><strong>Date:</strong> {new Date(transaction.date).toLocaleDateString()}</p>
+              <p><strong>Date:</strong> {formatDate(transaction.date)}</p>
               
               {transaction.email && (
                 <p><strong>Email:</strong> {transaction.email}</p>
@@ -40,15 +41,15 @@ export const TransactionModal = ({ isOpen, closeModal, transaction, type, error 
               {transaction.type === 'Renewal' && (
                 <>
                   {transaction.deadline && (
-                    <p><strong>Deadline:</strong> {new Date(transaction.deadline).toLocaleDateString()}</p>
+                    <p><strong>Deadline:</strong>{formatDate(transaction.deadline)}</p>
                   )}
                   
                   {transaction.start_date && (
-                    <p><strong>Start Date:</strong> {new Date(transaction.start_date).toLocaleDateString()}</p>
+                    <p><strong>Start Date:</strong>{formatDate(transaction.start_date)} </p>
                   )}
                   
                   {transaction.end_date && (
-                    <p><strong>End Date:</strong> {new Date(transaction.end_date).toLocaleDateString()}</p>
+                    <p><strong>End Date:</strong> {formatDate(transaction.end_date)}</p>
                   )}
                   
                   {transaction.month && (

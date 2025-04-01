@@ -150,6 +150,7 @@ const FundingPage = () => {
         icon={<Mail size={24} />}
         loading={loading}
         onSearch={handleSearch}
+        
         withButton={true}
         buttonText="Search"
         loadingText="Searching..."

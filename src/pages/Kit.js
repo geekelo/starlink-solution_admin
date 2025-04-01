@@ -27,7 +27,7 @@ import "../styles/Kits.css";
 import KitModal from "../components/kits/kitModal";
 import Modal from "../components/kits/transferModal";
 import { FilterSelect } from "../components/FilterSelect/Filter";
-
+import { formatDate } from "../components/utils/date";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -195,7 +195,7 @@ const KitPage = () => {
   const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
 
   const goToRenewals = (kit) => {
-    navigate(`/renewals?kitNumber=${kit.kitNo}`);
+    navigate(`/manage-renewal?kit=${kit.kitNo}`);
   };
   const handleTransferKit = async () => {
     if (!transferEmail) {
@@ -495,8 +495,9 @@ const KitPage = () => {
                   <CalendarDays size={16} />
                 </div>
                 <div className="kit-info-text">
-                  <strong>Date:</strong> {kit.dateAdded}
-                </div>
+  <strong>Date:</strong> {formatDate(kit.dateAdded)}
+</div>
+
               </div>
             </div>
           ))
