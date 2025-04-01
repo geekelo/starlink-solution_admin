@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MobileDrawer from "../nav/MobileDrawer";
 import { AdminSidebar } from "../nav/Sidebar";
 import { Outlet } from "react-router-dom";
-import { MobileHeader } from "../nav/Header";
+import { MobileHeader } from "../nav/MobileHeader";
 
 const AdminLayout = () => {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
