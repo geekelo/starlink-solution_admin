@@ -38,6 +38,7 @@ import {
   Edit2,
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { formatDate } from "../utils/date";
 
 // Renewal Component with dropdown menu for edit and view options
 const Renewal = ({ transaction, openModal }) => {
@@ -141,9 +142,9 @@ const Renewal = ({ transaction, openModal }) => {
         <div className="kit-info-text">
   <strong>Date:</strong>{" "}
   {transaction?.date
-    ? new Date(transaction.date).toLocaleDateString()
+    ? formatDate(transaction.date)
     : transaction?.date_of_renewal
-    ? new Date(transaction.date_of_renewal).toLocaleDateString()
+    ? formatDate(transaction.date_of_renewal)
     : "N/A"}
 </div>
 

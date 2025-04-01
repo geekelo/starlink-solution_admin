@@ -19,6 +19,7 @@
 
 import React from "react";
 import {  ArrowUpCircle, CalendarDays, CheckCircle, User, CreditCard } from 'lucide-react';
+import { formatDate } from "../utils/date";
 
 // Funding Component with Kit Card styling
 const Funding = ({ transaction }) => {
@@ -67,7 +68,7 @@ const Funding = ({ transaction }) => {
           <CalendarDays size={16} />
         </div>
         <div className="kit-info-text">
-          <strong>Date:</strong> {transaction.date ? new Date(transaction.date).toLocaleDateString() : "N/A"}
+          <strong>Date:</strong>  {transaction.date ?  formatDate(transaction.date) : "N/A"}
         </div>
       </div>
     </div>
