@@ -20,6 +20,7 @@ import {
   WalletCards,
   WalletMinimal,
 } from "lucide-react";
+import { formatDate } from "../utils/date";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -258,7 +259,7 @@ const Users = () => {
   <Calendar size={16} />
 </div>
 <div className="kit-info-text">
-  <strong>Date:</strong> {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}
+  <strong>Date:</strong> {user.createdAt ? formatDate(user.createdAt) : "N/A"}
 </div>
 
               </div>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import "../../styles/Withdrawal.css";
 import { ArrowDownCircle, CalendarDays, FileText } from "lucide-react";
 import WithdrawalFormModal from "./withdrawalForm";
+import { formatDate } from "../utils/date";
 
 const Withdrawal = ({ transaction = {} }) => {
   return (
@@ -35,7 +36,7 @@ const Withdrawal = ({ transaction = {} }) => {
           <div className="kit-info-text">
             <strong>Date:</strong>{" "}
             {transaction.date
-              ? new Date(transaction.date).toLocaleDateString()
+              ? formatDate(transaction.date) 
               : "N/A"}
           </div>
         </div>

@@ -26,6 +26,7 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/Kits.css";
 import KitModal from "./kitModal";
 import Modal from "./transferModal";
+import { formatDate } from "../utils/date";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -476,8 +477,9 @@ const KitPage = () => {
                   <CalendarDays size={16} />
                 </div>
                 <div className="kit-info-text">
-                  <strong>Date:</strong> {kit.dateAdded}
-                </div>
+  <strong>Date:</strong> {formatDate(kit.dateAdded)}
+</div>
+
               </div>
             </div>
           ))

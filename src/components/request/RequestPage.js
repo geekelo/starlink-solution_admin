@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import "../../styles/RequestPage.css";
+import { formatDate } from "../utils/date";
 
 const RequestPage = () => {
   const [activeTab, setActiveTab] = useState("funding");
@@ -68,7 +69,7 @@ const RequestPage = () => {
                     </td>
                     <td>{request.walletId}</td>
                     <td>{request.amount}</td>
-                    <td>{request.date}</td>
+                    <td>{formatDate(request.date)}</td>
                     <td className="action-buttons">
                       <button
                         className="approve-button"
