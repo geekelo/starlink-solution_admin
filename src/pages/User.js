@@ -4,24 +4,24 @@ import { createAxiosInstance } from "../config/axios";
 import "../styles/User.css";
 import {
   Calendar,
-  ChevronLeft,
-  ChevronRight,
-  Edit,
   Edit2,
-  KeyIcon,
   Mail,
   MoreVertical,
   Package,
   Phone,
   PhoneIncoming,
-  Search,
-  User2,
+  UserRoundX,
+  UsersRound,
   Wallet,
   WalletCards,
   WalletMinimal,
 } from "lucide-react";
 import { AppLoader } from "../components/Loader/loader";
 import SearchWithButton from "../components/SearchInput/SearchInput";
+import MetricBox from "../components/MetricsBox/MetricsBox";
+import Pagination from "../components/Pagination/Pagination";
+import PageHeader from "../components/PageHeader/PageHeader";
+import EmptyState from "../components/EmptyState/EmptyState";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -152,36 +152,35 @@ const Users = () => {
   const indexOfLastKit = currentPage * totalPages;
   const indexOfFirstKit = indexOfLastKit - totalPages;
   const currentKits = filteredUsers.slice(indexOfFirstKit, indexOfLastKit);
-  const indexOfLastItem = currentPage * totalPages;
+
   return (
     <div className="kit-container">
-      <div className="kit-nav">
-        <h2 className="kit-header">User Management</h2>
+       <PageHeader 
+        title="User Management" 
+        rightElement={   <SearchWithButton
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by Name, Email, Phone, WhatsApp, Wallet ID, or OTP"
+          icon={<Mail size={24} />}
+         withButton={false}
+         style={{ maxWidth: '400px' }}
+          
+      
+        />}
 
-        {error && <p className="error-message">{error}</p>}
-          <SearchWithButton
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search by Name, Email, Phone, WhatsApp, Wallet ID, or OTP"
-                icon={<Mail size={24} />}
-               withButton={false}
-               style={{ maxWidth: '300px' }}
-                
-            
-              />
-
-       
-      </div>
-
+      />
+       {error && <p className="error-message">{error}</p>}
+ 
+  
       <div className="kit-metrics">
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <User2 size={40} color="#b6bbc1" />
-            <h4>Total Users</h4>
-          </div>
-          <p>{loading ? "-" : filteredUsers.length}</p>
-        </div>
+      <MetricBox
+          icon={<UsersRound size={40} color="#4c6ef5" />}
+          title="Total Users"
+          value={`₦${filteredUsers.toLocaleString()}`}
+          loading={loading}
+        />
+    
       </div>
 
       <div className="kit-grid">
@@ -268,27 +267,18 @@ const Users = () => {
             </div>
           ))
         ) : (
-          <p className="no-results">No users found.</p>
+          <EmptyState message="No users found." icon={<UserRoundX />}/>
+      
         )}
       </div>
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              indexOfLastItem < currentKits.length ? prev + 1 : prev
-            )
-          }
-          disabled={indexOfLastItem >= currentKits.length}
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
+          <Pagination
+                        currentPage={currentPage}
+                        onPageChange={setCurrentPage}
+                        totalItems={currentKits.length}
+                        itemsPerPage={usersPerPage}
+                        showPageNumbers={true}
+                      />
+ 
       {isModalOpen && selectedUser && (
         <>
           <div

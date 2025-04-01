@@ -26,6 +26,8 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Kits.css";
 import KitModal from "../components/kits/kitModal";
 import Modal from "../components/kits/transferModal";
+import { FilterSelect } from "../components/FilterSelect/Filter";
+
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -255,6 +257,15 @@ const KitPage = () => {
   const itemsPerPage = currentKits.length - 1;
   const indexOfLastItem = currentPage * itemsPerPage;
 
+  const options = [
+    { value: 'kitNo', label: 'Kit No' },
+    { value: 'dateAdded', label: 'Date Added' },
+    { value: 'month', label: 'Month' },
+    { value: 'year', label: 'Year' },
+    { value: 'username', label: 'User' },
+    { value: 'email', label: 'Email' },
+  ];
+
   return (
     <div className="kit-container">
       <div className="kit-nav">
@@ -263,7 +274,15 @@ const KitPage = () => {
         {error && <p className="error-message">{error}</p>}
 
         <div className="search-filter">
-          <div className="filter-box">
+        <FilterSelect 
+          options={options} 
+          defaultValue="kitNo"
+          onChange={setSearchType}
+          placeholder="Select filter type"
+        
+          icon={<Filter size={16} />}
+        />
+          {/* <div className="filter-box">
             <Filter size={24} color="#b6bbc1" />
             <select
               value={searchType}
@@ -277,7 +296,7 @@ const KitPage = () => {
               <option value="username">User</option>
               <option value="email">Email</option>
             </select>
-          </div>
+          </div> */}
           <div className="search-box">
             <Search size={24} color="#b6bbc1" />
             {searchType === "dateAdded" ? (

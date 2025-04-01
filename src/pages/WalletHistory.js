@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 
 import {
-  ChevronLeft,
-  ChevronRight,
   ArrowUpCircle,
   RefreshCw,
   ArrowDownCircle,

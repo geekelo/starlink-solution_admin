@@ -10,6 +10,9 @@ import { FormInput } from "../components/FormInput/Input";
 import AppButton from "../components/AppButton/Button";
 import { AppLoader } from "../components/Loader/loader";
 import SearchWithButton from "../components/SearchInput/SearchInput";
+import Pagination from "../components/Pagination/Pagination";
+import PageHeader from "../components/PageHeader/PageHeader";
+import EmptyState from "../components/EmptyState/EmptyState";
 
 const FundingPage = () => {
   const location = useLocation();
@@ -155,7 +158,7 @@ const FundingPage = () => {
         <AppButton   variant="custom"
           backgroundColor="primary"
           leftIcon={<Plus/>}
-          textColor="#ffffff"
+          textColor="#000"
           loading={loading}
           loadingText="Creating..."
           disabled={loading}
@@ -167,10 +170,8 @@ const FundingPage = () => {
       </div>
     
       {/* Header stands alone */}
-      <div className="kit-header-wrapper">
-        <h2 className="kit-header-title">Manage Funding Request</h2>
- 
-      </div>
+      <PageHeader title="Manage Funding Request"/>
+   
     
       {/* Content area */}
       <div className="kit-content-area">
@@ -207,38 +208,28 @@ const FundingPage = () => {
     
         {/* Initial state shown when no search has been performed */}
         {!searchResult && !loading && (
-          <div className="kit-initial-state">
-            <div className="kit-initial-icon">
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8"/>
-                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-              </svg>
-            </div>
-            <h3 className="kit-initial-title">Ready to Search</h3>
-            <p className="kit-initial-message">Enter a user email above and click Search to view funding records.</p>
-          </div>
+          <EmptyState message="Enter a user email above and click Search to view funding records." icon={<Search/>}/>
+          // <div className="kit-initial-state">
+          //   <div className="kit-initial-icon">
+          //     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          //       <circle cx="11" cy="11" r="8"/>
+          //       <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          //     </svg>
+          //   </div>
+          //   <h3 className="kit-initial-title">Ready to Search</h3>
+          //   <p className="kit-initial-message">Enter a user email above and click Search to view funding records.</p>
+          // </div>
         )}
     
         {/* Pagination */}
         {fundingData.length > itemsPerPage && (
-        <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={() => 
-            setCurrentPage((prev) => 
-              indexOfLastItem < fundingData.length ? prev + 1 : prev
-            )
-          }
-          disabled={indexOfLastItem >= fundingData.length}
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
+               <Pagination
+                  currentPage={currentPage}
+                  onPageChange={setCurrentPage}
+                  totalItems={fundingData.length}
+                  itemsPerPage={itemsPerPage}
+                  showPageNumbers={true}
+                />
         )}
       </div>
     
