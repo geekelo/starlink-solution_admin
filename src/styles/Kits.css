@@ -421,8 +421,9 @@
 
 .modal-content button {
   margin-top: 15px;
-  background: #007bff;
-  color: white;
+
+  color: black;
+
   border: none;
   padding: 10px;
   border-radius: 5px;
