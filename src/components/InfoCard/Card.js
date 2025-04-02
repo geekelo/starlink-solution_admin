@@ -169,15 +169,7 @@ export const InfoCard = ({
   
         {/* Filter and Button Footer - Always render this section */}
         {showAppButton &&    <div className="info-card-footer" style={{display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '15px'}}>
-          <div className="form-group">
-            <FilterSelect
-              label={label}
-              options={statusOptions}
-              defaultValue={status}
-              onChange={setStatus}
-              placeholder={placeholder}
-            />
-          </div>
+        
           
           <div className="form-group">
           {planOptions && planOptions.length > 0 ? (
@@ -192,6 +184,15 @@ export const InfoCard = ({
             <p>No plan options available</p>
           )}
          
+          </div>
+          <div className="form-group">
+            <FilterSelect
+              label={label}
+              options={statusOptions}
+              defaultValue={status}
+              onChange={setStatus}
+              placeholder={placeholder}
+            />
           </div>
           
           {showAppButton && (
