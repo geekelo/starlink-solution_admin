@@ -100,21 +100,12 @@
   flex-direction: column;
   gap: 8px;
   position: relative;
-<<<<<<< HEAD
 }
 
 .renewal {
   border-left: 5px solid #fd7e14; /* Blue accent */
 }
 
-=======
-}
-
-.renewal {
-  border-left: 5px solid #0056b3; /* Blue accent */
-}
-
->>>>>>> a9fd7512bb06da7d62b302baeda013b8b49bf1a9
 .kit-card h3 {
   margin: 0 0 15px 0;
   display: flex;
