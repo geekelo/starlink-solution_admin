@@ -2,7 +2,7 @@
 
 import React from "react";
 import {  ArrowUpCircle, CalendarDays, CheckCircle, User, CreditCard } from 'lucide-react';
-import InfoCard from "../InfoCard/Card";
+import {InfoCard} from "../InfoCard/Card";
 
 // Funding Component with Kit Card styling
 const Funding = ({ transaction }) => {

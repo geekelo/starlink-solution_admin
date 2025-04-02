@@ -9,7 +9,7 @@ import {
   Edit2,
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import InfoCard from "../InfoCard/Card";
+import {InfoCard} from "../InfoCard/Card";
 
 import { formatDate } from "../utils/date";
 

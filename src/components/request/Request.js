@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Request.css";
-import InvoiceReminder from "../reminders/InvoiceReminder";
+// import InvoiceReminder from "../reminders/InvoiceReminder";
 import { formatDate } from "../utils/date";
 
 const Requests = () => {

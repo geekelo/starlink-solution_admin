@@ -21,7 +21,7 @@
 }
 
 .auto-renew-btn {
-  background-color: #007bff;
+  background-color: #fd7e14;
   color: white;
   padding: 15px 20px;
   font-size: 16px;
@@ -103,7 +103,7 @@
 }
 
 .renewal {
-  border-left: 5px solid #0056b3; /* Blue accent */
+  border-left: 5px solid #fd7e14; /* Blue accent */
 }
 
 .kit-card h3 {
