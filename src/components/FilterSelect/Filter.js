@@ -48,7 +48,11 @@ export const FilterSelect = ({
         aria-controls="filter-select-options"
       >
         <div className="filter-select-trigger-content">
+<<<<<<< HEAD
           {icon && <span className="filter-select-icon">{ <Filter size={16} />}</span>}
+=======
+          {icon && <span className="filter-select-icon">{icon}</span>}
+>>>>>>> a9fd7512bb06da7d62b302baeda013b8b49bf1a9
           <span className={selectedValue ? 'filter-select-value' : 'filter-select-placeholder'}>
             {selectedValue ? options.find(opt => opt.value === selectedValue)?.label || placeholder : placeholder}
           </span>
