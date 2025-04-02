@@ -7,7 +7,7 @@ export const FilterSelect = ({
   defaultValue = '', 
   onChange = () => {}, 
   placeholder = 'Select option...',
-  icon = <Filter size={16} />,
+  icon = '',
   label = '',
   disabled = false,
 }) => {
@@ -48,7 +48,7 @@ export const FilterSelect = ({
         aria-controls="filter-select-options"
       >
         <div className="filter-select-trigger-content">
-          {icon && <span className="filter-select-icon">{icon}</span>}
+          {icon && <span className="filter-select-icon">{ <Filter size={16} />}</span>}
           <span className={selectedValue ? 'filter-select-value' : 'filter-select-placeholder'}>
             {selectedValue ? options.find(opt => opt.value === selectedValue)?.label || placeholder : placeholder}
           </span>
@@ -68,7 +68,7 @@ export const FilterSelect = ({
                 aria-selected={selectedValue === option.value}
                 tabIndex={0}
               >
-                <span className="filter-select-option-text">{option.label}</span>
+                <span className="filter-select-option-text">{option.label || option.name}</span>
                 {selectedValue === option.value && <Check size={16} className="filter-select-check" />}
               </li>
             ))}

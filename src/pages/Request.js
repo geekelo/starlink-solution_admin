@@ -7,9 +7,10 @@ import FundingCard from "../components/request/FundCard";
 import {Box, HandCoins } from "lucide-react";
 import { AppLoader } from "../components/Loader/loader";
 import EmptyState from "../components/EmptyState/EmptyState";
+import TabGroup from "../components/TabGroup/Tab";
 
 const Requests = () => {
-  const [activeTab, setActiveTab] = useState("funding");
+  const [activeTab, setActiveTab] = useState("Funding");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState(""); // Success message
@@ -68,10 +69,15 @@ const Requests = () => {
   };
   return (
     <div className="requests-section">
-      <InvoiceReminder />
+    
       {message && <p className="success-message">{message}</p>}
-      
-      <div className="tabs">
+         <TabGroup
+              tabs={['Funding', 'Kits']}
+              activeTab={activeTab}
+              onTabChange={setActiveTab}
+              tabPrefix="tab"
+            />
+      {/* <div className="tabs">
         <button
           className={activeTab === "funding" ? "active" : ""}
           onClick={() => setActiveTab("funding")}
@@ -87,13 +93,13 @@ const Requests = () => {
           <Box size={18} />
           <span>Kits</span>
         </button>
-      </div>
+      </div> */}
       
       {loading ? (
          <AppLoader />
       ) : (
         <>
-          {activeTab === "funding" && (
+          {activeTab === "Funding" && (
             <div className="funding-list">
               {fundingData.length > 0 ? (
                 fundingData.map((item, index) => (
@@ -107,11 +113,11 @@ const Requests = () => {
             </div>
           )}
           
-          {activeTab === "kits" && (
+          {activeTab === "Kits" && (
             <div className="kit-grid">
               {kits.length > 0 ? (
-                kits.map((kit) => (
-                  <KitCard key={kit.id} kit={kit} plans={plans} />
+                kits.map((kit, index) => (
+                  <KitCard key={kit.id} kit={kit} plans={plans} index={index}/>
                 ))
               ) : (
                 <p className="req-message">No Starlink kit requests available.</p>
