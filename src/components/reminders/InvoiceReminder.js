@@ -31,7 +31,8 @@ const InvoiceReminder = () => {
     setError(null);
     try {
       const axiosInstance = createAxiosInstance();
-      await axiosInstance.post("/api/v1/admin/auto_renews"); // POST request
+     const res = await axiosInstance.post("/api/v1/admin/auto_renews"); // POST request
+      console.log(res)
       setMessage("Auto-renewal triggered successfully!"); // Show success message
     } catch (err) {
       setError("Failed to trigger auto-renewal.");

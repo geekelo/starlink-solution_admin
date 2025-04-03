@@ -68,7 +68,7 @@ const Requests = () => {
   };
   return (
     <div className="requests-section">
-      <InvoiceReminder />
+      
       {message && <p className="success-message">{message}</p>}
       
       <div className="tabs">
