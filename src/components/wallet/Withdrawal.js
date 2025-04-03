@@ -3,6 +3,7 @@ import "../../styles/Withdrawal.css";
 import { ArrowDownCircle, CalendarDays, FileText } from "lucide-react";
 import WithdrawalFormModal from "./withdrawalForm";
 import {InfoCard} from "../InfoCard/Card";
+import { formatDate } from "../utils/date";
 
 const Withdrawal = ({ transaction = {} }) => {
   return (
@@ -27,7 +28,7 @@ const Withdrawal = ({ transaction = {} }) => {
             icon: <CalendarDays size={16} />,
             label: "Date",
             value: transaction.date
-              ? new Date(transaction.date).toLocaleDateString()
+              ? formatDate(transaction.date)
               : "N/A"
           }
         ]}
