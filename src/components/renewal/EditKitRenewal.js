@@ -21,7 +21,6 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
     deadline: transaction?.deadline ? new Date(transaction.deadline).toISOString().split('T')[0] : "",
     date_of_renewal: transaction?.date_of_renewal || ""
   });
-console.log(formData);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
