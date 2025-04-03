@@ -353,7 +353,7 @@ const KitPage = () => {
         {loading ? (
        <AppLoader/>
         ) : (
-          currentKits.map((kit) => (
+       
             <div className="kit-grid">
             {currentKits.map((kit) => (
               <InfoCard
@@ -439,7 +439,7 @@ const KitPage = () => {
               />
             ))}
           </div>
-          )) 
+         
         )}
       </div>
       {/* Pagination Controls */}
