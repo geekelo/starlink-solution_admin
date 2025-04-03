@@ -37,7 +37,7 @@ const Funding = ({ transaction }) => {
       {
         icon: <CalendarDays size={16} />,
         label: "Date",
-        value: formatDate(transaction.date) || "N/A"
+        value: transaction.date ? formatDate(transaction.date) : "N/A"
       }
     ]}
   />
