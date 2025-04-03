@@ -133,6 +133,11 @@ const FundingPage = () => {
     }
   };
 
+  const handleModal = () => {
+    setShowModal(true)
+  }
+  
+
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFunding = fundingData.slice(indexOfFirstItem, indexOfLastItem);
@@ -156,16 +161,19 @@ const FundingPage = () => {
         loadingText="Searching..."
       />
         <div className="kit-action-wrapper">
-        <AppButton   variant="custom"
-          backgroundColor="primary"
-          leftIcon={<Plus/>}
-          textColor="#000"
-          loading={loading}
-          loadingText="Creating..."
-          disabled={loading}
-        onClick={() => setShowModal(true)}>
- Create Funding
-          </AppButton>
+        <AppButton
+  variant="custom"
+  backgroundColor="primary"
+  leftIcon={<Plus />}
+  textColor="#000"
+  loading={loading}
+  loadingText="Creating..."
+  disabled={loading}
+  onClick={handleModal}
+>
+  Create Funding
+</AppButton>
+
          
         </div>
       </div>
@@ -236,15 +244,20 @@ const FundingPage = () => {
     
       {/* Modals */}
       {showModal && (
-        <CreateFundingModal
-          newFunding={newFunding}
-          setNewFunding={setNewFunding}
-          handleCreateFunding={handleCreateFunding}
-          closeModal={() => setShowModal(false)}
-          loading={loading}
-        />
-      )}
-    
+  <>
+    {console.log("Modal should be visible now!")}
+    <CreateFundingModal
+  newFunding={newFunding}
+  setNewFunding={setNewFunding}
+  handleCreateFunding={handleCreateFunding}
+  closeModal={() => setShowModal(false)}
+  loading={loading}
+  isOpen={showModal}
+/>
+
+  </>
+)}
+
       {showSuccessModal && (
         <SuccessModal
           message="Funding Request Created Successfully!"
