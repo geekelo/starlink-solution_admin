@@ -10,6 +10,7 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
 
 
   const [formData, setFormData] = React.useState({
+    kit_number: transaction?.kit_number || "",
     status: transaction?.status || "",
     amount: transaction?.amount || "",
     month: transaction?.month || "",
@@ -20,7 +21,6 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
     deadline: transaction?.deadline ? new Date(transaction.deadline).toISOString().split('T')[0] : "",
     date_of_renewal: transaction?.date_of_renewal || ""
   });
-console.log(formData);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -40,6 +40,7 @@ console.log(formData);
   if (!isOpen || !transaction) {
     return null;
   }
+  
   return (
     <div className="modal-overlay">
       <div className="funding-modal">
