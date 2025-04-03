@@ -5,6 +5,7 @@ import "../styles/Wallet.css";
 import Renewal from "../components/renewal/Renewal";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import EditRenewalModal from "../components/renewal/EditKitRenewal";
+import { AppLoader } from "../components/Loader/loader";
 
 const MonthlyRenewalPage = () => {
   const navigate = useNavigate();
@@ -165,7 +166,7 @@ console.log(selectedTransaction)
 
       {/* Content */}
       <div className="kit-content-area">
-        {loading && <p>Loading records...</p>}
+        {loading && < AppLoader/>}
 
         {searchResult && !loading && (
           <>

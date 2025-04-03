@@ -15,7 +15,7 @@ import { formatDate } from "../utils/date";
 
 const Renewal = ({ transaction, openModal }) => {
   const location = useLocation();
-  const isManageRenewalsPath = location.pathname.includes("/manage-renewal");
+  const isManageRenewalsPath = location.pathname.includes("/monthly-renewals");
 
   const handleEditClick = () => {
     openModal("edit", transaction);
@@ -30,16 +30,16 @@ const Renewal = ({ transaction, openModal }) => {
       title="Renewal"
       className="renewal"
       menuItems={[
-        {
+       
+        ...(isManageRenewalsPath ? [ {
           icon: <Eye size={16} />,
           label: "View Details",
           onClick: handleViewClick
-        },
-        ...(isManageRenewalsPath ? [{
+        },{
           icon: <Edit2 size={16} />,
           label: "Edit",
           onClick: handleEditClick
-        }] : [])
+        }, ] : [])
       ]}
       items={[
         {
