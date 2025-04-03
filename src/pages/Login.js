@@ -29,11 +29,11 @@ const Login = () => {
 
   const navigate = useNavigate();
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setLoading(true);
-
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.post("/api/v1/login", {
@@ -42,14 +42,15 @@ const Login = () => {
           password,
         },
       });
+console.log(response);
 
       localStorage.setItem("candra", response.data.token);
-navigate('/')
+
       // // Redirect to home AFTER token is set
-      // window.location.href = "/";
+      window.location.href = "/";
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
-      setError(err.response?.data?.message || "Login failed. Please try again.");
+      setError(err.response?.data?.error || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
