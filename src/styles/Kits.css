@@ -218,7 +218,9 @@
   gap: 12px 8px;
   align-items: start;
 }
-
+.kit-box {
+  margin-bottom: 45px;
+}
 /* Icon styling */
 .kit-info-icon {
   color: #64748b;
@@ -252,8 +254,8 @@
 }
 
 .status-badge.active {
-  background-color: #dcfce7;
-  color: #16a34a;
+  background-color: #0d6efd;
+  color: #fff;
 }
 
 .status-badge.inactive {
@@ -356,83 +358,7 @@
   background: #0056b3;
 }
 
-/* Modal styles */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
 
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  width: 400px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  position: relative;
-}
-
-.modal-content h3 {
-  margin-top: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 15px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #888;
-}
-
-.close-btn:hover {
-  color: #333;
-}
-
-.modal-content form {
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-content label {
-  margin-top: 10px;
-  font-weight: bold;
-  color: #555;
-}
-
-.modal-content input,
-.modal-content select {
-  padding: 8px;
-  margin-top: 5px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
-
-.modal-content button {
-  margin-top: 15px;
-
-  color: black;
-
-  border: none;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.modal-content button:hover {
-  background: #0056b3;
-}
 
 .renew-btn {
   background-color: #007bff;

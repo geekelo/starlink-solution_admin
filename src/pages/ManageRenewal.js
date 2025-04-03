@@ -8,6 +8,7 @@ import EditKitRenewalModal from "../components/renewal/EditKitRenewal";
 import { Plus, Search } from "lucide-react";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import { AppLoader } from "../components/Loader/loader";
+import PageHeader from "../components/PageHeader/PageHeader";
 
 
 const RenewalPage = () => {
@@ -103,6 +104,7 @@ const RenewalPage = () => {
 
   return (
     <div className="kit-container-renewal">
+      <PageHeader title=""/>
       <button className="kit-create-button" onClick={() => setShowModal(true)}>
         Create Renewal
       </button>

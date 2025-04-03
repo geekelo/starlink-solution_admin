@@ -28,6 +28,11 @@ import KitModal from "../components/kits/kitModal";
 import Modal from "../components/kits/transferModal";
 import { FilterSelect } from "../components/FilterSelect/Filter";
 import { formatDate } from "../components/utils/date";
+import PageHeader from "../components/PageHeader/PageHeader";
+import MetricBox from "../components/MetricsBox/MetricsBox";
+import Pagination from "../components/Pagination/Pagination";
+import { AppLoader } from "../components/Loader/loader";
+import { InfoCard } from "../components/InfoCard/Card";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -61,7 +66,6 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
-       
 
         const formattedKits = response.data
           .map((kit) => ({
@@ -161,7 +165,10 @@ const KitPage = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  const handleSelectChange = (value) => {
+ 
+    setFormData((prev) => ({ ...prev, status: value }));
+  };
   const handleSave = async () => {
     try {
       const axiosInstance = createAxiosInstance();
@@ -258,275 +265,197 @@ const KitPage = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
 
   const options = [
-    { value: 'kitNo', label: 'Kit No' },
-    { value: 'dateAdded', label: 'Date Added' },
-    { value: 'month', label: 'Month' },
-    { value: 'year', label: 'Year' },
-    { value: 'username', label: 'User' },
-    { value: 'email', label: 'Email' },
+    { value: "kitNo", label: "Kit No" },
+    { value: "dateAdded", label: "Date Added" },
+    { value: "month", label: "Month" },
+    { value: "year", label: "Year" },
+    { value: "username", label: "User" },
+    { value: "email", label: "Email" },
   ];
 
   return (
     <div className="kit-container">
+           <PageHeader
+          title="Kit Management"
+          rightElement={
+            <div className="search-filter">
+              <FilterSelect
+                options={options}
+                defaultValue="kitNo"
+                onChange={setSearchType}
+                placeholder="Select filter type"
+                icon={<Filter size={16} />}
+              />
+
+              <div className="search-box">
+                <Search size={24} color="#b6bbc1" />
+                {searchType === "dateAdded" ? (
+                  <input
+                    type="date"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                ) : searchType === "month" ? (
+                  <input
+                    type="month"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                ) : searchType === "year" ? (
+                  <input
+                    type="number"
+                    min="2000"
+                    max={new Date().getFullYear()}
+                    placeholder="Enter Year"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                ) : (
+                  <input
+                    type="text"
+                    placeholder={`Search by ${searchType}`}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                )}
+              </div>
+            </div>
+          }
+        />
       <div className="kit-nav">
-        <h2 className="kit-header">Kit Management</h2>
+   
 
         {error && <p className="error-message">{error}</p>}
-
-        <div className="search-filter">
-        <FilterSelect 
-          options={options} 
-          defaultValue="kitNo"
-          onChange={setSearchType}
-          placeholder="Select filter type"
-        
-          icon={<Filter size={16} />}
-        />
-          {/* <div className="filter-box">
-            <Filter size={24} color="#b6bbc1" />
-            <select
-              value={searchType}
-              onChange={(e) => setSearchType(e.target.value)}
-              className="custom-select"
-            >
-              <option value="kitNo">Kit No</option>
-              <option value="dateAdded">Date Added</option>
-              <option value="month">Month</option>
-              <option value="year">Year</option>
-              <option value="username">User</option>
-              <option value="email">Email</option>
-            </select>
-          </div> */}
-          <div className="search-box">
-            <Search size={24} color="#b6bbc1" />
-            {searchType === "dateAdded" ? (
-              <input
-                type="date"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            ) : searchType === "month" ? (
-              <input
-                type="month"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            ) : searchType === "year" ? (
-              <input
-                type="number"
-                min="2000"
-                max={new Date().getFullYear()}
-                placeholder="Enter Year"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            ) : (
-              <input
-                type="text"
-                placeholder={`Search by ${searchType}`}
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            )}
-          </div>
-        </div>
       </div>
 
       {/* Metrics Section */}
-      <div className="kit-metrics">
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <Package size={40} color="#b6bbc1" />
-            <h4>Total Kits</h4>
-          </div>
-          <p>{loading ? "-" : metrics.total}</p>
-        </div>
-
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <CheckCircle size={40} color="green" />
-            <h4>Active Kits</h4>
-          </div>
-          <p>{loading ? "-" : metrics.active}</p>
-        </div>
-
-        <div className="kitmetric-box">
-          <div className="metric-icon">
-            <XCircle size={40} color="#ff1500b8" />
-            <h4>Inactive Kits</h4>
-          </div>
-          <p>{loading ? "-" : metrics.inactive}</p>
-        </div>
+      <div className="kit-grid kit-box">
+        <MetricBox
+          icon={<Package size={40} color="#b6bbc1" />}
+          title="Total Kits"
+          value={`₦${metrics.total}`}
+          loading={loading}
+        />
+        <MetricBox
+          icon={<CheckCircle size={40} color="green" />}
+          title="Active Kits"
+          value={`₦${metrics.active}`}
+          loading={loading}
+        />
+        <MetricBox
+          icon={<XCircle size={40} color="#ff1500b8" />}
+          title="Inactive Kits"
+          value={`₦${metrics.inactive}`}
+          loading={loading}
+        />
       </div>
       <div className="kit-grid">
         {loading ? (
-          <div className="loading-spinner-container">
-            <div className="loading-spinner"></div>
-          </div>
+       <AppLoader/>
         ) : (
-          currentKits.map((kit) => (
-            <div
-              key={kit.kitId}
-              className={`kit-card ${kit.status.toLowerCase()}`}
-            >
-              <h3>
-                Kit No: {kit.kitNo}
-                <div
-                  className="menu-dots"
-                  onClick={(e) => toggleDropdown(kit.kitId, e)}
-                >
-                  <MoreVertical size={20} />
-                </div>
-              </h3>
-
-              {/* Dropdown Menu */}
-              {activeDropdown === kit.kitId && (
-                <div className="dropdown-menu" ref={dropdownRef}>
-                  <div
-                    className="dropdown-item"
-                    onClick={() => {
+       
+            <div className="kit-grid">
+            {currentKits.map((kit) => (
+              <InfoCard
+                key={kit.kitId}
+                title={`Kit No: ${kit.kitNo}`}
+                items={[
+                  {
+                    icon: <MapPin size={16} />,
+                    label: 'Address',
+                    value: kit.address
+                  },
+                  {
+                    icon: <CreditCard size={16} />,
+                    label: 'NIN',
+                    value: kit.nin
+                  },
+                  {
+                    icon: <Building size={16} />,
+                    label: 'Company',
+                    value: kit.companyName
+                  },
+                  {
+                    icon: kit.status === "active" ? <CheckCircle size={16} /> : <XCircle size={16} />,
+                    label: 'Status',
+                    value: kit.status,
+                    className: `status-badge ${kit.status}`
+                  },
+                  {
+                    icon: <Tag size={16} />,
+                    label: 'Plan',
+                    value: kit.plan
+                  },
+                  {
+                    icon: <Phone size={16} />,
+                    label: 'Service No',
+                    value: kit.serviceNo
+                  },
+                  {
+                    icon: <User size={16} />,
+                    label: 'Owner\'s Name',
+                    value: kit.username
+                  },
+                  {
+                    icon: <MailIcon size={16} />,
+                    label: 'Owner\'s Email',
+                    value: kit.email
+                  },
+                  {
+                    icon: <CalendarDays size={16} />,
+                    label: 'Date',
+                    value: formatDate(kit.dateAdded)
+                  }
+                ]}
+                menuItems={[
+                  {
+                    icon: <Edit2 size={16} />,
+                    label: 'Edit',
+                    onClick: () => {
                       openModal(kit);
                       setActiveDropdown(null);
-                    }}
-                  >
-                    <Edit2 size={16} />
-                    Edit
-                  </div>
-                  <div
-                    className="dropdown-item"
-                    onClick={() => {
+                    }
+                  },
+                  {
+                    icon: <RefreshCw size={16} />,
+                    label: 'Renewals',
+                    onClick: () => {
                       goToRenewals(kit);
                       setActiveDropdown(null);
-                    }}
-                  >
-                    <RefreshCw size={16} />
-                    Renewals
-                  </div>
-                  <div
-                    className="dropdown-item"
-                    onClick={() => openTransferModal(kit)}
-                  >
-                    <FolderOpenDot size={16} />
-                    Transfer
-                  </div>
-                  <div
-                    className="dropdown-item"
-                    onClick={() => handleRenewKit(kit.kitId)}
-                  >
-                    <Repeat2 size={16} />
-                    Renew
-                  </div>
-                </div>
-              )}
-
-              {/* Grid layout with icons for each field */}
-              <div className="kit-info-grid">
-                {/* Address */}
-                <div className="kit-info-icon">
-                  <MapPin size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>Address:</strong> {kit.address}
-                </div>
-
-                {/* NIN */}
-                <div className="kit-info-icon">
-                  <CreditCard size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>NIN:</strong> {kit.nin}
-                </div>
-
-                {/* Company */}
-                <div className="kit-info-icon">
-                  <Building size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>Company:</strong> {kit.companyName}
-                </div>
-
-                {/* Status */}
-                <div className="kit-info-icon">
-                  {kit.status === "active" ? (
-                    <CheckCircle size={16} />
-                  ) : (
-                    <XCircle size={16} />
-                  )}
-                </div>
-                <div className="kit-info-text">
-                  <strong>Status:</strong>
-                  <span className={`status-badge ${kit.status}`}>
-                    {kit.status}
-                  </span>
-                </div>
-
-                {/* Plan */}
-                <div className="kit-info-icon">
-                  <Tag size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>Plan:</strong> {kit.plan}
-                </div>
-
-                {/* Service No */}
-                <div className="kit-info-icon">
-                  <Phone size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>Service No:</strong> {kit.serviceNo}
-                </div>
-
-                {/* Username */}
-                <div className="kit-info-icon">
-                  <User size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>Owner's Name:</strong> {kit.username}
-                </div>
-                <div className="kit-info-icon">
-                  <MailIcon size={16} />
-                </div>
-                <div className="kit-info-text">
-                  <strong>Owner's Email:</strong> {kit.email}
-                </div>
-
-                {/* Date */}
-                <div className="kit-info-icon">
-                  <CalendarDays size={16} />
-                </div>
-                <div className="kit-info-text">
-  <strong>Date:</strong> {formatDate(kit.dateAdded)}
-</div>
-
-              </div>
-            </div>
-          ))
+                    }
+                  },
+                  {
+                    icon: <FolderOpenDot size={16} />,
+                    label: 'Transfer',
+                    onClick: () => openTransferModal(kit)
+                  },
+                  {
+                    icon: <Repeat2 size={16} />,
+                    label: 'Renew',
+                    onClick: () => handleRenewKit(kit.kitId)
+                  }
+                ]}
+                className={kit.status.toLowerCase()}
+              />
+            ))}
+          </div>
+         
         )}
       </div>
-
-      <div className="pagination">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) =>
-              indexOfLastItem < currentKits.length ? prev + 1 : prev
-            )
-          }
-          disabled={indexOfLastItem >= currentKits.length}
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
+      {/* Pagination Controls */}
+      <Pagination
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        totalItems={currentKits.length}
+        itemsPerPage={itemsPerPage}
+        showPageNumbers={true}
+      />
 
       <KitModal
         isOpen={isModalOpen}
         formData={formData}
         handleChange={handleChange}
+        handleSelectChange={handleSelectChange}
         handleSave={handleSave}
         closeModal={closeModal}
         error={error}
