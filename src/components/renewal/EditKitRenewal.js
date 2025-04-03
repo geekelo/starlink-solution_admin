@@ -10,6 +10,7 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
 
 
   const [formData, setFormData] = React.useState({
+    kit_number: transaction?.kit_number || "",
     status: transaction?.status || "",
     amount: transaction?.amount || "",
     month: transaction?.month || "",
@@ -40,6 +41,7 @@ console.log(formData);
   if (!isOpen || !transaction) {
     return null;
   }
+  console.log(formData)
   return (
     <div className="modal-overlay">
       <div className="funding-modal">
