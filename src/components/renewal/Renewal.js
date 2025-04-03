@@ -39,7 +39,7 @@ const Renewal = ({ transaction, openModal }) => {
           icon: <Edit2 size={16} />,
           label: "Edit",
           onClick: handleEditClick
-        }, ] : [])
+        }] : [])
       ]}
       items={[
         {

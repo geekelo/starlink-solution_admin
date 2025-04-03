@@ -166,7 +166,7 @@ console.log(selectedTransaction)
 
       {/* Content */}
       <div className="kit-content-area">
-        {loading && < AppLoader/>}
+        {loading && <AppLoader />}
 
         {searchResult && !loading && (
           <>
