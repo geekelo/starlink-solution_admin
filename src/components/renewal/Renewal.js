@@ -65,8 +65,8 @@ const Renewal = ({ transaction, openModal }) => {
           label: "Date",
           value: transaction?.date
             ? formatDate(transaction.date)
-            : transaction?.date_of_renewal
-            ? formatDate(transaction.date_of_renewal)
+            : transaction?.start_date
+            ? formatDate(transaction.start_date)
             : "N/A"
         }
       ]}

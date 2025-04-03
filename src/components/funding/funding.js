@@ -3,6 +3,7 @@
 import React from "react";
 import {  ArrowUpCircle, CalendarDays, CheckCircle, User, CreditCard } from 'lucide-react';
 import {InfoCard} from "../InfoCard/Card";
+import { formatDate } from "../utils/date";
 
 // Funding Component with Kit Card styling
 const Funding = ({ transaction }) => {
@@ -36,7 +37,7 @@ const Funding = ({ transaction }) => {
       {
         icon: <CalendarDays size={16} />,
         label: "Date",
-        value: transaction.date ? new Date(transaction.date).toLocaleDateString() : "N/A"
+        value: transaction.date ? formatDate(transaction.date) : "N/A"
       }
     ]}
   />
