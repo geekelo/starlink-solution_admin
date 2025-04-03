@@ -98,7 +98,7 @@ const FundingPage = () => {
 
     setNewFunding((prev) => ({ ...prev, date: formattedDate })); // Set date before sending
 
-    c;
+
 
     if (
       !newFunding.email ||
