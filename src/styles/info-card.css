@@ -148,7 +148,9 @@
   .info-card.renewal {
     border-left-color: #fd7e14;
   }
-  
+  .info-card.pending {
+    border-left-color: #856404;;
+  }
   /* Hover effect */
   .info-card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
