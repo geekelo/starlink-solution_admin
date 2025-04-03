@@ -40,7 +40,7 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
   if (!isOpen || !transaction) {
     return null;
   }
-  console.log(formData)
+  
   return (
     <div className="modal-overlay">
       <div className="funding-modal">
