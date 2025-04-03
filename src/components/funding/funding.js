@@ -3,6 +3,7 @@
 import React from "react";
 import {  ArrowUpCircle, CalendarDays, CheckCircle, User, CreditCard } from 'lucide-react';
 import {InfoCard} from "../InfoCard/Card";
+import { formatDate } from "../utils/date";
 
 // Funding Component with Kit Card styling
 const Funding = ({ transaction }) => {
