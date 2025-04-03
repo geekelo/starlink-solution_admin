@@ -175,7 +175,7 @@ const Users = () => {
         <MetricBox
           icon={<UsersRound size={40} color="#4c6ef5" />}
           title="Total Users"
-          value={filteredUsers.length}
+          value={users.length}
           loading={loading}
         />
       </div>
