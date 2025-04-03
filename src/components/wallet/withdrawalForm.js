@@ -3,6 +3,10 @@ import { createAxiosInstance } from "../../config/axios";
 import { FaMoneyBillWave, FaRegStickyNote, FaCalendarAlt } from "react-icons/fa";
 import "../../styles/Withdrawal.css";
 import Modal from "../modal/modal";
+import { FormLabel } from "../FormLabel/Label";
+import { FormInput } from "../FormInput/Input";
+import AppButton from "../AppButton/Button";
+import { ChevronRight } from "lucide-react";
 
 const WithdrawalFormModal = ({ isOpen, onClose }) => {
  
@@ -47,72 +51,101 @@ const WithdrawalFormModal = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null; // Don't render modal if it's closed
+  if (!isOpen) return null; 
+  const modalFooter = (
+    <button 
+      type="submit" 
+      disabled={loading} 
+      className="withdraw-btn"
+      onClick={handleWithdraw}
+    >
+      {loading ? "Processing..." : "Withdraw Funds"}
+    </button>
+  );
+
 
   return (
-    <Modal isOpen={isOpen}  onClose={onClose}>
-      <div className="withdrawal-container">
-        <div className="withdrawal-header">
-          <h2>Withdrawal Funds</h2>
-          
-        </div>
-        
+    <Modal 
+      isOpen={isOpen} 
+      onClose={onClose} 
+      title="Withdraw Funds"
+      size="md"
+      className="withdrawal-modal"
+    >
+      <div className="withdrawal-content">
         <p className="withdrawal-info">
           Enter details below to request a withdrawal.
         </p>
         
-        <div className="withdrawal-form-container">
-          <form className="withdrawal-form" onSubmit={handleWithdraw}>
-            <div className="form-group">
-              <label htmlFor="amount">
-                <FaMoneyBillWave className="icon" /> Amount (₦)
-              </label>
-              <input
-                id="amount"
-                type="number"
-                step="0.01"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                required
-                placeholder="Enter amount"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="purpose">
-                <FaRegStickyNote className="icon" /> Purpose
-              </label>
-              <input
-                id="purpose"
-                type="text"
-                value={purpose}
-                onChange={(e) => setPurpose(e.target.value)}
-                required
-                placeholder="Reason for withdrawal"
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="withdrawalDate">
-                <FaCalendarAlt className="icon" /> Withdrawal Date
-              </label>
-              <input
-                id="withdrawalDate"
-                type="date"
-                value={withdrawalDate}
-                onChange={(e) => setWithdrawalDate(e.target.value)}
-                required
-              />
-            </div>
-            
-            {message && <p className="withdrawal-message success">{message}</p>}
-            {error && <p className="withdrawal-message error">{error}</p>}
-            
-            <button type="submit" disabled={loading} className="withdraw-btn">
-              {loading ? "Processing..." : "Withdraw ➔"}
-            </button>
-          </form>
-        </div>
+        <form className="withdrawal-form" onSubmit={handleWithdraw}>
+          <div className="form-group">
+            <FormLabel htmlFor="amount">
+              Amount (₦)
+            </FormLabel>
+            <FormInput
+              id="amount"
+              type="number"
+              step="0.01"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              required
+              placeholder="Enter amount"
+              icon={<FaMoneyBillWave />}
+              iconPosition="left"
+            />
+          </div>
+          
+          <div className="form-group">
+            <FormLabel htmlFor="purpose">
+              Purpose
+            </FormLabel>
+            <FormInput
+              id="purpose"
+              type="text"
+              value={purpose}
+              onChange={(e) => setPurpose(e.target.value)}
+              required
+              placeholder="Reason for withdrawal"
+              icon={<FaRegStickyNote />}
+              iconPosition="left"
+            />
+          </div>
+          
+          <div className="form-group">
+            <FormLabel htmlFor="withdrawalDate">
+               Withdrawal Date
+            </FormLabel>
+            <FormInput
+              id="withdrawalDate"
+              type="date"
+              value={withdrawalDate}
+              onChange={(e) => setWithdrawalDate(e.target.value)}
+              required
+              icon={<FaCalendarAlt />}
+              iconPosition="left"
+            />
+          </div>
+          
+          {message && <p className="withdrawal-message success">{message}</p>}
+          {error && <p className="withdrawal-message error">{error}</p>}
+          
+          <div className="form-actions">
+            <AppButton
+              type="submit"
+              variant="custom"
+              size="md"
+              loading={loading}
+              loadingText="Processing..."
+              rightIcon={<ChevronRight />}
+              backgroundColor="#e53e3e"
+              textColor="#ffffff"
+              hoverColor="#c53030"
+              fullWidth={false}
+            >
+              Withdraw
+            </AppButton>
+          </div>
+        </form>
       </div>
     </Modal>
   );

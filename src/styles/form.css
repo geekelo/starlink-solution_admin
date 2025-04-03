@@ -264,14 +264,14 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .form-label {
-    color: #e5e7eb;
+    color: #000;
   }
   
   .form-input,
   .form-select {
-    color: #e5e7eb;
-    background-color: #1f2937;
-    border-color: #4b5563;
+    color: #000;
+    /* background-color: #1f2937;
+    border-color: #4b5563; */
   }
   
   .form-input::placeholder {
