@@ -275,8 +275,7 @@ const KitPage = () => {
 
   return (
     <div className="kit-container">
-      <div className="kit-nav">
-        <PageHeader
+           <PageHeader
           title="Kit Management"
           rightElement={
             <div className="search-filter">
@@ -323,6 +322,8 @@ const KitPage = () => {
             </div>
           }
         />
+      <div className="kit-nav">
+   
 
         {error && <p className="error-message">{error}</p>}
       </div>
