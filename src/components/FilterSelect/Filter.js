@@ -10,6 +10,7 @@ export const FilterSelect = ({
   icon = '',
   label = '',
   disabled = false,
+
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(defaultValue);
