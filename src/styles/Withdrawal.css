@@ -1,4 +1,4 @@
-/* Withdrawal container styles */
+Withdrawal container styles
 .withdrawal-container {
   max-width: 650px;
 }
@@ -59,7 +59,7 @@ label {
   display: flex;
   align-items: center;
   margin-bottom: 5px;
-  color: #333;
+  color: #000;
 }
 
 .icon {
@@ -70,10 +70,10 @@ label {
   width: 100%;
   padding: 14px;
   border-radius: 8px;
-  border: 1px solid #fee2e2;
+  border: 1px solid #000;
   font-size: 14px;
   transition: border 0.3s ease-in-out;
-  color: #000;
+ 
 }
 .create-withdrawal-btn{
   display: flex;
