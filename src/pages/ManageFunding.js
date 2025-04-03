@@ -2,7 +2,16 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
-import { Edit, X, CheckCircle, Search, ChevronLeft, ChevronRight, Plus, Mail } from "lucide-react";
+import {
+  Edit,
+  X,
+  CheckCircle,
+  Search,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Mail,
+} from "lucide-react";
 import Funding from "../components/funding/funding";
 import CreateFundingModal from "../components/funding/CreateFunding";
 import SuccessModal from "../components/funding/Success-Modal";
@@ -35,7 +44,7 @@ const FundingPage = () => {
     type: "",
     payment_method: "",
     status: "pending",
-    date:""
+    date: "",
   });
 
   // Handle URL parameters for automatic search
@@ -55,25 +64,26 @@ const FundingPage = () => {
 
   const handleSearch = async () => {
     if (!email) return;
-    
+
     setLoading(true);
     setError("");
     setFundingData([]);
-    setSearchResult(true); 
+    setSearchResult(true);
 
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get(
         `/api/v1/admin/user_fundings?email=${email}`
-
       );
-    
+
       const sortedData = response.data.map((funding) => ({
         ...funding,
         email: funding.user_email || "N/A",
-        date: funding.created_at ? new Date(funding.created_at).toLocaleString() : "N/A",
+        date: funding.created_at
+          ? new Date(funding.created_at).toLocaleString()
+          : "N/A",
       }));
-      
+
       setFundingData(sortedData);
       setCurrentPage(1);
     } catch (err) {
@@ -82,22 +92,25 @@ const FundingPage = () => {
       setLoading(false);
     }
   };
-
   const handleCreateFunding = async () => {
+    const formattedDate =
+      newFunding.date || new Date().toISOString().split("T")[0];
+
+    setNewFunding((prev) => ({ ...prev, date: formattedDate })); // Set date before sending
+
+    c;
+
     if (
       !newFunding.email ||
       !newFunding.amount ||
       !newFunding.type ||
       !newFunding.payment_method ||
       !newFunding.status ||
-      !newFunding.date
+      !formattedDate
     ) {
       setError("Please fill all fields.");
       return;
     }
-
-    setLoading(true);
-    setError("");
 
     try {
       const axiosInstance = createAxiosInstance();
@@ -107,7 +120,7 @@ const FundingPage = () => {
           amount: Number(newFunding.amount),
           payment_method: newFunding.payment_method,
           status: newFunding.status,
-          date: newFunding.date
+          date: formattedDate,
         },
       });
 
@@ -119,14 +132,14 @@ const FundingPage = () => {
         type: "",
         payment_method: "",
         status: "pending",
-        date:""
+        date: "",
       });
-      
-      // If the created funding matches the current search, refresh results
+
       if (newFunding.email === email) {
         handleSearch();
       }
     } catch (err) {
+      console.error("API request failed:", err);
       setError("Failed to create funding.");
     } finally {
       setLoading(false);
@@ -134,9 +147,8 @@ const FundingPage = () => {
   };
 
   const handleModal = () => {
-    setShowModal(true)
-  }
-  
+    setShowModal(true);
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -145,52 +157,44 @@ const FundingPage = () => {
   return (
     <div className="kit-container-renewal">
       {/* Actions bar - search and create button in one line */}
-     
-      <div className="kit-actions-bar">
-      <SearchWithButton
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Enter user email"
-        icon={<Mail size={24} />}
-        loading={loading}
-        onSearch={handleSearch}
-        
-        withButton={true}
-        buttonText="Search"
-        loadingText="Searching..."
-      />
-        <div className="kit-action-wrapper">
-        <AppButton
-  variant="custom"
-  backgroundColor="primary"
-  leftIcon={<Plus />}
-  textColor="#000"
-  loading={loading}
-  loadingText="Creating..."
-  disabled={loading}
-  onClick={handleModal}
->
-  Create Funding
-</AppButton>
 
-         
+      <div className="kit-actions-bar">
+        <SearchWithButton
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Enter user email"
+          icon={<Mail size={24} />}
+          loading={loading}
+          onSearch={handleSearch}
+          withButton={true}
+          buttonText="Search"
+          loadingText="Searching..."
+        />
+        <div className="kit-action-wrapper">
+          <AppButton
+            variant="custom"
+            backgroundColor="primary"
+            leftIcon={<Plus />}
+            textColor="#000"
+            loading={loading}
+            loadingText="Creating..."
+            disabled={loading}
+            onClick={handleModal}
+          >
+            Create Funding
+          </AppButton>
         </div>
       </div>
-    
+
       {/* Header stands alone */}
-      <PageHeader title="Manage Funding Request"/>
-   
-    
+      <PageHeader title="Manage Funding Request" />
+
       {/* Content area */}
       <div className="kit-content-area">
-      
-    
         {/* Loading indicator */}
-        {loading && (
-        <AppLoader/>
-        )}
-    
+        {loading && <AppLoader />}
+
         {/* Show results based on search state */}
         {searchResult && !loading && (
           <>
@@ -203,21 +207,39 @@ const FundingPage = () => {
             ) : (
               <div className="kit-empty-state">
                 <div className="kit-empty-icon">
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                  <svg
+                    width="64"
+                    height="64"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                   </svg>
                 </div>
                 <h3 className="kit-empty-title">No Records Found</h3>
-                <p className="kit-empty-message">We couldn't find any funding records for email: <span className="kit-highlight">{email}</span></p>
-                <p className="kit-empty-suggestion">Try searching with a different email or create a new funding request.</p>
+                <p className="kit-empty-message">
+                  We couldn't find any funding records for email:{" "}
+                  <span className="kit-highlight">{email}</span>
+                </p>
+                <p className="kit-empty-suggestion">
+                  Try searching with a different email or create a new funding
+                  request.
+                </p>
               </div>
             )}
           </>
         )}
-    
+
         {/* Initial state shown when no search has been performed */}
         {!searchResult && !loading && (
-          <EmptyState message="Enter a user email above and click Search to view funding records." icon={<Search/>}/>
+          <EmptyState
+            message="Enter a user email above and click Search to view funding records."
+            icon={<Search />}
+          />
           // <div className="kit-initial-state">
           //   <div className="kit-initial-icon">
           //     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -229,34 +251,33 @@ const FundingPage = () => {
           //   <p className="kit-initial-message">Enter a user email above and click Search to view funding records.</p>
           // </div>
         )}
-    
+
         {/* Pagination */}
         {fundingData.length > itemsPerPage && (
-               <Pagination
-                  currentPage={currentPage}
-                  onPageChange={setCurrentPage}
-                  totalItems={fundingData.length}
-                  itemsPerPage={itemsPerPage}
-                  showPageNumbers={true}
-                />
+          <Pagination
+            currentPage={currentPage}
+            onPageChange={setCurrentPage}
+            totalItems={fundingData.length}
+            itemsPerPage={itemsPerPage}
+            showPageNumbers={true}
+          />
         )}
       </div>
-    
+
       {/* Modals */}
       {showModal && (
-  <>
-    {console.log("Modal should be visible now!")}
-    <CreateFundingModal
-  newFunding={newFunding}
-  setNewFunding={setNewFunding}
-  handleCreateFunding={handleCreateFunding}
-  closeModal={() => setShowModal(false)}
-  loading={loading}
-  isOpen={showModal}
-/>
-
-  </>
-)}
+        <>
+          
+          <CreateFundingModal
+            newFunding={newFunding}
+            setNewFunding={setNewFunding}
+            handleCreateFunding={handleCreateFunding}
+            closeModal={() => setShowModal(false)}
+            loading={loading}
+            isOpen={showModal}
+          />
+        </>
+      )}
 
       {showSuccessModal && (
         <SuccessModal
@@ -267,6 +288,5 @@ const FundingPage = () => {
     </div>
   );
 };
-
 
 export default FundingPage;
