@@ -36,7 +36,7 @@ const Funding = ({ transaction }) => {
       {
         icon: <CalendarDays size={16} />,
         label: "Date",
-        value: transaction.date ? new Date(transaction.date).toLocaleDateString() : "N/A"
+        value: transaction.date ? formatDate(transaction.date) : "N/A"
       }
     ]}
   />
