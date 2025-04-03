@@ -145,8 +145,8 @@ const KitPage = () => {
   const metrics = useMemo(
     () => ({
       total: filteredKits.length,
-      active: filteredKits.filter((kit) => kit.status === "Active").length,
-      inactive: filteredKits.filter((kit) => kit.status === "Inactive").length,
+      active: filteredKits.filter((kit) => kit.status === "active").length,
+      inactive: filteredKits.filter((kit) => kit.status === "inactive").length,
     }),
     [filteredKits]
   );
@@ -202,7 +202,7 @@ const KitPage = () => {
   const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
 
   const goToRenewals = (kit) => {
-    navigate(`/manage-renewal?kit=${kit.kitNo}`);
+    navigate(`/renewals?kit=${kit.kitNo}`);
   };
   const handleTransferKit = async () => {
     if (!transferEmail) {
