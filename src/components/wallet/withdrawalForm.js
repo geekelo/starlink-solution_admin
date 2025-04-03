@@ -5,6 +5,7 @@ import "../../styles/Withdrawal.css";
 import Modal from "../modal/modal";
 
 const WithdrawalFormModal = ({ isOpen, onClose }) => {
+ 
   const [amount, setAmount] = useState("");
   const [purpose, setPurpose] = useState("");
   const [withdrawalDate, setWithdrawalDate] = useState("");
@@ -49,11 +50,11 @@ const WithdrawalFormModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null; // Don't render modal if it's closed
 
   return (
-    <Modal onClose={onClose}>
+    <Modal isOpen={isOpen}  onClose={onClose}>
       <div className="withdrawal-container">
         <div className="withdrawal-header">
           <h2>Withdrawal Funds</h2>
-          <button className="close-btn" onClick={onClose}>×</button>
+          
         </div>
         
         <p className="withdrawal-info">

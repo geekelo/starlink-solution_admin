@@ -14,7 +14,6 @@ const WithdrawalsList = () => {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   useEffect(() => {
     const fetchWalletHistory = async () => {
       setLoading(true);
@@ -22,7 +21,7 @@ const WithdrawalsList = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/wallet_histories");
-    
+
         const { withdrawals } = response.data;
 
         if (!withdrawals) {
@@ -36,12 +35,12 @@ const WithdrawalsList = () => {
           date: item.created_at ? new Date(item.created_at) : null,
           email: item.user_email || item.email,
           reference: item.kit_number || item.reference,
-          purpose: item.purpose
+          purpose: item.purpose,
         }));
-        const sortedTransactions = [ ...formattedWithdrawals].sort(
+        const sortedTransactions = [...formattedWithdrawals].sort(
           (a, b) => b.date - a.date
         );
-  
+
         setWalletHistory(sortedTransactions);
       } catch (err) {
         console.error("Failed to fetch wallet history:", err);
@@ -53,30 +52,41 @@ const WithdrawalsList = () => {
 
     fetchWalletHistory();
   }, []);
-
+const handleModal = () => {
+  setIsModalOpen(true)
+  console.log('open')
+}
   return (
     <div>
-      <PageHeader title="Manage Withdrawal " rightElement={<AppButton variant="custom" backgroundColor="error" onClick={() => setIsModalOpen(true)} leftIcon={<Plus/>}>Create Withdrawal</AppButton>}/>
-    
-      
+      <PageHeader
+        title="Manage Withdrawal"
+        rightElement={
+          <AppButton
+            variant="custom"
+            backgroundColor="error"
+            onClick={handleModal} // This triggers the modal to open
+            leftIcon={<Plus />}
+          >
+            Create Withdrawal
+          </AppButton>
+        }
+      />
+
       {/* Loading Spinner */}
-      {loading && (
-     <AppLoader/>
-      )}
-      
+      {loading && <AppLoader />}
+
       {/* Error Message */}
       {error && <p className="kit-error-message">{error}</p>}
-      
-      {/* Withdrawal Modal */}
+
+      {/* Modal */}
       <WithdrawalFormModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isModalOpen} // Pass the state to control modal visibility
+        onClose={() => setIsModalOpen(false)} // Close the modal on action
       />
-      
+
       <div className="kit-grid">
         {!loading && walletHistory.length === 0 ? (
-          <EmptyState message="No withdrawals found."/>
-       
+          <EmptyState message="No withdrawals found." />
         ) : (
           walletHistory.map((transaction) => (
             <Withdrawal key={transaction.id} transaction={transaction} />
@@ -85,6 +95,6 @@ const WithdrawalsList = () => {
       </div>
     </div>
   );
-}
+};
 
 export default WithdrawalsList;
