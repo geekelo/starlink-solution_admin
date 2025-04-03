@@ -83,8 +83,8 @@ const Renewal = ({ transaction }) => {
             label: "Date",
             value: transaction?.date
               ? formatDate(transaction.date)
-              : transaction?.date_of_renewal
-              ? formatDate(transaction.date_of_renewal)
+              : transaction?.start_date
+              ? formatDate(transaction.start_date)
               : "N/A",
           },
         ]}
@@ -96,8 +96,8 @@ const Renewal = ({ transaction }) => {
           isOpen={modalOpen}
           closeModal={closeModal}
           transaction={selectedTransaction}
-          onSave={(updatedTransaction) => {
-            console.log("Updated Transaction:", updatedTransaction);
+          onSave={() => {
+           
             closeModal();
           }}
         />
