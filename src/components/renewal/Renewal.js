@@ -35,51 +35,72 @@ const Renewal = ({ transaction }) => {
   };
 
   return (
-    <InfoCard
-      title="Renewal"
-      className="renewal"
-      menuItems={[
-       
-        ...(isManageRenewalsPath ? [ {
-          icon: <Eye size={16} />,
-          label: "View Details",
-          onClick: handleViewClick
-        },{
-          icon: <Edit2 size={16} />,
-          label: "Edit",
-          onClick: handleEditClick
-        }] : [])
-      ]}
-      items={[
-        {
-          icon: <FileText size={16} />,
-          label: "Kit Number",
-          value: transaction?.reference || transaction?.kit_number || "N/A"
-        },
-        {
-          icon: <CheckCircle size={16} />,
-          label: "Status",
-          value: transaction?.status || "Receipt",
-          className: `status-badge ${transaction?.status?.toLowerCase()}`
-        },
-        {
-          icon: <RefreshCw size={16} />,
-          label: "Amount",
-          value: `₦${transaction.amount 
-            ? parseFloat(transaction.amount).toLocaleString() 
-            : "0"}`
-        },
-        {
-          icon: <CalendarDays size={16} />,
-          label: "Date",
-          value: transaction?.date
-            ? formatDate(transaction.date)
-            : transaction?.start_date
-            ? formatDate(transaction.start_date)
-            : "N/A"
-        }
-      ]}
-    />
+    <>
+      <InfoCard
+        title="Renewal"
+        className="renewal"
+        menuItems={[
+          {
+            icon: <Eye size={16} />,
+            label: "View Details",
+            onClick: () => openModal("view", transaction),
+          },
+          ...(isManageRenewalsPath
+            ? [
+                {
+                  icon: <Edit2 size={16} />,
+                  label: "Edit Kit",
+                  onClick: () => openModal("editKit", transaction),
+                },
+              ]
+            : []),
+        ]}
+        items={[
+          {
+            icon: <FileText size={16} />,
+            label: "Kit Number",
+            value: transaction?.reference || transaction?.kit_number || "N/A",
+          },
+          {
+            icon: <CheckCircle size={16} />,
+            label: "Status",
+            value: transaction?.status || "Receipt",
+            className: `status-badge ${transaction?.status?.toLowerCase()}`,
+          },
+          {
+            icon: <RefreshCw size={16} />,
+            label: "Amount",
+            value: `₦${
+              transaction.amount
+                ? parseFloat(transaction.amount).toLocaleString()
+                : "0"
+            }`,
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "Date",
+            value: transaction?.date
+              ? formatDate(transaction.date)
+              : transaction?.start_date
+              ? formatDate(transaction.start_date)
+              : "N/A",
+          },
+        ]}
+      />
+
+      {/* Render EditRenewalModal if modal is open */}
+      {modalOpen && (
+        <EditRenewalModal
+          isOpen={modalOpen}
+          closeModal={closeModal}
+          transaction={selectedTransaction}
+          onSave={() => {
+           
+            closeModal();
+          }}
+        />
+      )}
+    </>
   );
 };
 
