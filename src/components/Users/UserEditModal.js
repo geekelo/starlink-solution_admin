@@ -35,7 +35,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onChange }) => {
     { value: "false", label: "No" }
   ]
 
-  const whatappsOptions = [
+  const  whatsappOptions= [
     { value: "true", label: "Yes" },
     { value: "false", label: "No" }
   ]
