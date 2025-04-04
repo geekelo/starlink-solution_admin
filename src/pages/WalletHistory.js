@@ -48,7 +48,7 @@ const WalletPage = () => {
           "/api/v1/admin/wallet_histories"
         );
         const { fundings, renewals, withdrawals } = response.data;
-console.log(renewals)
+
         if (!fundings || !renewals || !withdrawals) {
           throw new Error("Missing fundings or renewals data");
         }

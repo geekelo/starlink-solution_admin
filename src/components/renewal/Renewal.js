@@ -1,28 +1,37 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
   RefreshCw,
   CalendarDays,
   CheckCircle,
   FileText,
-  MoreVertical,
   Eye,
   Edit2,
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
-import {InfoCard} from "../InfoCard/Card";
-
+import { InfoCard } from "../InfoCard/Card";
 import { formatDate } from "../utils/date";
+import EditRenewalModal from "./EditKitRenewal";
 
-const Renewal = ({ transaction, openModal }) => {
+const Renewal = ({ transaction }) => {
   const location = useLocation();
   const isManageRenewalsPath = location.pathname.includes("/monthly-renewals");
 
-  const handleEditClick = () => {
-    openModal("edit", transaction);
+  // State to handle modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState(null);
+
+  // Function to open modal
+  const openModal = (type, trans) => {
+    if (type === "editKit") {
+      setSelectedTransaction(trans);
+      setModalOpen(true);
+    }
   };
 
-  const handleViewClick = () => {
-    openModal("view", transaction);
+  // Function to close modal
+  const closeModal = () => {
+    setModalOpen(false);
+    setSelectedTransaction(null);
   };
 
   return (
@@ -73,7 +82,5 @@ const Renewal = ({ transaction, openModal }) => {
     />
   );
 };
-
-
 
 export default Renewal;

@@ -43,7 +43,7 @@ const Users = () => {
     const fetchUsers = async () => {
       setLoading(true);
       setError("");
-  
+
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/user_records");
@@ -56,13 +56,12 @@ const Users = () => {
             whatsapp: user.whatsapp_number,
             walletID: user.wallet_id || "N/A",
             walletBalance: user.wallet_balance || 0,
-            otp: user.kits_owned ,
+            otp: user.kits_owned,
             createdAt: user.created_at ? new Date(user.created_at) : null, // Convert to Date object
           }))
           .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); // Sort from latest to oldest
-  
+
         setUsers(formattedUsers);
-      
       } catch (err) {
         console.error(
           "Error fetching users:",
@@ -73,10 +72,10 @@ const Users = () => {
         setLoading(false);
       }
     };
-  
+
     fetchUsers();
   }, []);
-  
+
   const handleEditClick = (users) => {
     setSelectedUser(users); // Set user details in state
     setIsModalOpen(true); // Open modal
@@ -118,13 +117,13 @@ const Users = () => {
     return (
       user.name.toLowerCase().includes(query) ||
       user.email.toLowerCase().includes(query) ||
-      (user.createdAt && user.createdAt.toISOString().toLowerCase().includes(query)) ||
+      (user.createdAt &&
+        user.createdAt.toISOString().toLowerCase().includes(query)) ||
       (user.phone && user.phone.includes(query)) ||
       (user.whatsapp && user.whatsapp.includes(query)) ||
       (user.walletID && user.walletID.includes(query))
     );
   });
-  
 
   const toggleDropdown = (userId, e) => {
     e.stopPropagation();
@@ -172,22 +171,20 @@ const Users = () => {
         />}
 
       />
-       {error && <p className="error-message">{error}</p>}
- 
-  
+      {error && <p className="error-message">{error}</p>}
+
       <div className="kit-metrics">
-      <MetricBox
+        <MetricBox
           icon={<UsersRound size={40} color="#4c6ef5" />}
           title="Total Users"
-          value={`₦${filteredUsers.toLocaleString()}`}
+          value={users.length}
           loading={loading}
         />
-    
       </div>
 
       <div className="kit-grid">
         {loading ? (
-        <AppLoader/>
+          <AppLoader />
         ) : currentUsers.length > 0 ? (
           currentUsers.map((user) => (
             <InfoCard
@@ -325,8 +322,7 @@ const Users = () => {
 //             </div>
 //           ))
         ) : (
-          <EmptyState message="No users found." icon={<UserRoundX />}/>
-      
+          <EmptyState message="No users found." icon={<UserRoundX />} />
         )}
       </div>
          <Pagination
