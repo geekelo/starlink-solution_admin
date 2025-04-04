@@ -14,9 +14,7 @@ import EditRenewalModal from "./EditKitRenewal";
 
 const Renewal = ({ transaction }) => {
   const location = useLocation();
-  const isManageRenewalsPath =
-    location.pathname.includes("/manage-renewal") ||
-    location.pathname.includes("/renewals");
+  const isManageRenewalsPath = location.pathname.includes("/monthly-renewals");
 
   // State to handle modal
   const [modalOpen, setModalOpen] = useState(false);
