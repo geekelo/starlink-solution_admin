@@ -3,6 +3,7 @@
 import { ChevronRight, CreditCard, DollarSign, FileText, History, Home, Package, RefreshCw, Users } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/logo.png";
+import { FaFileInvoice } from "react-icons/fa";
 
 
 
@@ -18,6 +19,7 @@ export const AdminSidebar = ({ expanded, onMouseEnter, onMouseLeave }) => {
     { icon: <History size={20} />, name: 'Wallet Withdrawal', path: '/wallet-withdrawal' },
     { icon: <Package size={20} />, name: 'Kits', path: '/kits' },
     { icon: <Users size={20} />, name: 'Users', path: '/users' },
+    { icon: <FaFileInvoice size={20} />, name: 'Invoices', path: '/invoices' },
     { icon: <DollarSign size={20} />, name: 'Manage Funding', path: '/manage-funds' },
     { icon: <RefreshCw size={20} />, name: 'Manage Renewals', path: '/monthly-renewals' },
   ];

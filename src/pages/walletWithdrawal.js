@@ -54,7 +54,6 @@ const WithdrawalsList = () => {
   }, []);
 const handleModal = () => {
   setIsModalOpen(true)
-  
 }
   return (
     <div>

@@ -35,7 +35,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onChange }) => {
     { value: "false", label: "No" }
   ]
 
-  const whatappsOptions = [
+  const  whatsappOptions= [
     { value: "true", label: "Yes" },
     { value: "false", label: "No" }
   ]
@@ -129,7 +129,7 @@ const UserEditModal = ({ isOpen, onClose, user, onSave, onChange }) => {
         <FormLabel>WhatsApp Confirmed:</FormLabel>
    
         <FilterSelect
-          options={whatappsOptions}
+          options={whatsappOptions}
           value={user.whatsapp_number_confirmed?.toString() || "false"}
           onChange={(value) => handleChange('whatsapp_number_confirmed', value === "true")}
           placeholder="Select status"
