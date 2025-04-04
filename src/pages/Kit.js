@@ -33,6 +33,7 @@ import MetricBox from "../components/MetricsBox/MetricsBox";
 import Pagination from "../components/Pagination/Pagination";
 import { AppLoader } from "../components/Loader/loader";
 import { InfoCard } from "../components/InfoCard/Card";
+import { Select } from "../components/Select/Select";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -279,7 +280,7 @@ const KitPage = () => {
           title="Kit Management"
           rightElement={
             <div className="search-filter">
-              <FilterSelect
+              <Select
                 options={options}
                 defaultValue="kitNo"
                 onChange={setSearchType}
