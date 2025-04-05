@@ -7,7 +7,6 @@ import {
   Search,
   Filter,
   Edit2,
-  MoreVertical,
   RefreshCw,
   MapPin,
   CreditCard,
@@ -16,8 +15,6 @@ import {
   Phone,
   User,
   CalendarDays,
-  ChevronLeft,
-  ChevronRight,
   Repeat2,
   FolderOpenDot,
   MailIcon,
@@ -334,19 +331,19 @@ const KitPage = () => {
         <MetricBox
           icon={<Package size={40} color="#b6bbc1" />}
           title="Total Kits"
-          value={`₦${metrics.total}`}
+          value={`${metrics.total}`}
           loading={loading}
         />
         <MetricBox
           icon={<CheckCircle size={40} color="green" />}
           title="Active Kits"
-          value={`₦${metrics.active}`}
+          value={`${metrics.active}`}
           loading={loading}
         />
         <MetricBox
           icon={<XCircle size={40} color="#ff1500b8" />}
           title="Inactive Kits"
-          value={`₦${metrics.inactive}`}
+          value={`${metrics.inactive}`}
           loading={loading}
         />
       </div>
