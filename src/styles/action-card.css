@@ -48,7 +48,7 @@
 .icon-container {
   width: 64px;
   height: 64px;
-  background-color: #EEF2FF;
+  background-color: #00abef29;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -57,11 +57,11 @@
 }
 
 .icon-card {
-  color: #4c6ef5;
+  color: #005985;
 }
 
 .card-title {
-  color: #4c6ef5;
+  color: #005985;
   font-weight: bold;
   margin-bottom: 8px;
   font-size: 16px;
@@ -76,7 +76,7 @@
 }
 
 .action-button {
-  background-color: #4c6ef5;
+  background-color: #005985;
   color: white;
   border: none;
   border-radius: 4px;
@@ -88,7 +88,7 @@
 }
 
 .action-button:hover:not(:disabled) {
-  background-color: #4c6ef5;
+  background-color: #005985;
 }
 
 .action-button:disabled {
