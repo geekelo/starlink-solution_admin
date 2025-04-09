@@ -81,7 +81,6 @@ const MonthlyRenewalPage = () => {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get("/api/v1/admin/kit_renewals");
       const renewals = response.data;
-      console.log(renewals)
 
       if (renewals && renewals.length > 0) {
         const filteredRenewals = renewals.filter((item) => {
