@@ -131,20 +131,20 @@ const FundingCard = ({ item }) => {
         <div className="info-item">
           <User size={16} />
           <p>
-            <strong>User_name:</strong> {item.user_name}
+            <strong>Username:</strong> {item.user_name}
           </p>
         </div>
         <div className="info-item">
           <Calendar size={16} />
           <p>
-            <strong>User_email:</strong> {item.user_email}
+            <strong>User email:</strong> {item.user_email}
           </p>
         </div>
 
         <div className="info-item">
           <Wallet2 size={16} />
           <p>
-            <strong>Wallet_Id:</strong> {item.wallet_id}
+            <strong>Wallet Id:</strong> {item.wallet_id}
           </p>
         </div>
         <div className="info-item">
