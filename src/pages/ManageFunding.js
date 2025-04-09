@@ -22,6 +22,7 @@ import SearchWithButton from "../components/SearchInput/SearchInput";
 import Pagination from "../components/Pagination/Pagination";
 import PageHeader from "../components/PageHeader/PageHeader";
 import EmptyState from "../components/EmptyState/EmptyState";
+import EditFundingModal from "../components/funding/editFundingModal";
 
 const FundingPage = () => {
   const location = useLocation();
@@ -37,7 +38,30 @@ const FundingPage = () => {
   const [searchResult, setSearchResult] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
-
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    amount: "",
+    status: "pending",
+    credit_account: "no",
+  });
+  
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  
+  const handleSelectChange = (selectedOption) => {
+    setFormData({ ...formData, status: selectedOption.value });
+  };
+  
+  const handleRadioChange = (e) => {
+    setFormData({ ...formData, credit_account: e.target.value });
+  };
+  
+  const handleSave = async () => {
+    // make your API call here
+    setEditModalOpen(false);
+  };
+  
   const [newFunding, setNewFunding] = useState({
     email: "",
     amount: "",
@@ -149,6 +173,16 @@ const FundingPage = () => {
   const handleModal = () => {
     setShowModal(true);
   };
+  const handleOpenEditModal = (transaction) => {
+    setFormData({
+      amount: transaction.amount || "",
+      status: transaction.status || "pending",
+      credit_account: transaction.credit_account || "no",
+      // Add any other fields as needed
+    });
+    setEditModalOpen(true);
+  };
+  
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -201,7 +235,7 @@ const FundingPage = () => {
             {currentFunding.length > 0 ? (
               <div className="kit-grid">
                 {currentFunding.map((funding) => (
-                  <Funding key={funding.id} transaction={funding} />
+                  <Funding key={funding.id} transaction={funding}    openModal={handleOpenEditModal} />
                 ))}
               </div>
             ) : (
@@ -278,6 +312,19 @@ const FundingPage = () => {
           />
         </>
       )}
+
+<EditFundingModal
+  isOpen={editModalOpen}
+  formData={formData}
+  handleChange={handleChange}
+  handleSelectChange={handleSelectChange}
+  handleRadioChange={handleRadioChange}
+  handleSave={handleSave}
+  closeModal={() => setEditModalOpen(false)}
+  loading={loading}
+  error={error}
+/>
+
 
       {showSuccessModal && (
         <SuccessModal
