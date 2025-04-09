@@ -11,20 +11,26 @@ import {
 import { InfoCard } from "../InfoCard/Card";
 import { formatDate } from "../utils/date";
 import EditRenewalModal from "./EditKitRenewal";
+import { ViewRenewalModal } from "./ViewRenewal";
 
 const Renewal = ({ transaction }) => {
   const location = useLocation();
-  const isManageRenewalsPath = location.pathname.includes("/monthly-renewals");
+  const isManageRenewalsPath = location.pathname.includes("/monthly-renewals") || location.pathname.includes("/renewals");
 
   // State to handle modal
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewModal, setViewModal] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   // Function to open modal
   const openModal = (type, trans) => {
-    if (type === "editKit") {
+    if (type === "editRenewal") {
       setSelectedTransaction(trans);
       setModalOpen(true);
+    } 
+    if (type === "view") {
+      setSelectedTransaction(trans);
+      setViewModal(true)
     }
   };
 
@@ -33,7 +39,10 @@ const Renewal = ({ transaction }) => {
     setModalOpen(false);
     setSelectedTransaction(null);
   };
-
+  const closeViewModal = () => {
+    setViewModal(false);
+    setSelectedTransaction(null);
+  };
   return (
     <>
       <InfoCard
@@ -49,8 +58,8 @@ const Renewal = ({ transaction }) => {
             ? [
                 {
                   icon: <Edit2 size={16} />,
-                  label: "Edit Kit",
-                  onClick: () => openModal("editKit", transaction),
+                  label: "Edit Renewal",
+                  onClick: () => openModal("editRenewal", transaction),
                 },
               ]
             : []),
@@ -76,13 +85,41 @@ const Renewal = ({ transaction }) => {
                 : "0"
             }`,
           },
+        
           {
             icon: <CalendarDays size={16} />,
-            label: "Date",
+            label: "Start Date",
             value: transaction?.date
               ? formatDate(transaction.date)
               : transaction?.start_date
               ? formatDate(transaction.start_date)
+              : "N/A",
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "Deadline",
+            value: transaction?.deadline
+              ? formatDate(transaction.deadline)
+              : transaction?.deadline
+              ? formatDate(transaction.deadline)
+              : "N/A",
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "End Date",
+            value: transaction?.date
+              ? formatDate(transaction.date)
+              : transaction?.end_date
+              ? formatDate(transaction.end_date)
+              : "N/A",
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "Date of renewal",
+            value: transaction?.date
+              ? formatDate(transaction.date)
+              : transaction?.date_of_renewal
+              ? formatDate(transaction.date_of_renewal)
               : "N/A",
           },
         ]}
@@ -99,6 +136,19 @@ const Renewal = ({ transaction }) => {
             closeModal();
           }}
         />
+        
+      )}
+           {viewModal && (
+        <ViewRenewalModal
+          isOpen={viewModal}
+          closeModal={closeViewModal}
+          transaction={selectedTransaction}
+          onSave={() => {
+           
+            closeViewModal();
+          }}
+        />
+        
       )}
     </>
   );

@@ -80,7 +80,7 @@ const WalletPage = () => {
           ...formattedRenewals,
           ...formattedWithdrawals,
         ].sort((a, b) => b.date - a.date);
-
+console.log(formattedRenewals)
         setWalletHistory(sortedTransactions);
       } catch (err) {
         console.error("Failed to fetch wallet history:", err);

@@ -1,53 +1,75 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { DollarSign, Calendar, FileText, Box, Save, MoreVertical, Eye, Edit2, X } from 'lucide-react';
+import React, { useState, useRef, useEffect } from "react";
+import {
+  DollarSign,
+  Calendar,
+  FileText,
+  Box,
+  Save,
+  MoreVertical,
+  Eye,
+  Edit2,
+  X,
+  Wallet2,
+  User,
+  BadgeCheck,
+  Barcode,
+  CheckCircle,
+  CreditCard,
+  IdCard,
+} from "lucide-react";
+import { formatDate } from "../utils/date";
 
 const FundingCard = ({ item }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [status, setStatus] = useState('Pending');
-  
+  const [status, setStatus] = useState("Pending");
+
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
-  
+
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
-  
+
   const handleViewClick = () => {
-    console.log('View details for:', item);
+    console.log("View details for:", item);
     setShowDropdown(false);
     setShowModal(true);
   };
-  
+
   const handleEditClick = () => {
-    console.log('Edit:', item);
+    console.log("Edit:", item);
     setShowDropdown(false);
     setShowModal(true);
   };
-  
+
   const handleSave = () => {
-    console.log('Saving funding request status:', {
+    console.log("Saving funding request status:", {
       reference: item.reference,
-      status
+      status,
     });
     setShowModal(false);
   };
-  
+
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setShowDropdown(false);
       }
-      
-      if (modalRef.current && !modalRef.current.contains(event.target) && event.target.className !== 'modal-overlay') {
+
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target) &&
+        event.target.className !== "modal-overlay"
+      ) {
         // Don't close if clicking inside the modal
       }
     };
-    
-    document.addEventListener('mousedown', handleClickOutside);
+
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -55,14 +77,11 @@ const FundingCard = ({ item }) => {
     <div className="kit-card renewal">
       <h3>
         Funding Request
-        <div 
-          className="menu-dots" 
-          onClick={toggleDropdown}
-        >
+        <div className="menu-dots" onClick={toggleDropdown}>
           <MoreVertical size={20} />
         </div>
       </h3>
-      
+
       {/* Dropdown Menu */}
       {showDropdown && (
         <div className="dropdown-menu" ref={dropdownRef}>
@@ -76,26 +95,66 @@ const FundingCard = ({ item }) => {
           </div>
         </div>
       )}
-      
+
       <div className="card-content">
         <div className="info-item">
+          <IdCard size={16} />
+          <p>
+            <strong>Transaction:</strong> {item.transaction_id}
+          </p>
+        </div>
+        <div className="info-item">
+  <DollarSign size={16} />
+  <p><strong>Amount:</strong> {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.amount)}</p>
+</div>
+
+        <div className="info-item">
+          <CheckCircle size={16} />
+          <p>
+            <strong>Status:</strong> {item.status}
+          </p>
+        </div>
+
+        <div className="info-item">
+          <BadgeCheck size={16} />
+          <p>
+            <strong>Paid:</strong> {item.paid}
+          </p>
+        </div>
+        <div className="info-item">
           <Calendar size={16} />
-          <p><strong>Date:</strong> {new Date(item.created_at).toLocaleDateString("en-US")}</p>
+          <p>
+            <strong>Date of Request:</strong> {formatDate(item.created_at)}
+          </p>
+        </div>
+       
+        <div className="info-item">
+          <User size={16} />
+          <p>
+            <strong>Name:</strong> {item.user_name}
+          </p>
         </div>
         <div className="info-item">
-          <DollarSign size={16} />
-          <p><strong>Amount:</strong> {item.amount}</p>
+          <Calendar size={16} />
+          <p>
+            <strong>Email:</strong> {item.user_email}
+          </p>
+        </div>
+
+        <div className="info-item">
+          <Wallet2 size={16} />
+          <p>
+            <strong>Wallet Id:</strong> {item.wallet_id}
+          </p>
         </div>
         <div className="info-item">
-          <FileText size={16} />
-          <p><strong>Reference:</strong> {item.reference}</p>
-        </div>
-        <div className="info-item">
-          <Box size={16} />
-          <p><strong>Payment Type:</strong> {item.type}</p>
+          <Barcode size={16} />
+          <p>
+            <strong>Wallet Balance:</strong>  {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.wallet_balance)}
+          </p>
         </div>
       </div>
-      
+
       {/* Modal */}
       {showModal && (
         <div className="modal-overlay">
@@ -106,12 +165,12 @@ const FundingCard = ({ item }) => {
                 <X size={20} />
               </button>
             </div>
-            
+
             <div className="modal-body">
               <div className="form-group">
                 <label>Status</label>
-                <select 
-                  value={status} 
+                <select
+                  value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
                   <option value="Pending">Pending</option>
@@ -120,9 +179,12 @@ const FundingCard = ({ item }) => {
                 </select>
               </div>
             </div>
-            
+
             <div className="modal-footer">
-              <button className="cancel-btn" onClick={() => setShowModal(false)}>
+              <button
+                className="cancel-btn"
+                onClick={() => setShowModal(false)}
+              >
                 Cancel
               </button>
               <button className="save-btn" onClick={handleSave}>
