@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { DollarSign, Calendar, FileText, Box, Save, MoreVertical, Eye, Edit2, X, Wallet2, User, BadgeCheck, Barcode, CheckCircle, CreditCard } from 'lucide-react';
+import { DollarSign, Calendar, FileText, Box, Save, MoreVertical, Eye, Edit2, X, Wallet2, User, BadgeCheck, Barcode, CheckCircle, CreditCard, IdCard } from 'lucide-react';
 import { formatDate } from '../utils/date';
 
 const FundingCard = ({ item }) => {
@@ -79,42 +79,51 @@ const FundingCard = ({ item }) => {
       )}
       
       <div className="card-content">
-        <div className="info-item">
-          <Calendar size={16} />
-          <p><strong>Date:</strong> {formatDate(item.created_at)}</p>
+      <div className="info-item">
+          <IdCard size={16} />
+          <p><strong>Id:</strong> {item.id}</p>
         </div>
         <div className="info-item">
           <DollarSign size={16} />
           <p><strong>Amount:</strong> {item.amount}</p>
         </div>
         <div className="info-item">
-          <FileText size={16} />
-          <p><strong>Reference:</strong> {item.reference}</p>
-        </div>
-        <div className="info-item">
-  <CreditCard size={16} />
-  <p><strong>Payment Type:</strong> {item.payment_method}</p>
-</div>
-<div className="info-item">
   <CheckCircle size={16} />
   <p><strong>Status:</strong> {item.status}</p>
 </div>
-<div className="info-item">
-  <Barcode size={16} />
-  <p><strong>Transaction Id:</strong> {item.transaction_id}</p>
-</div>
+
 <div className="info-item">
   <BadgeCheck size={16} />
   <p><strong>Paid:</strong> {item.paid}</p>
 </div>
-<div className="info-item">
-  <User size={16} />
-  <p><strong>User Id:</strong> {item.starlink_user_id}</p>
-</div>
-<div className="info-item">
+        <div className="info-item">
+          <Calendar size={16} />
+          <p><strong>Created_at:</strong> {formatDate(item.created_at)}</p>
+        </div>
+        <div className="info-item">
+          <Calendar size={16} />
+          <p><strong>Updated_at:</strong> {formatDate(item.updated_at)}</p>
+        </div>
+        <div className="info-item">
+          <User size={16} />
+          <p><strong>User_name:</strong> {item.user_name}</p>
+        </div>
+        <div className="info-item">
+          <Calendar size={16} />
+          <p><strong>User_email:</strong> {item.user_email}</p>
+        </div>
+        
+       
+       
+        <div className="info-item">
   <Wallet2 size={16} />
-  <p><strong>Wallet Id:</strong> {item.starlink_user_wallet_id}</p>
+  <p><strong>Wallet_Id:</strong> {item.wallet_id}</p>
 </div>
+<div className="info-item">
+  <Barcode size={16} />
+  <p><strong>Wallet_balance:</strong> {item.wallet_balance}</p>
+</div>
+
       </div>
       
       {/* Modal */}
