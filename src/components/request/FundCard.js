@@ -124,7 +124,7 @@ const FundingCard = ({ item }) => {
         <div className="info-item">
           <Calendar size={16} />
           <p>
-            <strong>Created_at:</strong> {formatDate(item.created_at)}
+            <strong>Date of Request:</strong> {formatDate(item.created_at)}
           </p>
         </div>
        
