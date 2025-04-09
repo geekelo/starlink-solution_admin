@@ -127,12 +127,7 @@ const FundingCard = ({ item }) => {
             <strong>Created_at:</strong> {formatDate(item.created_at)}
           </p>
         </div>
-        <div className="info-item">
-          <Calendar size={16} />
-          <p>
-            <strong>Updated_at:</strong> {formatDate(item.updated_at)}
-          </p>
-        </div>
+       
         <div className="info-item">
           <User size={16} />
           <p>
