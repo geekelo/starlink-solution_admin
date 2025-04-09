@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { DollarSign, Calendar, FileText, Box, Save, MoreVertical, Eye, Edit2, X } from 'lucide-react';
+import { DollarSign, Calendar, FileText, Box, Save, MoreVertical, Eye, Edit2, X, Wallet2, User, BadgeCheck, Barcode, CheckCircle, CreditCard } from 'lucide-react';
+import { formatDate } from '../utils/date';
 
 const FundingCard = ({ item }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -80,7 +81,7 @@ const FundingCard = ({ item }) => {
       <div className="card-content">
         <div className="info-item">
           <Calendar size={16} />
-          <p><strong>Date:</strong> {new Date(item.created_at).toLocaleDateString("en-US")}</p>
+          <p><strong>Date:</strong> {formatDate(item.created_at)}</p>
         </div>
         <div className="info-item">
           <DollarSign size={16} />
@@ -91,9 +92,29 @@ const FundingCard = ({ item }) => {
           <p><strong>Reference:</strong> {item.reference}</p>
         </div>
         <div className="info-item">
-          <Box size={16} />
-          <p><strong>Payment Type:</strong> {item.type}</p>
-        </div>
+  <CreditCard size={16} />
+  <p><strong>Payment Type:</strong> {item.payment_method}</p>
+</div>
+<div className="info-item">
+  <CheckCircle size={16} />
+  <p><strong>Status:</strong> {item.status}</p>
+</div>
+<div className="info-item">
+  <Barcode size={16} />
+  <p><strong>Transaction Id:</strong> {item.transaction_id}</p>
+</div>
+<div className="info-item">
+  <BadgeCheck size={16} />
+  <p><strong>Paid:</strong> {item.paid}</p>
+</div>
+<div className="info-item">
+  <User size={16} />
+  <p><strong>User Id:</strong> {item.starlink_user_id}</p>
+</div>
+<div className="info-item">
+  <Wallet2 size={16} />
+  <p><strong>Wallet Id:</strong> {item.starlink_user_wallet_id}</p>
+</div>
       </div>
       
       {/* Modal */}

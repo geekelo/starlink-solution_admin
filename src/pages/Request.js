@@ -25,22 +25,24 @@ const Requests = () => {
   }, []);
 
   const fetchFundingRequests = async () => {
-    setLoading(true);
-    try {
-      const axiosInstance = createAxiosInstance();
-      const response = await axiosInstance.get(
-        "/api/v1/admin/funding_kit_requests/pending_paid"
-      );
-      const sortedData = response.data.sort(
-        (a, b) => new Date(b.created_at) - new Date(a.created_at)
-      );
-      setFundingData(sortedData);
-    } catch (err) {
-      setError("Failed to fetch funding requests.");
-    } finally {
-      setLoading(false);
-    }
-  };
+     setLoading(true);
+     try {
+       const axiosInstance = createAxiosInstance();
+       const response = await axiosInstance.get(
+         "/api/v1/admin/funding_kit_requests/pending_paid"
+       );
+   console.log(response)
+       const sortedData = response.data.fundings.sort(
+         (a, b) => new Date(b.created_at) - new Date(a.created_at)
+       );
+       setFundingData(sortedData);
+     } catch (err) {
+       setError("Failed to fetch funding requests.");
+     } finally {
+       setLoading(false);
+     }
+   };
+   
 
   const fetchStarlinkKits = async () => {
     setLoading(true);
