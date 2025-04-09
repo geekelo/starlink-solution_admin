@@ -100,7 +100,7 @@ const FundingCard = ({ item }) => {
         <div className="info-item">
           <IdCard size={16} />
           <p>
-            <strong>Id:</strong> {item.id}
+            <strong>Transaction:</strong> {item.Transaction_id}
           </p>
         </div>
         <div className="info-item">
