@@ -104,11 +104,10 @@ const FundingCard = ({ item }) => {
           </p>
         </div>
         <div className="info-item">
-          <DollarSign size={16} />
-          <p>
-            <strong>Amount:</strong> {item.amount}
-          </p>
-        </div>
+  <DollarSign size={16} />
+  <p><strong>Amount:</strong> {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.amount)}</p>
+</div>
+
         <div className="info-item">
           <CheckCircle size={16} />
           <p>
@@ -156,7 +155,7 @@ const FundingCard = ({ item }) => {
         <div className="info-item">
           <Barcode size={16} />
           <p>
-            <strong>Wallet_balance:</strong> {item.wallet_balance}
+            <strong>Wallet Balance:</strong>  {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.wallet_balance)}
           </p>
         </div>
       </div>
