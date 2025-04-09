@@ -1,9 +1,9 @@
-import React from 'react';
-import '../../styles/empty-state.css';
+import React from "react";
+import "../../styles/empty-state.css";
 
 /**
  * EmptyState - A component to display when there are no items to show
- * 
+ *
  * @param {Object} props
  * @param {string} props.message - Message to display
  * @param {React.ReactNode} props.icon - Optional icon to display
@@ -12,18 +12,20 @@ import '../../styles/empty-state.css';
  */
 export const EmptyState = ({
   message = "No items found.",
+  title = "",
   icon = null,
   className = "",
   action = null,
   ...props
 }) => {
-  const emptyStateClasses = `empty-state ${className}`.trim();
-  
+  const emptyStateClasses = `empty-state-con ${className}`.trim();
+
   return (
     <div className={emptyStateClasses} {...props}>
       {icon && <div className="empty-state-icon">{icon}</div>}
-      
+      <h3 className="empty-state-title">{title}</h3>
       <p className="empty-state-message">{message}</p>
+
       {action && <div className="empty-state-action">{action}</div>}
     </div>
   );

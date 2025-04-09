@@ -9,6 +9,9 @@ import { Plus, Search } from "lucide-react";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import { AppLoader } from "../components/Loader/loader";
 import PageHeader from "../components/PageHeader/PageHeader";
+import SearchWithButton from "../components/SearchInput/SearchInput";
+import EmptyState from "../components/EmptyState/EmptyState";
+import AppButton from "../components/AppButton/Button";
 
 
 const RenewalPage = () => {
@@ -104,31 +107,22 @@ const RenewalPage = () => {
 
   return (
     <div className="kit-container-renewal">
-      <PageHeader title=""/>
-      <button className="kit-create-button" onClick={() => setShowModal(true)}>
+      <PageHeader title="Manage Kit Renewals" rightElement={<AppButton variant="outline" leftIcon={<Plus/>} onClick={() => setShowModal(true)}>
         Create Renewal
-      </button>
-
+      </AppButton>}/>
       <div className="kit-actions-bar">
-        <div className="kit-search-wrapper">
-          <div className="kit-search-input-container">
-            <Search size={24} color="#b6bbc1" className="kit-search-icon" />
-            <input
-              type="text"
-              className="kit-search-input"
-              placeholder="Enter kit number"
-              value={kitNumber}
-              onChange={(e) => setKitNumber(e.target.value)}
-            />
-          </div>
-          <button className="kit-search-button" onClick={() => handleSearch()} disabled={loading}>
-            {loading ? "Searching..." : "Search"}
-          </button>
-        </div>
-      </div>
-
-      <div className="kit-header-wrapper">
-        <h2 className="kit-header-title">Manage Kit Renewals</h2>
+      <SearchWithButton
+          type="text"
+          placeholder="Enter kit number"
+          value={kitNumber}
+          onChange={(e) => setKitNumber(e.target.value)}
+          withButton={true}
+          onSearch={() => handleSearch()}
+          loading={loading}
+           buttonText="Search"
+          loadingText="Searching..."
+          style={{ maxWidth: '600px' }}
+        />
       </div>
 
       <div className="kit-content-area">
@@ -145,10 +139,7 @@ const RenewalPage = () => {
                 ))}
               </div>
             ) : (
-              <div className="kit-empty-state">
-                <h3>No Records Found</h3>
-                <p>Try searching with a different kit number.</p>
-              </div>
+              <EmptyState message="Try searching with a different kit number." title="No Records Found"/>
             )}
           </>
         )}

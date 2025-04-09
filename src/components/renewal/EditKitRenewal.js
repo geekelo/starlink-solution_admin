@@ -1,7 +1,11 @@
 import React from "react";
 import "../../styles/KitRenewalModal.css";
 import "../../styles/Wallet.css";
-import { XCircle } from 'lucide-react';
+import { Calendar, CalendarDays, CalendarPlus, CalendarX, Clock, DollarSign, FileText, FormInput, RefreshCw, TagIcon, UserCheck, XCircle } from 'lucide-react';
+import AppButton from "../AppButton/Button";
+import Modal from "../modal/modal";
+import { FormLabel } from "../FormLabel/Label";
+import { Select } from "../Select/Select";
 
 
 const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
@@ -40,8 +44,17 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
   if (!isOpen || !transaction) {
     return null;
   }
+  const options = [
+    { value: "receipt", label: "Receipt" },
+    { value: "dateAdded", label: "Date Added" },
+    { value: "month", label: "Month" },
+    { value: "year", label: "Year" },
+    { value: "username", label: "User" },
+    { value: "email", label: "Email" },
+  ];
   
   return (
+
     <div className="modal-overlay">
       <div className="funding-modal">
         <div className="funding-modal-header">
