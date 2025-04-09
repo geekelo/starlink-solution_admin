@@ -31,7 +31,6 @@ const Requests = () => {
        const response = await axiosInstance.get(
          "/api/v1/admin/funding_kit_requests/pending_paid"
        );
-   console.log(response)
        const sortedData = response.data.fundings.sort(
          (a, b) => new Date(b.created_at) - new Date(a.created_at)
        );
