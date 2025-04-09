@@ -85,13 +85,41 @@ const Renewal = ({ transaction }) => {
                 : "0"
             }`,
           },
+        
           {
             icon: <CalendarDays size={16} />,
-            label: "Date",
+            label: "Start Date",
             value: transaction?.date
               ? formatDate(transaction.date)
               : transaction?.start_date
               ? formatDate(transaction.start_date)
+              : "N/A",
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "Deadline",
+            value: transaction?.deadline
+              ? formatDate(transaction.deadline)
+              : transaction?.deadline
+              ? formatDate(transaction.deadline)
+              : "N/A",
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "End Date",
+            value: transaction?.date
+              ? formatDate(transaction.date)
+              : transaction?.end_date
+              ? formatDate(transaction.end_date)
+              : "N/A",
+          },
+          {
+            icon: <CalendarDays size={16} />,
+            label: "Date of renewal",
+            value: transaction?.date
+              ? formatDate(transaction.date)
+              : transaction?.date_of_renewal
+              ? formatDate(transaction.date_of_renewal)
               : "N/A",
           },
         ]}
