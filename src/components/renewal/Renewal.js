@@ -11,20 +11,26 @@ import {
 import { InfoCard } from "../InfoCard/Card";
 import { formatDate } from "../utils/date";
 import EditRenewalModal from "./EditKitRenewal";
+import { ViewRenewalModal } from "./ViewRenewal";
 
 const Renewal = ({ transaction }) => {
   const location = useLocation();
-  const isManageRenewalsPath = location.pathname.includes("/monthly-renewals");
-console.log(transaction)
+  const isManageRenewalsPath = location.pathname.includes("/monthly-renewals") || location.pathname.includes("/renewals");
+
   // State to handle modal
   const [modalOpen, setModalOpen] = useState(false);
+  const [viewModal, setViewModal] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   // Function to open modal
   const openModal = (type, trans) => {
-    if (type === "editKit") {
+    if (type === "editRenewal") {
       setSelectedTransaction(trans);
       setModalOpen(true);
+    } 
+    if (type === "view") {
+      setSelectedTransaction(trans);
+      setViewModal(true)
     }
   };
 
@@ -33,7 +39,10 @@ console.log(transaction)
     setModalOpen(false);
     setSelectedTransaction(null);
   };
-
+  const closeViewModal = () => {
+    setViewModal(false);
+    setSelectedTransaction(null);
+  };
   return (
     <>
       <InfoCard
@@ -49,8 +58,8 @@ console.log(transaction)
             ? [
                 {
                   icon: <Edit2 size={16} />,
-                  label: "Edit Kit",
-                  onClick: () => openModal("editKit", transaction),
+                  label: "Edit Renewal",
+                  onClick: () => openModal("editRenewal", transaction),
                 },
               ]
             : []),
@@ -127,6 +136,19 @@ console.log(transaction)
             closeModal();
           }}
         />
+        
+      )}
+           {viewModal && (
+        <ViewRenewalModal
+          isOpen={viewModal}
+          closeModal={closeViewModal}
+          transaction={selectedTransaction}
+          onSave={() => {
+           
+            closeViewModal();
+          }}
+        />
+        
       )}
     </>
   );

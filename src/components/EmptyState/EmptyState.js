@@ -13,16 +13,17 @@ import '../../styles/empty-state.css';
 export const EmptyState = ({
   message = "No items found.",
   icon = null,
+  title="",
   className = "",
   action = null,
   ...props
 }) => {
-  const emptyStateClasses = `empty-state ${className}`.trim();
+  const emptyStateClasses = `empty-state-con ${className}`.trim();
   
   return (
     <div className={emptyStateClasses} {...props}>
       {icon && <div className="empty-state-icon">{icon}</div>}
-      
+      <h3 className='empty-state-title'>{title}</h3>
       <p className="empty-state-message">{message}</p>
       {action && <div className="empty-state-action">{action}</div>}
     </div>
