@@ -32,7 +32,13 @@ const Dashboard = () => {
             buttonText="Download Reports"
             onClick={() => handleNavigation("/monthly-renewals")}
           />
-
+<ActionCard
+  title="DEACTIVATE KITS"
+  description="You can deactivate kits whose subscription is expired"
+  icon={<Download size={32} />}
+  buttonText="Deactivate"
+  // onClick={() => handleNavigation("/kits")}
+/>
           <Reminders />
         </div>
       </div>
