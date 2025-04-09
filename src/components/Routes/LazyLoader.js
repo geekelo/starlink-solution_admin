@@ -12,6 +12,5 @@ export const RenewalPage = lazy(() => import("../../pages/ManageRenewal"));
 export const MonthlyRenewalPage = lazy(() => import("../../pages/monthRenewal"));
 export const Wallet = lazy(() => import("../../pages/WalletPage"));
 export const WalletHistory = lazy(() => import("../../pages/WalletHistory"));
-export const WithdrawalsList = lazy(() => import("../../pages/walletWithdrawal"));
 export const KitPage = lazy(() => import("../../pages/Kit"));
 export const Users = lazy(() => import("../../pages/User"));

@@ -64,7 +64,6 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
-
         const formattedKits = response.data
           .map((kit) => ({
             kitId: kit.id,

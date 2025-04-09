@@ -16,7 +16,6 @@ export const AdminSidebar = ({ expanded, onMouseEnter, onMouseLeave }) => {
     { icon: <Home size={20} />, name: 'Dashboard', path: '/dashboard' },
     { icon: <FileText size={20} />, name: 'Requests', path: '/requests' },
     { icon: <CreditCard size={20} />, name: 'Wallet History', path: '/wallet-history' },
-    { icon: <History size={20} />, name: 'Wallet Withdrawal', path: '/wallet-withdrawal' },
     { icon: <Package size={20} />, name: 'Kits', path: '/kits' },
     { icon: <Users size={20} />, name: 'Users', path: '/users' },
     { icon: <FaFileInvoice size={20} />, name: 'Invoices', path: '/invoices' },

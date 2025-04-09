@@ -5,6 +5,7 @@ import {
   RefreshCw,
   ArrowDownCircle,
   Database,
+  Plus,
 
 } from "lucide-react";
 import "../styles/Wallet.css";
@@ -22,6 +23,8 @@ import PageHeader from "../components/PageHeader/PageHeader";
 import TabGroup from "../components/TabGroup/Tab";
 import EmptyState from "../components/EmptyState/EmptyState";
 import Pagination from "../components/Pagination/Pagination";
+import AppButton from "../components/AppButton/Button";
+import WithdrawalFormModal from "../components/wallet/withdrawalForm";
 const WalletPage = () => {
   const [walletHistory, setWalletHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,7 +32,7 @@ const WalletPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [activeTab, setActiveTab] = useState("All");
   const [walletBalance, setWalletBalance] = useState(0);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // Modal states
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -128,13 +131,25 @@ const WalletPage = () => {
       setEditModalOpen(true);
     }
   };
-
+  const handleModal = () => {
+    setIsModalOpen(true)
+  }
   return (
     <div className="kit-container">
     <PageHeader 
         title="Wallet History" 
-        rightElement={ <WalletBalance onBalanceFetched={setWalletBalance} />}
+        rightElement={ <WalletBalance onBalanceFetched={setWalletBalance} />    }
       />
+      <div className="kit-actions-bar">
+      <AppButton
+        variant="primary"
+        backgroundColor="error"
+        onClick={handleModal} 
+        leftIcon={<Plus />}
+      >
+        Create Withdrawal
+      </AppButton>
+      </div>
 
       {/* Metrics Section */}
       <div className="kit-metrics">
@@ -220,6 +235,11 @@ const WalletPage = () => {
           transaction={selectedTransaction}
         />
       )}
+            {/* Modal */}
+            <WithdrawalFormModal
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };
