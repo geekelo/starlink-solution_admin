@@ -131,13 +131,13 @@ const FundingCard = ({ item }) => {
         <div className="info-item">
           <User size={16} />
           <p>
-            <strong>Username:</strong> {item.user_name}
+            <strong>Name:</strong> {item.user_name}
           </p>
         </div>
         <div className="info-item">
           <Calendar size={16} />
           <p>
-            <strong>User email:</strong> {item.user_email}
+            <strong>Email:</strong> {item.user_email}
           </p>
         </div>
 
