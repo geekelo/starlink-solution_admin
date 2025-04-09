@@ -23,7 +23,7 @@
     color: #212529;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
   }
   
   .info-card-menu {
