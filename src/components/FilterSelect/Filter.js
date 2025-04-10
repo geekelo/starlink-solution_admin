@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown, X } from 'lucide-react';
-import '../../styles/filter.css'
+import '../../styles/filter.css';
 
 /**
  * FilterSelect - An enhanced select component with improved dropdown positioning
@@ -24,16 +24,23 @@ const FilterSelect = ({
   disabled = false,
   className = "",
   errorMessage = "",
+  label,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filter, setFilter] = useState("");
   const [position, setPosition] = useState("bottom");
+  const [selectedVal, setSelectedVal] = useState(value);
   const selectRef = useRef(null);
   const dropdownRef = useRef(null);
 
+  // Set initial value when component mounts or value changes
+  useEffect(() => {
+    setSelectedVal(value);
+  }, [value]);
+
   // Selected option object
-  const selectedOption = options.find(option => option.value === value);
+  const selectedOption = options.find(option => option.value === selectedVal);
 
   // Filter options based on search term
   const filteredOptions = filter
@@ -98,7 +105,10 @@ const FilterSelect = ({
 
   // Handle option selection
   const handleSelect = (optionValue) => {
-    onChange(optionValue);
+    setSelectedVal(optionValue);
+    if (onChange) {
+      onChange(optionValue);
+    }
     setIsOpen(false);
   };
 
@@ -130,8 +140,8 @@ const FilterSelect = ({
     }
   };
 
-  // Prevent dropdown from closing when scrolling inside
-  const handleDropdownScroll = (e) => {
+  // Ensure dropdown content clicks don't propagate to parent
+  const handleDropdownClick = (e) => {
     e.stopPropagation();
   };
 
@@ -140,6 +150,8 @@ const FilterSelect = ({
       className={`filter-select-container ${className} ${errorMessage ? 'has-error' : ''}`} 
       ref={selectRef}
     >
+      {label && <div className="filter-select-label">{label}</div>}
+      
       <div
         className={`filter-select ${isOpen ? 'is-open' : ''} ${disabled ? 'is-disabled' : ''}`}
         onClick={toggleDropdown}
@@ -166,8 +178,7 @@ const FilterSelect = ({
         <div 
           className={`filter-select-dropdown ${position === 'top' ? 'position-top' : 'position-bottom'}`}
           ref={dropdownRef}
-          onScroll={handleDropdownScroll}
-          onClick={(e) => e.stopPropagation()}
+          onClick={handleDropdownClick}
         >
           <div className="filter-select-search">
             <input
@@ -176,12 +187,15 @@ const FilterSelect = ({
               onChange={handleFilterChange}
               placeholder="Search options..."
               autoFocus
-              onKeyDown={(e) => e.stopPropagation()}
+              onClick={(e) => e.stopPropagation()}
             />
             {filter && (
               <button 
                 className="filter-select-clear" 
-                onClick={() => setFilter("")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFilter("");
+                }}
                 aria-label="Clear search"
               >
                 <X size={14} />
@@ -197,12 +211,15 @@ const FilterSelect = ({
               filteredOptions.map((option) => (
                 <li
                   key={option.value}
-                  className={`filter-select-option ${option.value === value ? 'is-selected' : ''}`}
-                  onClick={() => handleSelect(option.value)}
+                  className={`filter-select-option ${option.value === selectedVal ? 'is-selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelect(option.value);
+                  }}
                   role="option"
-                  aria-selected={option.value === value}
+                  aria-selected={option.value === selectedVal}
                 >
-                {option.label || option.name}
+                  {option.label || option.name}
                 </li>
               ))
             ) : (
@@ -219,6 +236,4 @@ const FilterSelect = ({
   );
 };
 
-export {FilterSelect};
-
-
+export { FilterSelect };

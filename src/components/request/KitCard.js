@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Calendar, FileText, Save, MoreVertical, Eye, Edit2, X } from 'lucide-react';
+import { Box, Calendar, FileText, Save, MoreVertical, Eye, Edit2, X, Copy } from 'lucide-react';
+import { InfoCard } from '../InfoCard/Card';
+import { formatDate } from '../utils/date';
 
 const KitCard = ({ kit, plans }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -54,114 +56,71 @@ const KitCard = ({ kit, plans }) => {
     };
   }, []);
 
-  return (
-    <div className="kit-card renewal">
-      <h3>
-        Renewal
-        <div 
-          className="menu-dots" 
-          onClick={toggleDropdown}
-        >
-          <MoreVertical size={20} />
-        </div>
-      </h3>
-      
-      {/* Dropdown Menu */}
-      {showDropdown && (
-        <div className="dropdown-menu" ref={dropdownRef}>
-          {/* <div className="dropdown-item" onClick={handleViewClick}>
-            <Eye size={16} />
-            View Details
-          </div> */}
-          {isManageRenewalsPath && (
-            <div className="dropdown-item" onClick={handleEditClick}>
-              <Edit2 size={16} />
-              Edit
-            </div>
-          )}
-        </div>
-      )}
-      
-      <div className="card-content">
-        <div className="info-item">
-          <FileText size={16} />
-          <p><strong>NIN:</strong> {kit.nin}</p>
-        </div>
-        <div className="info-item">
-          <FileText size={16} />
-          <p><strong>Address:</strong> {kit.address}</p>
-        </div>
-        <div className="info-item">
-          <FileText size={16} />
-          <p><strong>Id:</strong> {kit.id}</p>
-        </div>
-        <div className="info-item">
-          <Box size={16} />
-          <p><strong>Kit No:</strong> {kit.kit_number}</p>
-        </div>
-        <div className="info-item">
-          <FileText size={16} />
-          <p><strong>Company Name:</strong> {kit.company_name}</p>
-        </div>
-        <div className="info-item">
-          <Calendar size={16} />
-          <p><strong>Date:</strong> {new Date(kit.created_at).toLocaleDateString("en-US")}</p>
-        </div>
-      </div>
-      
-      {/* Modal */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" ref={modalRef}>
-            <div className="modal-header">
-              <h4>Manage Kit Request</h4>
-              <button className="close-btn" onClick={() => setShowModal(false)}>
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="modal-body">
-              <div className="form-group">
-                <label>Status</label>
-                <select 
-                  value={status} 
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="pending">Pending</option>
-                  <option value="approved">Approved</option>
-                  <option value="rejected">Rejected</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label>Plan</label>
-                <select 
-                  value={selectedPlan} 
-                  onChange={(e) => setSelectedPlan(e.target.value)}
-                >
-                  {plans.map((plan) => (
-                    <option key={plan.id} value={plan.id}>
-                      {plan.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            
-            <div className="modal-footer">
-              <button className="cancel-btn" onClick={() => setShowModal(false)}>
-                Cancel
-              </button>
-              <button className="save-btn" onClick={handleSave}>
-                <Save size={16} />
-                <span>Save Changes</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  const kitItems = [
+    {
+      icon: <FileText size={16} />,
+      label: "NIN",
+      value: kit.nin
+    },
+    {
+      icon: <FileText size={16} />,
+      label: "Address",
+      value: kit.address
+    },
+    {
+      icon: <FileText size={16} />,
+      label: "Id",
+      value: kit.id
+    },
+    {
+      icon: <Box size={16} />,
+      label: "Kit No",
+      value: kit.kit_number
+    },
+    {
+      icon: <FileText size={16} />,
+      label: "Company Name",
+      value: kit.company_name
+    },
+    {
+      icon: <Calendar size={16} />,
+      label: "Date",
+      value:formatDate(kit.created_at)
+    }
+  ];
+    // Status options for the select dropdown
+    const statusOptions = [
+      { value: "pending", label: "Pending" },
+      { value: "approved", label: "Approved" },
+      { value: "rejected", label: "Rejected" }
+    ];
+  
+    // Convert plans array to options format
+    const planOptions = plans.map(plan => ({
+      value: plan.id,
+      label: plan.name
+    }));
+ return (
+  <InfoCard
+      title="New Kits"
+      items={kitItems}
+      menuItems={[]} 
+      icon={<Copy />} 
+      className="renewal kit-card"
+      active={status === "approved"}
+      showAppButton={true}
+      onAppButtonClick={handleSave}
+      appButtonLabel="Approve"
+      statusOptions={statusOptions}
+      status={status}
+      setStatus={setStatus}
+      placeholder="Select status"
+      label="Status"
+      planOptions={planOptions}
+      selectedPlan={selectedPlan}
+      setSelectedPlan={setSelectedPlan}
+    />
+ )
 };
 
 export default KitCard;
