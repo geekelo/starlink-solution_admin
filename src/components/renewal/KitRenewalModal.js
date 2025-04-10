@@ -6,6 +6,7 @@ import { FormLabel } from "../FormLabel/Label";
 import { FormInput } from "../FormInput/Input";
 import { Select } from "../Select/Select";
 import AppButton from "../AppButton/Button";
+import { FormSelect } from "../FormSelect";
 
 const KitRenewalModal = ({ 
   showModal, 
@@ -48,7 +49,10 @@ const KitRenewalModal = ({
       { value: "true", label: "Yes" },
       { value: "false", label: "No" }
     ];
-  
+    const months = [
+      "January", "February", "March", "April", "May", "June", 
+      "July", "August", "September", "October", "November", "December"
+    ];
   if (!showModal) return null;
 
   return (
@@ -99,15 +103,23 @@ const KitRenewalModal = ({
         />
         
         <FormLabel htmlFor="kit_renewal.month">Month:</FormLabel>
-        <FormInput
-          id="kit_renewal_month"
-          name="kit_renewal.month"
-          type="text"
-          placeholder="Month"
-          value={formData.kit_renewal?.month || ""}
-          onChange={handleInputChange}
-          icon={<Calendar size={18} />}
-        />
+
+
+<FormSelect
+  id="kit_renewal_month"
+  name="kit_renewal.month"
+  value={formData.kit_renewal?.month || ""}
+  onChange={handleInputChange}
+  required
+>
+  <option value="" disabled>Select Month</option>
+  {months.map((month, index) => (
+    <option key={index + 1} value={index + 1}>
+      {month}
+    </option>
+  ))}
+</FormSelect>
+     
         
         <FormLabel htmlFor="kit_renewal.year">Year:</FormLabel>
         <FormInput
@@ -160,7 +172,8 @@ const KitRenewalModal = ({
           value={formData.kit_renewal?.deadline || ""}
           onChange={handleInputChange}
         />
-        
+      
+
         {formData.status === "receipt" && (
           <>
             <FormLabel htmlFor="date_of_renewal">Date of Renewal:</FormLabel>
@@ -174,6 +187,19 @@ const KitRenewalModal = ({
             />
           </>
         )}
+          <FormLabel htmlFor="deduct_wallet">Deduct from Wallet?</FormLabel>
+          <div className="form-group">
+  <select
+    name="deduct_wallet"
+    value={formData.deduct_wallet.toString()} // Show "true"/"false" as string
+    onChange={handleInputChange}
+    className="form-control"
+  >
+    <option value="true">Yes</option>
+    <option value="false">No</option>
+  </select>
+</div>
+
       </div>
     </div>
   </Modal>

@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/KitRenewalModal.css";
 import "../../styles/Wallet.css";
 import { XCircle } from 'lucide-react';
+import { FormSelect } from "../FormSelect";
 
 
 const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
@@ -40,7 +41,10 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
   if (!isOpen || !transaction) {
     return null;
   }
-  
+  const months = [
+    "January", "February", "March", "April", "May", "June", 
+    "July", "August", "September", "October", "November", "December"
+  ];
   return (
     <div className="modal-overlay">
       <div className="funding-modal">
@@ -84,13 +88,21 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, onSave }) => {
               />
 
               <label>Month:</label>
-              <input 
-                type="text" 
-                name="month" 
-                placeholder="Month" 
-                value={formData.month || ""} 
-                onChange={handleInputChange} 
-              />
+              <FormSelect
+  id="kit_renewal_month"
+  name="month" 
+  value={formData.month || ""} 
+  onChange={handleInputChange}
+
+>
+  <option value="" disabled>Select Month</option>
+  {months.map((month, index) => (
+    <option key={index + 1} value={index + 1}>
+      {month}
+    </option>
+  ))}
+</FormSelect>
+            
 
               <label>Year:</label>
               <input 

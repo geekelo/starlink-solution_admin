@@ -18,11 +18,13 @@ import {
   IdCard,
 } from "lucide-react";
 import { formatDate } from "../utils/date";
+import { InfoCard } from "../InfoCard/Card";
 
 const FundingCard = ({ item }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState("Pending");
+  const [selectedAmount, setSelectedAmount] = useState(item?.amount)
 
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
@@ -73,129 +75,78 @@ const FundingCard = ({ item }) => {
     };
   }, []);
 
+    // Prepare the items array for InfoCard
+    const cardItems = [
+      {
+        icon: <IdCard size={16} />,
+        label: "Transaction",
+        value: item.transaction_id
+      },
+      {
+        icon: <DollarSign size={16} />,
+        label: "Amount",
+        value: new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.amount)
+      },
+      {
+        icon: <BadgeCheck size={16} />,
+        label: "Paid",
+        value: item.paid
+      },
+      {
+        icon: <Calendar size={16} />,
+        label: "Date of Request",
+        value: formatDate(item.created_at)
+      },
+      {
+        icon: <User size={16} />,
+        label: "Name",
+        value: item.user_name
+      },
+      {
+        icon: <User size={16} />,
+        label: "Email",
+        value: item.user_email
+      },
+      {
+        icon: <Wallet2 size={16} />,
+        label: "Wallet Id",
+        value: item.wallet_id
+      },
+      {
+        icon: <Barcode size={16} />,
+        label: "Wallet Balance",
+        value: new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.wallet_balance)
+      }
+    ];
+    const handleStatusChange = (value) => {
+      setStatus(value);
+    };
+    // Status options for the select dropdown
+    const statusOptions = [
+      { value: "pending", label: "Pending" },
+      { value: "approved", label: "Approved" },
+      { value: "rejected", label: "Rejected" }
+    ];
+
   return (
-    <div className="kit-card renewal">
-      <h3>
-        Funding Request
-        <div className="menu-dots" onClick={toggleDropdown}>
-          <MoreVertical size={20} />
-        </div>
-      </h3>
+    <InfoCard
+    title="Funding Request"
+    items={cardItems}
+    menuItems={[]} 
+    className="funding-request-card"
+    showAppButton={true}
+    onAppButtonClick={handleSave}
+    appButtonLabel="Save Changes"
+    statusOptions={statusOptions}
+    status={status}
+    inputValue={selectedAmount}
+    inputLabel="Amount"
+    setSelectedAmount={setSelectedAmount}
+    setStatus={setStatus}
+    placeholder="Select status"
+    label="Status"
+  />
 
-      {/* Dropdown Menu */}
-      {showDropdown && (
-        <div className="dropdown-menu" ref={dropdownRef}>
-          {/* <div className="dropdown-item" onClick={handleViewClick}>
-            <Eye size={16} />
-            View Details
-          </div> */}
-          <div className="dropdown-item" onClick={handleEditClick}>
-            <Edit2 size={16} />
-            Edit
-          </div>
-        </div>
-      )}
-
-      <div className="card-content">
-        <div className="info-item">
-          <IdCard size={16} />
-          <p>
-            <strong>Transaction:</strong> {item.transaction_id}
-          </p>
-        </div>
-        <div className="info-item">
-  <DollarSign size={16} />
-  <p><strong>Amount:</strong> {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.amount)}</p>
-</div>
-
-        <div className="info-item">
-          <CheckCircle size={16} />
-          <p>
-            <strong>Status:</strong> {item.status}
-          </p>
-        </div>
-
-        <div className="info-item">
-          <BadgeCheck size={16} />
-          <p>
-            <strong>Paid:</strong> {item.paid}
-          </p>
-        </div>
-        <div className="info-item">
-          <Calendar size={16} />
-          <p>
-            <strong>Date of Request:</strong> {formatDate(item.created_at)}
-          </p>
-        </div>
-       
-        <div className="info-item">
-          <User size={16} />
-          <p>
-            <strong>Name:</strong> {item.user_name}
-          </p>
-        </div>
-        <div className="info-item">
-          <Calendar size={16} />
-          <p>
-            <strong>Email:</strong> {item.user_email}
-          </p>
-        </div>
-
-        <div className="info-item">
-          <Wallet2 size={16} />
-          <p>
-            <strong>Wallet Id:</strong> {item.wallet_id}
-          </p>
-        </div>
-        <div className="info-item">
-          <Barcode size={16} />
-          <p>
-            <strong>Wallet Balance:</strong>  {new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(item.wallet_balance)}
-          </p>
-        </div>
-      </div>
-
-      {/* Modal */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content" ref={modalRef}>
-            <div className="modal-header">
-              <h4>Manage Funding Request</h4>
-              <button className="close-btn" onClick={() => setShowModal(false)}>
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <div className="form-group">
-                <label>Status</label>
-                <select
-                  value={status}
-                  onChange={(e) => setStatus(e.target.value)}
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="modal-footer">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowModal(false)}
-              >
-                Cancel
-              </button>
-              <button className="save-btn" onClick={handleSave}>
-                <Save size={16} />
-                <span>Save Changes</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
   );
 };
 
