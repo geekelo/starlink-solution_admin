@@ -11,7 +11,7 @@ import { InfoCard } from "../InfoCard/Card";
 import { formatDate } from "../utils/date";
 
 const Funding = ({ transaction, openModal }) => {
-  console.log(transaction);
+
   
   return (
     <InfoCard
