@@ -30,6 +30,7 @@ const RenewalPage = () => {
   const [formData, setFormData] = useState({
     kit_number: "",
     status: "",
+    deduct_wallet: false, // <--- Add this
     kit_renewal: {
       amount: "",
       month: "",
@@ -41,6 +42,7 @@ const RenewalPage = () => {
     },
     date_of_renewal: "",
   });
+  
 
   useEffect(() => {
     if (initialKitNumber) {
@@ -75,7 +77,7 @@ const RenewalPage = () => {
   // Handle input changes for the modal form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-
+  
     if (name.includes("kit_renewal.")) {
       const field = name.split(".")[1]; // Extract nested field name
       setFormData((prevData) => ({
@@ -88,10 +90,12 @@ const RenewalPage = () => {
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value,
+        [name]: value === "true",  // Converts "true"/"false" to boolean
       }));
     }
   };
+  
+  
 
   // Handle create record (API call)
   const handleCreateRecord = async () => {

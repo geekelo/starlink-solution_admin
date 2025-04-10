@@ -160,7 +160,8 @@ const KitRenewalModal = ({
           value={formData.kit_renewal?.deadline || ""}
           onChange={handleInputChange}
         />
-        
+      
+
         {formData.status === "receipt" && (
           <>
             <FormLabel htmlFor="date_of_renewal">Date of Renewal:</FormLabel>
@@ -174,6 +175,19 @@ const KitRenewalModal = ({
             />
           </>
         )}
+          <FormLabel htmlFor="deduct_wallet">Deduct from Wallet?</FormLabel>
+          <div className="form-group">
+  <select
+    name="deduct_wallet"
+    value={formData.deduct_wallet.toString()} // Show "true"/"false" as string
+    onChange={handleInputChange}
+    className="form-control"
+  >
+    <option value="true">Yes</option>
+    <option value="false">No</option>
+  </select>
+</div>
+
       </div>
     </div>
   </Modal>
