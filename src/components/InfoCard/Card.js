@@ -3,6 +3,8 @@ import '../../styles/info-card.css';
 import { MoreVertical, Copy, CheckCheck, Check } from 'lucide-react';
 import { FilterSelect } from '../FilterSelect/Filter';
 import AppButton from '../AppButton/Button';
+import { FormInput } from '../FormInput/Input';
+import { FormLabel } from '../FormLabel/Label';
 
 /**
  * InfoCard - A flexible card component to display information with icons, labels, and optional dropdown menu
@@ -39,6 +41,9 @@ export const InfoCard = ({
     statusOptions = [],
     status,
     setStatus,
+    setAmount,
+    inputLabel,
+    inputValue,
     placeholder = "Select status",
     label = "Status", 
     planOptions = [],
@@ -99,7 +104,9 @@ export const InfoCard = ({
         setSelectedPlan(value);
       }
     };
-    
+    const handleInput = (e) => {
+      setAmount(e.target.value)
+    }
     // Handle app button click
     const handleAppButtonClick = () => {
       if (onAppButtonClick) {
@@ -228,6 +235,20 @@ export const InfoCard = ({
                   onChange={handleStatusChange}
                   placeholder={placeholder}
                 />
+                {inputValue && <div className='form-group'>
+<FormLabel>{inputLabel}</FormLabel>
+                  <FormInput
+      type="text"
+      id="amount"
+      name="amount"
+      placeholder="Enter Amount"
+      value={inputValue}
+      onChange={(e) => handleInput(e)}
+      required
+    />
+                </div>
+
+       }
               </div>
             )}
             

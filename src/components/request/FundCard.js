@@ -24,6 +24,7 @@ const FundingCard = ({ item }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState("Pending");
+  const [selectedAmount, setSelectedAmount] = useState(item?.amount)
 
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
@@ -138,7 +139,10 @@ const FundingCard = ({ item }) => {
     appButtonLabel="Save Changes"
     statusOptions={statusOptions}
     status={status}
-    setStatus={handleStatusChange}
+    inputValue={selectedAmount}
+    inputLabel="Amount"
+    setSelectedAmount={setSelectedAmount}
+    setStatus={setStatus}
     placeholder="Select status"
     label="Status"
   />
