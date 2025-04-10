@@ -122,9 +122,9 @@ const FundingCard = ({ item }) => {
     };
     // Status options for the select dropdown
     const statusOptions = [
-      { value: "Pending", label: "Pending" },
-      { value: "Approved", label: "Approved" },
-      { value: "Rejected", label: "Rejected" }
+      { value: "pending", label: "Pending" },
+      { value: "approved", label: "Approved" },
+      { value: "rejected", label: "Rejected" }
     ];
 
   return (
