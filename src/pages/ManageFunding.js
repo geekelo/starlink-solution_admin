@@ -3,19 +3,14 @@ import { useLocation } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
 import {
-  Edit,
-  X,
-  CheckCircle,
+
   Search,
-  ChevronLeft,
-  ChevronRight,
   Plus,
   Mail,
 } from "lucide-react";
 import Funding from "../components/funding/funding";
 import CreateFundingModal from "../components/funding/CreateFunding";
 import SuccessModal from "../components/funding/Success-Modal";
-import { FormInput } from "../components/FormInput/Input";
 import AppButton from "../components/AppButton/Button";
 import { AppLoader } from "../components/Loader/loader";
 import SearchWithButton from "../components/SearchInput/SearchInput";
@@ -23,7 +18,6 @@ import Pagination from "../components/Pagination/Pagination";
 import PageHeader from "../components/PageHeader/PageHeader";
 import EmptyState from "../components/EmptyState/EmptyState";
 import EditFundingModal from "../components/funding/editFundingModal";
-
 const FundingPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -100,13 +94,25 @@ const FundingPage = () => {
         `/api/v1/admin/user_fundings?email=${email}`
       );
 
-      const sortedData = response.data.map((funding) => ({
+      // First create the data objects with formatted dates
+      const processedData = response.data.map((funding) => ({
         ...funding,
         email: funding.user_email || "N/A",
         date: funding.created_at
           ? new Date(funding.created_at).toLocaleString()
           : "N/A",
+        // Keep the original timestamp for sorting
+        timestamp: funding.created_at ? new Date(funding.created_at) : null,
       }));
+
+      // Then sort the data by timestamp (newest first)
+      const sortedData = processedData.sort((a, b) => {
+        // Handle null timestamps by placing them at the end
+        if (!a.timestamp) return 1;
+        if (!b.timestamp) return -1;
+        // Sort descending (newest first)
+        return b.timestamp - a.timestamp;
+      });
 
       setFundingData(sortedData);
       setCurrentPage(1);
@@ -116,13 +122,12 @@ const FundingPage = () => {
       setLoading(false);
     }
   };
+  
   const handleCreateFunding = async () => {
     const formattedDate =
       newFunding.date || new Date().toISOString().split("T")[0];
 
     setNewFunding((prev) => ({ ...prev, date: formattedDate })); // Set date before sending
-
-
 
     if (
       !newFunding.email ||
@@ -173,6 +178,7 @@ const FundingPage = () => {
   const handleModal = () => {
     setShowModal(true);
   };
+  
   const handleOpenEditModal = (transaction) => {
     setFormData({
       amount: transaction.amount || "",
@@ -183,7 +189,6 @@ const FundingPage = () => {
     setEditModalOpen(true);
   };
   
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentFunding = fundingData.slice(indexOfFirstItem, indexOfLastItem);
@@ -191,9 +196,21 @@ const FundingPage = () => {
   return (
     <div className="kit-container-renewal">
       {/* Actions bar - search and create button in one line */}
-
+<PageHeader title="Manage Funding Request"  rightElement={   <AppButton
+          variant="custom"
+          backgroundColor="primary"
+          leftIcon={<Plus />}
+          textColor="#000"
+          loading={loading}
+          loadingText="Creating..."
+          disabled={loading}
+          onClick={handleModal}
+        >
+          Create Funding
+        </AppButton>}/>
       <div className="kit-actions-bar">
-        <SearchWithButton
+    
+      <SearchWithButton
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -201,28 +218,14 @@ const FundingPage = () => {
           icon={<Mail size={24} />}
           loading={loading}
           onSearch={handleSearch}
+          width="70%"
           withButton={true}
           buttonText="Search"
           loadingText="Searching..."
         />
-        <div className="kit-action-wrapper">
-          <AppButton
-            variant="custom"
-            backgroundColor="primary"
-            leftIcon={<Plus />}
-            textColor="#000"
-            loading={loading}
-            loadingText="Creating..."
-            disabled={loading}
-            onClick={handleModal}
-          >
-            Create Funding
-          </AppButton>
-        </div>
       </div>
 
-      {/* Header stands alone */}
-      <PageHeader title="Manage Funding Request" />
+ 
 
       {/* Content area */}
       <div className="kit-content-area">
@@ -235,7 +238,7 @@ const FundingPage = () => {
             {currentFunding.length > 0 ? (
               <div className="kit-grid">
                 {currentFunding.map((funding) => (
-                  <Funding key={funding.id} transaction={funding}    openModal={handleOpenEditModal} />
+                  <Funding key={funding.id} transaction={funding} openModal={handleOpenEditModal} />
                 ))}
               </div>
             ) : (
@@ -274,16 +277,7 @@ const FundingPage = () => {
             message="Enter a user email above and click Search to view funding records."
             icon={<Search />}
           />
-          // <div className="kit-initial-state">
-          //   <div className="kit-initial-icon">
-          //     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-          //       <circle cx="11" cy="11" r="8"/>
-          //       <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          //     </svg>
-          //   </div>
-          //   <h3 className="kit-initial-title">Ready to Search</h3>
-          //   <p className="kit-initial-message">Enter a user email above and click Search to view funding records.</p>
-          // </div>
+       
         )}
 
         {/* Pagination */}
@@ -313,18 +307,17 @@ const FundingPage = () => {
         </>
       )}
 
-<EditFundingModal
-  isOpen={editModalOpen}
-  formData={formData}
-  handleChange={handleChange}
-  handleSelectChange={handleSelectChange}
-  handleRadioChange={handleRadioChange}
-  handleSave={handleSave}
-  closeModal={() => setEditModalOpen(false)}
-  loading={loading}
-  error={error}
-/>
-
+      <EditFundingModal
+        isOpen={editModalOpen}
+        formData={formData}
+        handleChange={handleChange}
+        handleSelectChange={handleSelectChange}
+        handleRadioChange={handleRadioChange}
+        handleSave={handleSave}
+        closeModal={() => setEditModalOpen(false)}
+        loading={loading}
+        error={error}
+      />
 
       {showSuccessModal && (
         <SuccessModal
@@ -335,5 +328,6 @@ const FundingPage = () => {
     </div>
   );
 };
+
 
 export default FundingPage;
