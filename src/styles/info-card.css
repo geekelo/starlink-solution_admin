@@ -1,169 +1,240 @@
-/* InfoCard.css */
+/* InfoCard.css - Integrated with fixes for FilterSelect */
 
 .info-card {
-    background-color: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    border-left: 4px solid transparent;
-    margin-bottom: 16px;
-    position: relative;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 1; /* Base z-index */
+}
+
+.info-card.active {
+  border-left-color: #0d6efd;
+}
+
+/* Improve stacking when cards are interacted with */
+.info-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  z-index: 5; /* Raise z-index when hovered */
+}
+
+.info-card:focus-within {
+  z-index: 5; /* Raise z-index when containing focused elements */
+}
+
+.info-card-title {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.info-card-menu {
+  position: relative;
+  z-index: 10; /* Higher z-index for menu */
+}
+
+.menu-dots {
+  cursor: pointer;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.menu-dots:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  z-index: 1200; /* Very high z-index to ensure it's above other elements */
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #495057;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f8f9fa;
+}
+
+.dropdown-item svg {
+  color: #6c757d;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px 16px;
+  align-items: center;
+}
+
+.info-icon {
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.info-text {
+  font-size: 14px;
+  color: #495057;
+}
+
+.info-text strong {
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Status badge styles */
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-badge.success,
+.status-badge.completed {
+  background-color: #d1e7dd;
+  color: #0f5132;
+}
+
+.status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-badge.failed {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-badge.processing {
+  background-color: #cff4fc;
+  color: #055160;
+}
+
+.status-badge.receipt {
+  background-color: #e2e3e5;
+  color: #41464b;
+}
+
+/* Card type variations */
+.info-card.funding {
+  border-left-color: #198754;
+}
+
+.info-card.withdrawal {
+  border-left-color: #dc3545;
+}
+
+.info-card.renewal {
+  border-left-color: #fd7e14;
+}
+
+.info-card.pending {
+  border-left-color: #856404;
+}
+
+/* Footer styling - NEW */
+.info-card-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 20px;
+  position: relative;
+  z-index: 2; /* Ensure footer elements are above the card */
+}
+
+/* Form group styling - NEW */
+.form-group {
+  position: relative;
+  z-index: 5; /* Higher z-index for form controls */
+  margin-bottom: 16px;
+}
+
+/* Higher z-index for focused form elements - NEW */
+.form-group:focus-within,
+.form-group:has(.filter-select.is-open) {
+  z-index: 1000;
+}
+
+/* Ensure the filter select container is properly positioned - NEW */
+.filter-select-container {
+  position: relative;
+  z-index: 5;
+}
+
+/* Filter select open state - NEW */
+.filter-select-container:has(.is-open) {
+  z-index: 1000;
+}
+
+/* Container for multiple info cards - NEW */
+.info-cards-container {
+  position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+  .info-card {
+    padding: 15px;
   }
-  
-  .info-card.active {
-    border-left-color: #0d6efd;
-  }
-  
-  .info-card-title {
-    margin-top: 0;
-    margin-bottom: 16px;
-    font-size: 18px;
-    font-weight: 600;
-    color: #212529;
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-  }
-  
-  .info-card-menu {
-    position: relative;
-  }
-  
-  .menu-dots {
-    cursor: pointer;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-  }
-  
-  .menu-dots:hover {
-    background-color: #f8f9fa;
-  }
-  
-  .dropdown-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #ffffff;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    min-width: 160px;
-    z-index: 10;
-    overflow: hidden;
-  }
-  
-  .dropdown-item {
-    padding: 10px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #495057;
-    transition: background-color 0.2s;
-  }
-  
-  .dropdown-item:hover {
-    background-color: #f8f9fa;
-  }
-  
-  .dropdown-item svg {
-    color: #6c757d;
-  }
-  
+
   .info-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 12px 16px;
-    align-items: center;
+    gap: 10px;
   }
   
-  .info-icon {
-    color: #6c757d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* Enhanced mobile styling for dropdowns - NEW */
+  .filter-select-dropdown {
+    max-height: 200px;
+    overflow-y: auto;
   }
-  
-  .info-text {
-    font-size: 14px;
-    color: #495057;
-  }
-  
-  .info-text strong {
-    font-weight: 600;
-    color: #343a40;
-  }
-  
-  /* Status badge styles */
-  .status-badge {
-    display: inline-block;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: capitalize;
-  }
-  
-  .status-badge.success,
-  .status-badge.completed {
-    background-color: #d1e7dd;
-    color: #0f5132;
-  }
-  
-  .status-badge.pending {
-    background-color: #fff3cd;
-    color: #856404;
-  }
-  
-  .status-badge.failed {
-    background-color: #f8d7da;
-    color: #721c24;
-  }
-  
-  .status-badge.processing {
-    background-color: #cff4fc;
-    color: #055160;
-  }
-  
-  .status-badge.receipt {
-    background-color: #e2e3e5;
-    color: #41464b;
-  }
-  
-  /* Card type variations */
-  .info-card.funding {
-    border-left-color: #198754;
-  }
-  
-  .info-card.withdrawal {
-    border-left-color: #dc3545;
-  }
-  
-  .info-card.renewal {
-    border-left-color: #fd7e14;
-  }
-  .info-card.pending {
-    border-left-color: #856404;;
-  }
-  /* Hover effect */
-  .info-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-  }
-  
-  /* Responsive adjustments */
-  @media (max-width: 576px) {
-    .info-card {
-      padding: 15px;
-    }
-    
-    .info-grid {
-      gap: 10px;
-    }
-  }
+}
+
+/* Copy button styles (optional) */
+.copy-button {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #6c757d;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.copy-button:hover {
+  background-color: #f8f9fa;
+  color: #343a40;
+}
