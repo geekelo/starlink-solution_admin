@@ -60,7 +60,7 @@ const RenewalPage = () => {
       const response = await axiosInstance.get(`/api/v1/admin/kit_renewals?kit_number=${kitNo}`);
 
       if (response.data.length > 0) {
-        const sortedData = response.data.sort((a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal));
+        const sortedData = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         setRenewalData(sortedData);
       } else {
         setError("No records found.");
