@@ -3,18 +3,39 @@ import { CircleAlert, Download } from "lucide-react";
 import PageHeader from "../components/PageHeader/PageHeader";
 import Reminders from "../components/reminders/reminders";
 import { ActionCard } from "../components/ActionCard/ActionCard";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { createAxiosInstance } from "../config/axios";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [loadingDeactivate, setLoadingDeactivate] = useState(false);
+
   const handleNavigation = (route) => {
     navigate(route);
+  };
+
+  const handleDeactivateKits = async () => {
+    setLoadingDeactivate(true);
+    try {
+      const axiosInstance = createAxiosInstance();
+      const res = await axiosInstance.get(
+        "/api/v1/admin/kit_deactivations/deactivate_expired_kits"
+      );
+console.log(res)
+      const { message, count } = res.data;
+      toast.success(`${message}`);
+    } catch (err) {
+      toast.error("Failed to deactivate kits.");
+    } finally {
+      setLoadingDeactivate(false);
+    }
   };
 
   return (
     <div className="dashboard-container">
       <PageHeader title="Dashboard" />
 
-      {/* Navigation Cards Section */}
       <div className="dashboard-section">
         <div className="cards-container">
           <ActionCard
@@ -32,13 +53,15 @@ const Dashboard = () => {
             buttonText="Download Reports"
             onClick={() => handleNavigation("/monthly-renewals")}
           />
-<ActionCard
-  title="DEACTIVATE KITS"
-  description="You can deactivate kits whose subscription is expired"
-  icon={<Download size={32} />}
-  buttonText="Deactivate"
-  // onClick={() => handleNavigation("/kits")}
-/>
+
+          <ActionCard
+            title="DEACTIVATE KITS"
+            description="You can deactivate kits whose subscription is expired"
+            icon={<Download size={32} />}
+            buttonText={loadingDeactivate ? "Deactivating..." : "Deactivate"}
+            onClick={handleDeactivateKits}
+          />
+
           <Reminders />
         </div>
       </div>
