@@ -21,6 +21,8 @@ import { formatDate } from "../utils/date";
 import { InfoCard } from "../InfoCard/Card";
 import { createAxiosInstance } from "../../config/axios";
 
+import { toast } from "react-toastify";
+
 const FundingCard = ({ item }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -59,9 +61,8 @@ const FundingCard = ({ item }) => {
         `/api/v1/admin/funding_kit_requests/${item.id}/update_funding_request`,
         payload
       );
-
-      console.log("Funding updated successfully:", response.data);
-      alert("Funding updated successfully!");
+     const {message, funding} = response.data
+      toast.success(`${message}`);
       setShowModal(false);
     } catch (error) {
       console.error("Error updating funding:", error);
