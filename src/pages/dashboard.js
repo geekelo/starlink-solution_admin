@@ -50,7 +50,7 @@ console.log(res)
             title="DOWNLOAD RENEWALS"
             description="Access and download your monthly renewal reports with ease."
             icon={<Download size={32} />}
-            buttonText="Download Reports"
+            buttonText="See Reports"
             onClick={() => handleNavigation("/monthly-renewals")}
           />
 

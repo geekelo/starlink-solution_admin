@@ -221,7 +221,6 @@ export const InfoCard = ({
                 </div>
                 
                 {/* Add copy button specifically for Kit Number */}
-
                 {item.label === "Kit Number" && (
                   <div 
                     className="copy-button" 
