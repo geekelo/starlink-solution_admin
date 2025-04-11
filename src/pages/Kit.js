@@ -20,6 +20,8 @@ import {
   MailIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 import "../styles/Kits.css";
 import KitModal from "../components/kits/kitModal";
 import Modal from "../components/kits/transferModal";
@@ -64,6 +66,7 @@ const KitPage = () => {
       try {
         const axiosInstance = createAxiosInstance();
         const response = await axiosInstance.get("/api/v1/admin/kit_records");
+        console.log(response)
         const formattedKits = response.data
           .map((kit) => ({
             kitId: kit.id,
@@ -107,13 +110,25 @@ const KitPage = () => {
       });
     }
   }, [selectedKit]);
-
   const handleRenewKit = async (kitId) => {
-    setTimeout(() => {
-      console.log(`Kit with ID: ${kitId} successfully renewed!`);
-      alert(`Kit with ID: ${kitId} successfully renewed!`);
-    }, 1000);
+    try {
+      const axiosInstance = createAxiosInstance();
+      const res = await axiosInstance.post(
+        "/api/v1/admin/kit_autorenews/renew_specific_kit",
+        {
+          kit_id: kitId,
+        }
+      );
+      console.log(res)
+  console.log(kitId)
+      toast.success(`Kit with ID: ${kitId} successfully renewed!`);
+      console.log("Renew response:", res.data);
+    } catch (error) {
+      console.error("Error renewing kit:", error);
+      toast.error("Failed to renew kit. Please try again.");
+    }
   };
+  
 
   const filteredKits = useMemo(() => {
     if (!Array.isArray(kits)) return [];
