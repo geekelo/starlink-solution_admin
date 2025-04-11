@@ -22,7 +22,7 @@ const Dashboard = () => {
       const res = await axiosInstance.get(
         "/api/v1/admin/kit_deactivations/deactivate_expired_kits"
       );
-console.log(res)
+      
       const { message, count } = res.data;
       toast.success(`${message}`);
     } catch (err) {
