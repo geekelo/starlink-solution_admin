@@ -116,7 +116,8 @@ const Requests = () => {
                   <KitCard key={kit.id} kit={kit} plans={plans} />
                 ))
               ) : (
-                <p className="req-message">No Starlink kit requests available.</p>
+                <EmptyState message="No Starlink kits available" />
+             
               )}
             </div>
           )}
