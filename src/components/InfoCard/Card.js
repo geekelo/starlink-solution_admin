@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import '../../styles/info-card.css';
-import { MoreVertical, Copy, CheckCheck, Check } from 'lucide-react';
+import { MoreVertical, Copy, CheckCheck, Check, Eye, Edit2, FileText, CheckCircle, RefreshCw, CalendarDays } from 'lucide-react';
 import { FilterSelect } from '../FilterSelect/Filter';
 import AppButton from '../AppButton/Button';
 import { FormInput } from '../FormInput/Input';
@@ -55,6 +55,7 @@ export const InfoCard = ({
     const [currentStatus, setCurrentStatus] = useState(status);
     const [currentPlan, setCurrentPlan] = useState(selectedPlan);
     const [copied, setCopied] = useState(false);
+    const [kitNumberCopied, setKitNumberCopied] = useState(false);
     const dropdownRef = useRef(null);
     const cardRef = useRef(null);
     
@@ -114,7 +115,7 @@ export const InfoCard = ({
       }
     };
 
-    // Handle copy functionality
+    // Handle copy functionality for all items
     const handleCopy = () => {
       const textToCopy = items
         .map(item => `${item.label}: ${item.value}`)
@@ -127,6 +128,18 @@ export const InfoCard = ({
         })
         .catch(err => {
           console.error('Failed to copy: ', err);
+        });
+    };
+
+    // Handle copy functionality specifically for Kit Number
+    const handleCopyKitNumber = (value) => {
+      navigator.clipboard.writeText(value)
+        .then(() => {
+          setKitNumberCopied(true);
+          setTimeout(() => setKitNumberCopied(false), 2000); // Reset after 2 seconds
+        })
+        .catch(err => {
+          console.error('Failed to copy kit number: ', err);
         });
     };
     
@@ -195,14 +208,36 @@ export const InfoCard = ({
               <div className="info-icon">
                 {item.icon}
               </div>
-              <div className="info-text">
-                <strong>{item.label}:</strong>{' '}
-                {item.className ? (
-                  <span className={item.className}>
-                    {item.value}
-                  </span>
-                ) : (
-                  <span>{item.value}</span>
+              <div className="info-text" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                <div>
+                  <strong>{item.label}:</strong>{' '}
+                  {item.className ? (
+                    <span className={item.className}>
+                      {item.value}
+                    </span>
+                  ) : (
+                    <span>{item.value}</span>
+                  )}
+                </div>
+                
+                {/* Add copy button specifically for Kit Number */}
+                {item.label === "Kit Number" && (
+                  <div 
+                    className="copy-button" 
+                    onClick={() => handleCopyKitNumber(item.value)}
+                    style={{ 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      marginLeft: '10px'
+                    }}
+                  >
+                    {kitNumberCopied && item.label === "Kit Number" ? (
+                      <Check size={16} color="green" />
+                    ) : (
+                      <Copy size={16} />
+                    )}
+                  </div>
                 )}
               </div>
             </React.Fragment>
@@ -236,19 +271,17 @@ export const InfoCard = ({
                   placeholder={placeholder}
                 />
                 {inputValue && <div className='form-group'>
-<FormLabel>{inputLabel}</FormLabel>
+                  <FormLabel>{inputLabel}</FormLabel>
                   <FormInput
-      type="text"
-      id="amount"
-      name="amount"
-      placeholder="Enter Amount"
-      value={inputValue}
-      onChange={(e) => handleInput(e)}
-      required
-    />
-                </div>
-
-       }
+                    type="text"
+                    id="amount"
+                    name="amount"
+                    placeholder="Enter Amount"
+                    value={inputValue}
+                    onChange={(e) => handleInput(e)}
+                    required
+                  />
+                </div>}
               </div>
             )}
             

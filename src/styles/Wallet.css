@@ -995,7 +995,10 @@
   display: flex;
   width: 100%;
 }
-
+.kit-select {
+  display: flex;
+  gap: 10px
+}
 .kit-search-input-container {
   position: relative;
   flex: 1;
