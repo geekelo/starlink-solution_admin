@@ -8,6 +8,7 @@ import {Box, HandCoins } from "lucide-react";
 import { AppLoader } from "../components/Loader/loader";
 import EmptyState from "../components/EmptyState/EmptyState";
 
+
 const Requests = () => {
   const [activeTab, setActiveTab] = useState("funding");
   const [loading, setLoading] = useState(false);
@@ -115,7 +116,8 @@ const Requests = () => {
                   <KitCard key={kit.id} kit={kit} plans={plans} />
                 ))
               ) : (
-                <p className="req-message">No Starlink kit requests available.</p>
+                <EmptyState message="No Starlink kits available" />
+             
               )}
             </div>
           )}

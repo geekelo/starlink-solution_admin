@@ -22,6 +22,7 @@ const Dashboard = () => {
       const res = await axiosInstance.get(
         "/api/v1/admin/kit_deactivations/deactivate_expired_kits"
       );
+      
       const { message, count } = res.data;
       toast.success(`${message}`);
     } catch (err) {
@@ -49,7 +50,7 @@ const Dashboard = () => {
             title="DOWNLOAD RENEWALS"
             description="Access and download your monthly renewal reports with ease."
             icon={<Download size={32} />}
-            buttonText="Download Reports"
+            buttonText="See Reports"
             onClick={() => handleNavigation("/monthly-renewals")}
           />
 

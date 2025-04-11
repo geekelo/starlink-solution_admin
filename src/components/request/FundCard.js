@@ -19,6 +19,9 @@ import {
 } from "lucide-react";
 import { formatDate } from "../utils/date";
 import { InfoCard } from "../InfoCard/Card";
+import { createAxiosInstance } from "../../config/axios";
+
+import { toast } from "react-toastify";
 
 const FundingCard = ({ item }) => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -44,14 +47,29 @@ const FundingCard = ({ item }) => {
     setShowDropdown(false);
     setShowModal(true);
   };
+  const handleSave = async () => {
+    try {
+      const axiosInstance = createAxiosInstance();
+      const payload = {
+        starlink_wallet_funding: {
+          status: status.toLowerCase(),
+          amount: Number(selectedAmount),
+        },
+      };
 
-  const handleSave = () => {
-    console.log("Saving funding request status:", {
-      reference: item.reference,
-      status,
-    });
-    setShowModal(false);
+      const response = await axiosInstance.patch(
+        `/api/v1/admin/funding_kit_requests/${item.id}/update_funding_request`,
+        payload
+      );
+     const {message, funding} = response.data
+      toast.success(`${message}`);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error updating funding:", error);
+      alert("Failed to update funding.");
+    }
   };
+
 
   // Close dropdown when clicking outside
   useEffect(() => {

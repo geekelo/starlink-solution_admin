@@ -2,10 +2,18 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
+
 import Renewal from "../components/renewal/Renewal";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import EditRenewalModal from "../components/renewal/EditKitRenewal";
 import { AppLoader } from "../components/Loader/loader";
+import PageHeader from "../components/PageHeader/PageHeader";
+import { FormSelect } from "../components/FormSelect";
+import Pagination from "../components/Pagination/Pagination";
+import EmptyState from "../components/EmptyState/EmptyState";
+import { Package, Search } from "lucide-react";
+import SearchWithButton from "../components/SearchInput/SearchInput";
+import MetricBox from "../components/MetricsBox/MetricsBox";
 
 const MonthlyRenewalPage = () => {
   const navigate = useNavigate();
@@ -26,7 +34,7 @@ const MonthlyRenewalPage = () => {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
+  const recordsPerPage = 12;
   const totalPages = Math.ceil(renewalData.length / recordsPerPage) || 1;
 
   const indexOfLastRecord = currentPage * recordsPerPage;
@@ -119,25 +127,8 @@ const MonthlyRenewalPage = () => {
 console.log(selectedTransaction)
   return (
     <div className="kit-container-renewal">
-      {/* Top Summary Card */}
-      <div className="kit-summary-card">
-        <h3 className="kit-create-button">
-          Total Renewals for{" "}
-          {selectedMonth === "All"
-            ? selectedYear
-            : new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1).toLocaleString(
-                "default",
-                { month: "long" }
-              ) + ` ${selectedYear}`}{" "}
-          {renewalData.length}
-        </h3>
-      </div>
-
-      {/* Actions Bar */}
-      <div className="kit-actions-bar">
-        {/* Month Selector */}
-        <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-          <option value="All">All</option>
+      <PageHeader title="Monthly Renewals" rightElement={<div className="kit-select"><FormSelect value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+                <option value="All">All</option>
           {Array.from({ length: 12 }, (_, index) => {
             const monthValue = (index + 1).toString().padStart(2, "0");
             return (
@@ -146,24 +137,46 @@ console.log(selectedTransaction)
               </option>
             );
           })}
-        </select>
-
-        {/* Year Selector */}
-        <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-          {Array.from({ length: 5 }, (_, index) => {
+              </FormSelect> <FormSelect value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+              {Array.from({ length: 5 }, (_, index) => {
             const yearValue = (currentDate.getFullYear() - 2 + index).toString();
             return <option key={yearValue} value={yearValue}>{yearValue}</option>;
           })}
-        </select>
+                </FormSelect></div>}/>
+   
 
-        {/* Search by Kit Number */}
-        <input type="text" placeholder="Search by Kit Number" value={kitNumber} onChange={(e) => setKitNumber(e.target.value)} />
+      {/* Actions Bar */}
+      <div className="kit-actions-bar">
+                {/* Search by Kit Number */}
+      <SearchWithButton
+          type="text"
+          value={kitNumber} onChange={(e) => setKitNumber(e.target.value)}
+          placeholder="Search by Kit Number"
+          icon={<Search size={24} />}
+         withButton={false}
+         style={{ maxWidth: '600px' }}
+          
+      
+        />
+
+
+
+
 
     
 
       
       </div>
+      <div className="kit-grid-box kit-box">
+      <MetricBox
+          icon={<Package size={40} color="#b6bbc1"  />}
+          title={`Total Renewals`}
+          value={renewalData.length}
+          loading={loading}
+        />
 
+      </div>
+    
       {/* Content */}
       <div className="kit-content-area">
         {loading && <AppLoader />}
@@ -175,26 +188,29 @@ console.log(selectedTransaction)
                 {currentRecords.map((item) => (
                   <div key={item.id} className="kit-renewal-item">
                     <Renewal transaction={item} openModal={handleOpenModal} />
-                    <button onClick={() => handleOpenEditModal(item)}>Edit</button>
-                    <button onClick={() => navigate(`/manage-renewal?kit=${item.kit_number}`)}>See Kit</button>
+                    
                   </div>
                 ))}
               </div>
             ) : (
-              <p>No renewals found for {selectedMonth}/{selectedYear}.</p>
+              <EmptyState message={`No renewals found for ${selectedMonth}/${selectedYear}.`}/>
+           
             )}
           </>
         )}
 
-        {!searchResult && !loading && <p>Select a month and year or enter a kit number to search.</p>}
+        {!searchResult && !loading && <EmptyState icon={<Search/>} message="Select a month and year or enter a kit number to search."/>}
       </div>
 
       {/* Pagination */}
-      <div className="pagination">
-        <button onClick={prevPage} disabled={currentPage === 1}>Previous</button>
-        <span>Page {currentPage} of {totalPages}</span>
-        <button onClick={nextPage} disabled={currentPage >= totalPages}>Next</button>
-      </div>
+           <Pagination
+                    currentPage={currentPage}
+                    onPageChange={setCurrentPage}
+                    totalItems={renewalData.length}
+                    itemsPerPage={recordsPerPage}
+                    showPageNumbers={true}
+                  />
+  
 
       {/* Modals */}
       {viewModalOpen && selectedTransaction && (

@@ -11,6 +11,8 @@ import { InfoCard } from "../InfoCard/Card";
 import { formatDate } from "../utils/date";
 
 const Funding = ({ transaction, openModal }) => {
+
+  
   return (
     <InfoCard
       title="Funding"
@@ -44,6 +46,16 @@ const Funding = ({ transaction, openModal }) => {
           icon: <CreditCard size={16} />,
           label: "Reference",
           value: transaction.reference || "N/A",
+        },
+        {
+          icon: <CreditCard size={16} />,
+          label: "Payment Method",
+          value: transaction.payment_method || "N/A",
+        },
+        {
+          icon: <CreditCard size={16} />,
+          label: "Transaction ID",
+          value: transaction.transaction_id || "N/A",
         },
         {
           icon: <CalendarDays size={16} />,
