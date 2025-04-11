@@ -85,11 +85,6 @@ const KitCard = ({ kit, plans }) => {
       value: kit.address
     },
     {
-      icon: <FileText size={16} />,
-      label: "Id",
-      value: kit.id
-    },
-    {
       icon: <Box size={16} />,
       label: "Kit No",
       value: kit.kit_number
