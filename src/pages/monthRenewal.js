@@ -34,7 +34,7 @@ const MonthlyRenewalPage = () => {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10;
+  const recordsPerPage = 12;
   const totalPages = Math.ceil(renewalData.length / recordsPerPage) || 1;
 
   const indexOfLastRecord = currentPage * recordsPerPage;
