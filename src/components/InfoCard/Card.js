@@ -221,7 +221,26 @@ export const InfoCard = ({
                 </div>
                 
                 {/* Add copy button specifically for Kit Number */}
+
                 {item.label === "Kit Number" && (
+                  <div 
+                    className="copy-button" 
+                    onClick={() => handleCopyKitNumber(item.value)}
+                    style={{ 
+                      cursor: 'pointer', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      marginLeft: '10px'
+                    }}
+                  >
+                    {kitNumberCopied && item.label === "Kit Number" ? (
+                      <Check size={16} color="green" />
+                    ) : (
+                      <Copy size={16} />
+                    )}
+                  </div>
+                )}
+                    {item.label === "Email" && (
                   <div 
                     className="copy-button" 
                     onClick={() => handleCopyKitNumber(item.value)}
