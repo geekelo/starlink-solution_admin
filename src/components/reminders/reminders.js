@@ -4,6 +4,8 @@ import { createAxiosInstance } from "../../config/axios";
 import "../../styles/Request.css";
 import { ActionCard } from "../ActionCard/ActionCard";
 
+import { toast } from "react-toastify";
+
 const Reminders = () => {
   const [loadingReminder, setLoadingReminder] = useState(false);
   const [loadingRenew, setLoadingRenew] = useState(false);
@@ -32,8 +34,9 @@ const Reminders = () => {
     setError(null);
     try {
       const axiosInstance = createAxiosInstance();
-     const res = await axiosInstance.post("/api/v1/admin/auto_renews"); // POST request
-      console.log(res)
+     const res = await axiosInstance.get("/api/v1/admin/kit_autorenews/auto_renew_kits"); // POST request
+     const { message, count } = res.data;
+     toast.success(`${message}`);
       setMessage("Auto-renewal triggered successfully!"); // Show success message
     } catch (err) {
       setError("Failed to trigger auto-renewal.");
