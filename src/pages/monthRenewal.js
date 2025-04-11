@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
+
 import Renewal from "../components/renewal/Renewal";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import EditRenewalModal from "../components/renewal/EditKitRenewal";
@@ -10,8 +11,9 @@ import PageHeader from "../components/PageHeader/PageHeader";
 import { FormSelect } from "../components/FormSelect";
 import Pagination from "../components/Pagination/Pagination";
 import EmptyState from "../components/EmptyState/EmptyState";
-import { Search } from "lucide-react";
+import { Package, Search } from "lucide-react";
 import SearchWithButton from "../components/SearchInput/SearchInput";
+import MetricBox from "../components/MetricsBox/MetricsBox";
 
 const MonthlyRenewalPage = () => {
   const navigate = useNavigate();
@@ -125,12 +127,7 @@ const MonthlyRenewalPage = () => {
 console.log(selectedTransaction)
   return (
     <div className="kit-container-renewal">
-      <PageHeader title={`Total Renewals for    ${renewalData.length} ${selectedMonth === "All"
-            ? selectedYear
-            : new Date(parseInt(selectedYear), parseInt(selectedMonth) - 1).toLocaleString(
-                "default",
-                { month: "long" }
-              ) + ` ${selectedYear}`}`} rightElement={<div className="kit-select"><FormSelect value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
+      <PageHeader title="Monthly Renewals" rightElement={<div className="kit-select"><FormSelect value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
                 <option value="All">All</option>
           {Array.from({ length: 12 }, (_, index) => {
             const monthValue = (index + 1).toString().padStart(2, "0");
@@ -170,7 +167,16 @@ console.log(selectedTransaction)
 
       
       </div>
+      <div className="kit-grid-box kit-box">
+      <MetricBox
+          icon={<Package size={40} color="#b6bbc1"  />}
+          title={`Total Renewals`}
+          value={renewalData.length}
+          loading={loading}
+        />
 
+      </div>
+    
       {/* Content */}
       <div className="kit-content-area">
         {loading && <AppLoader />}

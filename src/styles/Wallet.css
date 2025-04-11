@@ -143,7 +143,15 @@
   gap: 20px;
   /* padding: 20px; */
 }
-
+.kit-grid-box {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 20px;
+}
+.kit-box {
+  margin-bottom: 45px;
+}
 .kit-card {
   background-color: white;
   padding: 20px;
