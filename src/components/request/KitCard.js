@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Box, Calendar, FileText, Save, MoreVertical, Eye, Edit2, X, Copy } from 'lucide-react';
 import { InfoCard } from '../InfoCard/Card';
 import { formatDate } from '../utils/date';
+import { createAxiosInstance } from '../../config/axios';
 
+import { toast } from "react-toastify";
 const KitCard = ({ kit, plans }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
@@ -29,15 +31,30 @@ const KitCard = ({ kit, plans }) => {
     setShowModal(true);
   };
   
-  const handleSave = () => {
-    console.log('Saving changes:', {
-      kitId: kit.id,
-      status,
-      plan: selectedPlan
-    });
-    setShowModal(false);
-  };
+  const handleSave = async () => {
+    try {
+      const axiosInstance = createAxiosInstance();
+      const payload = {
+        status,
+        plan_id: selectedPlan,
+      };
   
+      const response = await axiosInstance.patch(
+        `/api/v1/admin/funding_kit_requests/${kit.id}/update_kit_status`,
+        payload
+      );
+  
+      console.log("Update successful", response.data);
+      
+     const {message, funding} = response.data
+     toast.success(`${message}`);
+      setShowModal(false);
+      alert("Kit updated successfully");
+    } catch (error) {
+      console.error("Error updating kit:", error);
+      alert("Failed to update kit. Please try again.");
+    }
+  };
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
