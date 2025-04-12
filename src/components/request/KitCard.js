@@ -36,7 +36,7 @@ const KitCard = ({ kit, plans }) => {
       const axiosInstance = createAxiosInstance();
       const payload = {
         status,
-        plan_id: selectedPlan,
+        starlink_plan_id: selectedPlan,
       };
   
       const response = await axiosInstance.patch(
