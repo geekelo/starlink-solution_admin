@@ -47,7 +47,7 @@ const KitCard = ({ kit, plans }) => {
       const payload = {
         starlink_kit: {
           status,
-          plan_id: selectedPlan,
+          starlink_plan_id: selectedPlan,
         },
       };
 
