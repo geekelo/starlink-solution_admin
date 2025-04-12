@@ -111,12 +111,13 @@ const KitPage = () => {
     }
   }, [selectedKit]);
   const handleRenewKit = async (kitId) => {
+    console.log(kitId)
     try {
       const axiosInstance = createAxiosInstance();
       const res = await axiosInstance.post(
         "/api/v1/admin/kit_autorenews/renew_specific_kit",
         {
-          kit_id: kitId,
+          id: kitId,
         }
       );
       console.log(res)
