@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
 
+import { toast } from "react-toastify";
 import Renewal from "../components/renewal/Renewal";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
 import EditRenewalModal from "../components/renewal/EditKitRenewal";
@@ -110,16 +111,21 @@ const MonthlyRenewalPage = () => {
           (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
         );
         if (sortedRenewals.length > 0) {
+          toast.success("Renewals fetched successfully.");
           setRenewalData(sortedRenewals);
         } else {
-          setError(`No renewals found for ${selectedMonth}/${selectedYear}.`);
+          const noDataMsg = `No renewals found for ${selectedMonth}/${selectedYear}.`;
+      setError(noDataMsg);
+      toast.error(noDataMsg);
         }
       } else {
         setError("No renewal records found.");
+        toast.error("No renewal records found.");
       }
     } catch (err) {
       console.error(err);
       setError("Error fetching renewal records.");
+      toast.error("Error fetching renewal records.");
     } finally {
       setLoading(false);
     }

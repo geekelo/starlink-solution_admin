@@ -36,7 +36,6 @@ const KitCard = ({ kit, plans }) => {
   };
 
   const handleEditClick = () => {
-    console.log("Edit kit:", kit.id);
     setShowDropdown(false);
     setShowModal(true);
   };
