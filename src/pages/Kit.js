@@ -191,6 +191,7 @@ const KitPage = () => {
           starlink_kit: formData,
         }
       );
+      console.log(res)
       setKits((prevKits) =>
         prevKits.map((kit) =>
           kit.kitId === selectedKit.kitId
