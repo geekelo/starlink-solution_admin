@@ -15,10 +15,11 @@ import { formatDate } from "../utils/date";
 import { createAxiosInstance } from "../../config/axios";
 
 import { toast } from "react-toastify";
-const KitCard = ({ kit, plans }) => {
+const KitCard = ({ kit, plans, fetchStarlinkKits }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState(kit.status);
+  const [isSaving, setIsSaving] = useState(false); 
   const [selectedPlan, setSelectedPlan] = useState(kit.plan);
 
   const dropdownRef = useRef(null);
@@ -41,6 +42,7 @@ const KitCard = ({ kit, plans }) => {
   };
 
   const handleSave = async () => {
+    setIsSaving(true); 
     try {
       const axiosInstance = createAxiosInstance();
       const payload = {
@@ -64,6 +66,8 @@ const KitCard = ({ kit, plans }) => {
     } catch (error) {
       console.error("Error updating kit:", error);
       alert("Failed to update kit. Please try again.");
+    } finally {
+      setIsSaving(false); 
     }
   };
   // Close dropdown when clicking outside
@@ -137,7 +141,9 @@ const KitCard = ({ kit, plans }) => {
       active={status === "approved"}
       showAppButton={true}
       onAppButtonClick={handleSave}
-      appButtonLabel="Approve"
+
+      appButtonLabel={isSaving ? "Saving..." : "Approve"}  
+      appButtonDisabled={isSaving} 
       statusOptions={statusOptions}
       status={status}
       setStatus={setStatus}

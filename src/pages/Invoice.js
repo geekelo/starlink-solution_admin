@@ -110,7 +110,7 @@ const InvoicesPage = () => {
                     <p>Start Date: {formatDate(item.start_date)}</p>
                     <p>End Date: {formatDate(item.end_date)}</p>
                     <p>Deadline: {formatDate(item.deadline)}</p>
-                    <p>Prorated: {item?.protat}</p>
+                    <p>Prorated: {item.prorated ? "Yes" : "No"}</p>
                     <button onClick={() => handleEditClick(item)}>Edit</button>
                   </div>
                 ))}

@@ -99,7 +99,7 @@ const Requests = () => {
             <div className="funding-list">
               {fundingData.length > 0 ? (
                 fundingData.map((item, index) => (
-                  <FundingCard key={index} item={item} />
+                  <FundingCard key={index} item={item} fetchFundingRequests={fetchFundingRequests} />
                
                 ))
               ) : (
@@ -113,7 +113,7 @@ const Requests = () => {
             <div className="kit-grid">
               {kits.length > 0 ? (
                 kits.map((kit) => (
-                  <KitCard key={kit.id} kit={kit} plans={plans} />
+                  <KitCard key={kit.id} kit={kit} plans={plans}   fetchStarlinkKits={fetchStarlinkKits}  />
                 ))
               ) : (
                 <EmptyState message="No Starlink kits available" />
