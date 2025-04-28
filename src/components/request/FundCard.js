@@ -23,11 +23,12 @@ import { createAxiosInstance } from "../../config/axios";
 
 import { toast } from "react-toastify";
 
-const FundingCard = ({ item }) => {
+const FundingCard = ({ item, fetchFundingRequests }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [status, setStatus] = useState("Pending");
   const [selectedAmount, setSelectedAmount] = useState(item?.amount)
+  const [saving, setSaving] = useState(false);
 
   const dropdownRef = useRef(null);
   const modalRef = useRef(null);
@@ -48,6 +49,7 @@ const FundingCard = ({ item }) => {
     setShowModal(true);
   };
   const handleSave = async () => {
+    setSaving(true);
     try {
       const axiosInstance = createAxiosInstance();
       const payload = {
@@ -61,8 +63,10 @@ const FundingCard = ({ item }) => {
         `/api/v1/admin/funding_kit_requests/${item.id}/update_funding_request`,
         payload
       );
+      await fetchFundingRequests();
      const {message, funding} = response.data
       toast.success(`${message}`);
+      setSaving(false); 
       setShowModal(false);
     } catch (error) {
       console.error("Error updating funding:", error);
@@ -154,7 +158,8 @@ const FundingCard = ({ item }) => {
     className="funding-request-card"
     showAppButton={true}
     onAppButtonClick={handleSave}
-    appButtonLabel="Save Changes"
+    appButtonLabel={saving ? "Saving..." : "Save Changes"}
+    disabledAppButton={saving}
     statusOptions={statusOptions}
     status={status}
     inputValue={selectedAmount}

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/Wallet.css";
-
 import { toast } from "react-toastify";
 import Renewal from "../components/renewal/Renewal";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
@@ -40,7 +39,10 @@ const MonthlyRenewalPage = () => {
 
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = renewalData.slice(indexOfFirstRecord, indexOfLastRecord);
+  const currentRecords = renewalData.slice(
+    indexOfFirstRecord,
+    indexOfLastRecord
+  );
 
   // Pagination handlers
   const nextPage = () => {
@@ -57,23 +59,11 @@ const MonthlyRenewalPage = () => {
     setEditModalOpen(true);
   };
 
-  // Handle saving an edit
-  const handleSaveEdit = (updatedTransaction) => {
-    console.log("Updated transaction:", updatedTransaction);
-    setEditModalOpen(false);
-  };
-
   // Open View Modal
   const handleOpenModal = (transaction) => {
-    console.log("Opening View Modal for transaction:", transaction);
-    if (!transaction) {
-      console.error("handleOpenModal called with an undefined transaction");
-      return;
-    }
     setSelectedTransaction(transaction);
     setViewModalOpen(true);
   };
-  
 
   useEffect(() => {
     handleSearch();
@@ -95,7 +85,9 @@ const MonthlyRenewalPage = () => {
         const filteredRenewals = renewals.filter((item) => {
           if (!item.date_of_renewal) return false;
           const itemDate = new Date(item.date_of_renewal);
-          const itemMonth = (itemDate.getMonth() + 1).toString().padStart(2, "0");
+          const itemMonth = (itemDate.getMonth() + 1)
+            .toString()
+            .padStart(2, "0");
           const itemYear = itemDate.getFullYear().toString();
 
           return selectedMonth === "All"
@@ -104,7 +96,9 @@ const MonthlyRenewalPage = () => {
         });
 
         const finalFilteredRenewals = kitNumber
-          ? filteredRenewals.filter((item) => item.kit_number.includes(kitNumber))
+          ? filteredRenewals.filter((item) =>
+              item.kit_number.includes(kitNumber)
+            )
           : filteredRenewals;
 
         const sortedRenewals = finalFilteredRenewals.sort(
@@ -115,8 +109,8 @@ const MonthlyRenewalPage = () => {
           setRenewalData(sortedRenewals);
         } else {
           const noDataMsg = `No renewals found for ${selectedMonth}/${selectedYear}.`;
-      setError(noDataMsg);
-      toast.error(noDataMsg);
+          setError(noDataMsg);
+          toast.error(noDataMsg);
         }
       } else {
         setError("No renewal records found.");
@@ -130,59 +124,73 @@ const MonthlyRenewalPage = () => {
       setLoading(false);
     }
   };
-console.log(selectedTransaction)
+
   return (
     <div className="kit-container-renewal">
-      <PageHeader title="Monthly Renewals" rightElement={<div className="kit-select"><FormSelect value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
-                <option value="All">All</option>
-          {Array.from({ length: 12 }, (_, index) => {
-            const monthValue = (index + 1).toString().padStart(2, "0");
-            return (
-              <option key={index} value={monthValue}>
-                {new Date(2025, index).toLocaleString("default", { month: "long" })}
-              </option>
-            );
-          })}
-              </FormSelect> <FormSelect value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+      <PageHeader
+        title="Monthly Renewals"
+        rightElement={
+          <div className="kit-select">
+            <FormSelect
+              value={selectedMonth}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              <option value="All">All</option>
+              {Array.from({ length: 12 }, (_, index) => {
+                const monthValue = (index + 1).toString().padStart(2, "0");
+                return (
+                  <option key={index} value={monthValue}>
+                    {new Date(2025, index).toLocaleString("default", {
+                      month: "long",
+                    })}
+                  </option>
+                );
+              })}
+            </FormSelect>
+            <FormSelect
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+            >
               {Array.from({ length: 5 }, (_, index) => {
-            const yearValue = (currentDate.getFullYear() - 2 + index).toString();
-            return <option key={yearValue} value={yearValue}>{yearValue}</option>;
-          })}
-                </FormSelect></div>}/>
-   
+                const yearValue = (
+                  currentDate.getFullYear() -
+                  2 +
+                  index
+                ).toString();
+                return (
+                  <option key={yearValue} value={yearValue}>
+                    {yearValue}
+                  </option>
+                );
+              })}
+            </FormSelect>
+          </div>
+        }
+      />
 
       {/* Actions Bar */}
       <div className="kit-actions-bar">
-                {/* Search by Kit Number */}
-      <SearchWithButton
+        {/* Search by Kit Number */}
+        <SearchWithButton
           type="text"
-          value={kitNumber} onChange={(e) => setKitNumber(e.target.value)}
+          value={kitNumber}
+          onChange={(e) => setKitNumber(e.target.value)}
           placeholder="Search by Kit Number"
           icon={<Search size={24} />}
-         withButton={false}
-         style={{ maxWidth: '600px' }}
-          
-      
+          withButton={false}
+          style={{ maxWidth: "600px" }}
         />
-
-
-
-
-
-    
-
-      
       </div>
+
       <div className="kit-grid-box kit-box">
-      <MetricBox
-          icon={<Package size={40} color="#b6bbc1"  />}
+        <MetricBox
+          icon={<Package size={40} color="#b6bbc1" />}
           title={`Total Renewals`}
           value={renewalData.length}
           loading={loading}
         />
-
       </div>
-    
+
       {/* Content */}
       <div className="kit-content-area">
         {loading && <AppLoader />}
@@ -194,36 +202,48 @@ console.log(selectedTransaction)
                 {currentRecords.map((item) => (
                   <div key={item.id} className="kit-renewal-item">
                     <Renewal transaction={item} openModal={handleOpenModal} />
-                    
                   </div>
                 ))}
               </div>
             ) : (
-              <EmptyState message={`No renewals found for ${selectedMonth}/${selectedYear}.`}/>
-           
+              <EmptyState
+                message={`No renewals found for ${selectedMonth}/${selectedYear}.`}
+              />
             )}
           </>
         )}
 
-        {!searchResult && !loading && <EmptyState icon={<Search/>} message="Select a month and year or enter a kit number to search."/>}
+        {!searchResult && !loading && (
+          <EmptyState
+            icon={<Search />}
+            message="Select a month and year or enter a kit number to search."
+          />
+        )}
       </div>
 
       {/* Pagination */}
-           <Pagination
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                    totalItems={renewalData.length}
-                    itemsPerPage={recordsPerPage}
-                    showPageNumbers={true}
-                  />
-  
+      <Pagination
+        currentPage={currentPage}
+        onPageChange={setCurrentPage}
+        totalItems={renewalData.length}
+        itemsPerPage={recordsPerPage}
+        showPageNumbers={true}
+      />
 
       {/* Modals */}
       {viewModalOpen && selectedTransaction && (
-        <ViewRenewalModal isOpen={viewModalOpen} closeModal={() => setViewModalOpen(false)} transaction={selectedTransaction} />
+        <ViewRenewalModal
+          isOpen={viewModalOpen}
+          closeModal={() => setViewModalOpen(false)}
+          transaction={selectedTransaction}
+        />
       )}
       {editModalOpen && selectedTransaction && (
-        <EditRenewalModal isOpen={editModalOpen} closeModal={() => setEditModalOpen(false)} transaction={selectedTransaction} onSave={handleSaveEdit} />
+        <EditRenewalModal
+          isOpen={editModalOpen}
+          closeModal={() => setEditModalOpen(false)}
+          transaction={selectedTransaction}
+        />
       )}
     </div>
   );
