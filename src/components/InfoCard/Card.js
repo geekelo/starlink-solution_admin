@@ -25,7 +25,10 @@ import { FormLabel } from '../FormLabel/Label';
  * @param {Array} props.planOptions - Options for the plan filter
  * @param {string} props.selectedPlan - Current plan value
  * @param {function} props.setSelectedPlan - Function to update plan
+ * @param {boolean} props.appButtonDisabled - Whether the app button is disabled
  */
+
+ 
 export const InfoCard = ({
     title,
     items = [],
@@ -49,6 +52,7 @@ export const InfoCard = ({
     planOptions = [],
     selectedPlan,
     setSelectedPlan,
+    appButtonDisabled = false,
     ...props
   }) => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -302,13 +306,14 @@ export const InfoCard = ({
                 </div>}
               </div>
             )}
-            
             <AppButton 
-              onClick={handleAppButtonClick}
-              leftIcon={<CheckCheck size={16} />}
-            >
-              {appButtonLabel}
-            </AppButton>
+  onClick={handleAppButtonClick}
+  leftIcon={<CheckCheck size={16} />}
+  disabled={appButtonDisabled} 
+>
+  {appButtonLabel}
+</AppButton>
+           
           </div>
         )}
       </div>
