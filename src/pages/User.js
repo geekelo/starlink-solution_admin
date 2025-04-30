@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { createAxiosInstance } from "../config/axios";
 import "../styles/User.css";
@@ -111,10 +111,9 @@ const Users = () => {
       alert("Failed to update user. Please try again.");
     }
   };
-
-  const filteredUsers = users.filter((user) => {
+  const filteredUsers = useMemo(() => {
     const query = searchQuery.toLowerCase();
-    return (
+    return users.filter((user) =>
       user.name.toLowerCase().includes(query) ||
       user.email.toLowerCase().includes(query) ||
       (user.createdAt &&
@@ -123,7 +122,14 @@ const Users = () => {
       (user.whatsapp && user.whatsapp.includes(query)) ||
       (user.walletID && user.walletID.includes(query))
     );
-  });
+  }, [searchQuery, users]);
+  
+  const currentUsers = useMemo(() => {
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    return filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
+  }, [filteredUsers, currentPage]);
+  
 
   const toggleDropdown = (userId, e) => {
     e.stopPropagation();
@@ -148,7 +154,6 @@ const Users = () => {
   }, [dropdownRef]);
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
   const indexOfLastKit = currentPage * totalPages;
   const indexOfFirstKit = indexOfLastKit - totalPages;
