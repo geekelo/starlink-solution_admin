@@ -8,6 +8,7 @@ import {
   Eye,
   Edit2,
   Delete,
+  Projector,
 } from "lucide-react";
 import { InfoCard } from "../InfoCard/Card";
 import { formatDate } from "../utils/date";
@@ -157,6 +158,17 @@ const Renewal = ({ transaction }) => {
               ? formatDate(transaction.date_of_renewal)
               : "N/A",
           },
+          {
+            icon: <Projector size={16} />,
+            label: "Prorated",
+            value: transaction?.prorated
+            
+              ? "Yes"
+                
+              : "No",
+             
+          },
+
         ]}
       />
 

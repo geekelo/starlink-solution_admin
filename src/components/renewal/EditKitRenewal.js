@@ -39,6 +39,8 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
           ? new Date(transaction.deadline).toISOString().split("T")[0]
           : "",
         date_of_renewal: transaction?.date_of_renewal || "",
+        prorated: transaction?.prorated || false,
+
       });
     }
   }, [transaction]);
@@ -186,6 +188,8 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
                 <option value="false">No</option>
               </select>
             </div>
+            
+
 
             {/* Right Column */}
             <div className="modal-column">
@@ -212,6 +216,28 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
                 value={formData.deadline || ""}
                 onChange={handleInputChange}
               />
+              {formData.status === "invoice" && (
+  <>
+    <label>Prorated:</label>
+    <select
+      name="prorated"
+      value={formData.prorated ? "true" : "false"}
+      onChange={(e) =>
+        handleInputChange({
+          target: {
+            name: "prorated",
+            value: e.target.value,
+            type: "checkbox",
+            checked: e.target.value === "true",
+          },
+        })
+      }
+    >
+      <option value="true">Yes</option>
+      <option value="false">No</option>
+    </select>
+  </>
+)}
 
               {formData.status === "receipt" && (
                 <>
