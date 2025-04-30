@@ -61,7 +61,7 @@ const RenewalPage = () => {
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get(`/api/v1/admin/kit_renewals?kit_number=${kitNo}`);
-
+console.log(response)
       if (response.data.length > 0) {
         const sortedData = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         setRenewalData(sortedData);
