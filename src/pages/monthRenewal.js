@@ -17,114 +17,107 @@ import MetricBox from "../components/MetricsBox/MetricsBox";
 
 const MonthlyRenewalPage = () => {
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [renewalData, setRenewalData] = useState([]);
-  const [searchResult, setSearchResult] = useState(false);
+
   const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+
   const [kitNumber, setKitNumber] = useState("");
 
-  // Default selected month and year
+  // Date selectors
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const currentYear = currentDate.getFullYear().toString();
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 12;
-  const totalPages = Math.ceil(renewalData.length / recordsPerPage) || 1;
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const totalPages = Math.ceil(renewalData.length / recordsPerPage) || 1;
   const currentRecords = renewalData.slice(
-    indexOfFirstRecord,
-    indexOfLastRecord
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
   );
 
-  // Pagination handlers
-  const nextPage = () => {
-    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
-  };
-
-  const prevPage = () => {
-    if (currentPage > 1) setCurrentPage(currentPage - 1);
-  };
-
-  // Open Edit Modal
-  const handleOpenEditModal = (transaction) => {
-    setSelectedTransaction(transaction);
-    setEditModalOpen(true);
-  };
-
-  // Open View Modal
-  const handleOpenModal = (transaction) => {
-    setSelectedTransaction(transaction);
-    setViewModalOpen(true);
-  };
-
-  useEffect(() => {
-    handleSearch();
-  }, [selectedMonth, selectedYear, kitNumber]);
-
-  const handleSearch = async () => {
+  // Fetch all renewals (raw)
+  const fetchRenewals = async () => {
     setLoading(true);
-    setSearchResult(true);
-    setError("");
-    setRenewalData([]);
-    setCurrentPage(1);
-
+    setErrorMessage("");
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get("/api/v1/admin/kit_renewals");
-      console.log(response)
-      const renewals = response.data;
-
-      if (renewals && renewals.length > 0) {
-        const filteredRenewals = renewals.filter((item) => {
-          if (!item.date_of_renewal) return false;
-          const itemDate = new Date(item.date_of_renewal);
-          const itemMonth = (itemDate.getMonth() + 1)
-            .toString()
-            .padStart(2, "0");
-          const itemYear = itemDate.getFullYear().toString();
-
-          return selectedMonth === "All"
-            ? itemYear === selectedYear
-            : itemMonth === selectedMonth && itemYear === selectedYear;
-        });
-
-        const finalFilteredRenewals = kitNumber
-          ? filteredRenewals.filter((item) =>
-              item.kit_number.includes(kitNumber)
-            )
-          : filteredRenewals;
-
-        const sortedRenewals = finalFilteredRenewals.sort(
-          (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
-        );
-        if (sortedRenewals.length > 0) {
-          toast.success("Renewals fetched successfully.");
-          setRenewalData(sortedRenewals);
-        } else {
-          const noDataMsg = `No renewals found for ${selectedMonth}/${selectedYear}.`;
-          setError(noDataMsg);
-          toast.error(noDataMsg);
-        }
-      } else {
-        setError("No renewal records found.");
-        toast.error("No renewal records found.");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Error fetching renewal records.");
-      toast.error("Error fetching renewal records.");
+      return response.data || [];
+    } catch (error) {
+      console.error("Fetch error:", error);
+      toast.error("Failed to fetch renewal records.");
+      return [];
     } finally {
       setLoading(false);
     }
   };
+
+  // Filter data based on selected month/year and kitNumber
+  const filterRenewals = (data) => {
+    const filteredByDate = data.filter((item) => {
+      if (!item.date_of_renewal) return false;
+      const itemDate = new Date(item.date_of_renewal);
+      const itemMonth = (itemDate.getMonth() + 1).toString().padStart(2, "0");
+      const itemYear = itemDate.getFullYear().toString();
+
+      return selectedMonth === "All"
+        ? itemYear === selectedYear
+        : itemMonth === selectedMonth && itemYear === selectedYear;
+    });
+
+    const filteredByKit = kitNumber
+      ? filteredByDate.filter((item) =>
+          item.kit_number.toLowerCase().includes(kitNumber.toLowerCase())
+        )
+      : filteredByDate;
+
+    return filteredByKit.sort(
+      (a, b) => new Date(b.date_of_renewal) - new Date(a.date_of_renewal)
+    );
+  };
+
+  const handleSearch = async () => {
+    setLoading(true);
+    setCurrentPage(1);
+    const allRenewals = await fetchRenewals();
+    const finalData = filterRenewals(allRenewals);
+
+    if (finalData.length > 0) {
+      setRenewalData(finalData);
+      toast.success("Renewals fetched successfully.");
+    } else {
+      setRenewalData([]);
+      const noDataMsg = `No renewals found for ${selectedMonth}/${selectedYear}.`;
+      setErrorMessage(noDataMsg);
+      toast.info(noDataMsg);
+    }
+    setLoading(false);
+  };
+
+  const handleOpenViewModal = (transaction) => {
+    setSelectedTransaction(transaction);
+    setViewModalOpen(true);
+  };
+
+  // Trigger fetch only when month/year/kitNumber changes, debounce kitNumber
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      handleSearch();
+    }, 500); // debounce 500ms
+
+    return () => clearTimeout(delayDebounce);
+  }, [selectedMonth, selectedYear, kitNumber]);
 
   return (
     <div className="kit-container-renewal">
@@ -154,9 +147,7 @@ const MonthlyRenewalPage = () => {
             >
               {Array.from({ length: 5 }, (_, index) => {
                 const yearValue = (
-                  currentDate.getFullYear() -
-                  2 +
-                  index
+                  currentDate.getFullYear() - 2 + index
                 ).toString();
                 return (
                   <option key={yearValue} value={yearValue}>
@@ -169,9 +160,7 @@ const MonthlyRenewalPage = () => {
         }
       />
 
-      {/* Actions Bar */}
       <div className="kit-actions-bar">
-        {/* Search by Kit Number */}
         <SearchWithButton
           type="text"
           value={kitNumber}
@@ -186,43 +175,33 @@ const MonthlyRenewalPage = () => {
       <div className="kit-grid-box kit-box">
         <MetricBox
           icon={<Package size={40} color="#b6bbc1" />}
-          title={`Total Renewals`}
+          title="Total Renewals"
           value={renewalData.length}
           loading={loading}
         />
       </div>
 
-      {/* Content */}
       <div className="kit-content-area">
         {loading && <AppLoader />}
 
-        {searchResult && !loading && (
-          <>
-            {renewalData.length > 0 ? (
-              <div className="kit-grid">
-                {currentRecords.map((item) => (
-                  <div key={item.id} className="kit-renewal-item">
-                    <Renewal transaction={item} openModal={handleOpenModal} />
-                  </div>
-                ))}
+        {!loading && renewalData.length > 0 && (
+          <div className="kit-grid">
+            {currentRecords.map((item) => (
+              <div key={item.id} className="kit-renewal-item">
+                <Renewal transaction={item} openModal={handleOpenViewModal} />
               </div>
-            ) : (
-              <EmptyState
-                message={`No renewals found for ${selectedMonth}/${selectedYear}.`}
-              />
-            )}
-          </>
+            ))}
+          </div>
         )}
 
-        {!searchResult && !loading && (
+        {!loading && renewalData.length === 0 && (
           <EmptyState
             icon={<Search />}
-            message="Select a month and year or enter a kit number to search."
+            message={errorMessage || "Select a month and year or enter a kit number to search."}
           />
         )}
       </div>
 
-      {/* Pagination */}
       <Pagination
         currentPage={currentPage}
         onPageChange={setCurrentPage}
@@ -231,7 +210,6 @@ const MonthlyRenewalPage = () => {
         showPageNumbers={true}
       />
 
-      {/* Modals */}
       {viewModalOpen && selectedTransaction && (
         <ViewRenewalModal
           isOpen={viewModalOpen}
@@ -239,11 +217,13 @@ const MonthlyRenewalPage = () => {
           transaction={selectedTransaction}
         />
       )}
+
       {editModalOpen && selectedTransaction && (
         <EditRenewalModal
           isOpen={editModalOpen}
           closeModal={() => setEditModalOpen(false)}
           transaction={selectedTransaction}
+          
         />
       )}
     </div>

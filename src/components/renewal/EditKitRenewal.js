@@ -6,7 +6,7 @@ import { FormSelect } from "../FormSelect";
 import { toast } from "react-toastify";
 import { createAxiosInstance } from "../../config/axios"; 
 
-const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
+const EditRenewalModal = ({ isOpen, closeModal, transaction, }) => {
   const [formData, setFormData] = useState({
     kit_number: transaction?.kit_number || "",
     status: transaction?.status || "",
@@ -20,6 +20,7 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
       ? new Date(transaction.deadline).toISOString().split("T")[0]
       : "",
     date_of_renewal: transaction?.date_of_renewal || "",
+    prorated : transaction?.prorated  || false,
   });
 
   const [loading, setLoading] = useState(false);
@@ -44,32 +45,34 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
       });
     }
   }, [transaction]);
-
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+    const booleanFields = ["credit_admin", "prorated"];
+    const isBooleanField = booleanFields.includes(name);
+  
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === "checkbox"
+        ? checked
+        : isBooleanField
+        ? value === "true"
+        : value,
     }));
   };
+  
   const handleUpdate = async () => {
     setLoading(true);
     try {
       const axiosInstance = createAxiosInstance();
-
+  
       const response = await axiosInstance.put(
         `/api/v1/admin/kit_renewals/${transaction?.id}`,
         formData
       );
-
+  
       if (response.data) {
         toast.success("Renewal updated successfully!");
-
-        const updatedTransaction = await axiosInstance.get(
-          `/api/v1/admin/kit_renewals/${transaction?.id}`
-        );
-        setFormData(updatedTransaction.data);
-
+       
         closeModal();
       } else {
         throw new Error("Failed to update renewal.");
@@ -81,6 +84,7 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
       setLoading(false);
     }
   };
+  
 
   if (!isOpen || !transaction) {
     return null;
@@ -216,26 +220,18 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction }) => {
                 value={formData.deadline || ""}
                 onChange={handleInputChange}
               />
-              {formData.status === "invoice" && (
+              {formData.status === "invoice" || "receipt" && (
   <>
     <label>Prorated:</label>
     <select
-      name="prorated"
-      value={formData.prorated ? "true" : "false"}
-      onChange={(e) =>
-        handleInputChange({
-          target: {
-            name: "prorated",
-            value: e.target.value,
-            type: "checkbox",
-            checked: e.target.value === "true",
-          },
-        })
-      }
-    >
-      <option value="true">Yes</option>
-      <option value="false">No</option>
-    </select>
+  name="prorated"
+  value={formData.prorated ? "true" : "false"}
+  onChange={handleInputChange}
+>
+  <option value="true">Yes</option>
+  <option value="false">No</option>
+</select>
+
   </>
 )}
 
