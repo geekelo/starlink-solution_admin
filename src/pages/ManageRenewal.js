@@ -30,6 +30,7 @@ const RenewalPage = () => {
   const [formData, setFormData] = useState({
     kit_number: "",
     status: "",
+    prorated: false,
     deduct_wallet: false, // <--- Add this
     kit_renewal: {
       amount: "",
@@ -90,7 +91,7 @@ const RenewalPage = () => {
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: name === "deduct_wallet" ? value === "true" : value,
+        [name]: (name === "deduct_wallet" || name === "prorated") ? value === "true" : value,
       }));
     }
   };
