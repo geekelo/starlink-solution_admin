@@ -90,13 +90,11 @@ const RenewalPage = () => {
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value === "true",  // Converts "true"/"false" to boolean
+        [name]: name === "deduct_wallet" ? value === "true" : value,
       }));
     }
   };
   
-  
-
   // Handle create record (API call)
   const handleCreateRecord = async () => {
     try {
