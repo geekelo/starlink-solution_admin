@@ -30,6 +30,7 @@ const RenewalPage = () => {
   const [formData, setFormData] = useState({
     kit_number: "",
     status: "",
+    prorated: false,
     deduct_wallet: false, // <--- Add this
     kit_renewal: {
       amount: "",
@@ -90,13 +91,11 @@ const RenewalPage = () => {
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value === "true",  // Converts "true"/"false" to boolean
+        [name]: (name === "deduct_wallet" || name === "prorated") ? value === "true" : value,
       }));
     }
   };
   
-  
-
   // Handle create record (API call)
   const handleCreateRecord = async () => {
     try {
