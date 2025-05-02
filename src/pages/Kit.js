@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import { createAxiosInstance } from "../config/axios";
 import {
   Package,
   CheckCircle,
@@ -20,12 +19,9 @@ import {
   MailIcon,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
-
 import "../styles/Kits.css";
 import KitModal from "../components/kits/kitModal";
 import Modal from "../components/kits/transferModal";
-import { FilterSelect } from "../components/FilterSelect/Filter";
 import { formatDate } from "../components/utils/date";
 import PageHeader from "../components/PageHeader/PageHeader";
 import MetricBox from "../components/MetricsBox/MetricsBox";
@@ -33,70 +29,46 @@ import Pagination from "../components/Pagination/Pagination";
 import { AppLoader } from "../components/Loader/loader";
 import { InfoCard } from "../components/InfoCard/Card";
 import { Select } from "../components/Select/Select";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchKits, renewKit, transferKit, updateKit } from "../redux/slice/kitSlice";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
   const [searchQuery, setSearchQuery] = useState("");
-  const [kits, setKits] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedKit, setSelectedKit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRef = useRef(null);
-
+  
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferEmail, setTransferEmail] = useState("");
-
-  const [formData, setFormData] = useState({
-    kit_number: selectedKit?.kit_number || "",
-    address: selectedKit?.address || "",
-    company_name: selectedKit?.company_name || "",
-    company_number: selectedKit?.company_number || "",
-    nin: selectedKit?.nin || "",
-    status: selectedKit?.status || "active",
-    service_line_number: selectedKit?.service_line_number || "",
-  });
-  const kitsPerPage = 12;
-
+  const [error, setError] = useState("");
+  
+  const dispatch = useDispatch();
+  const { kits, loading, error: fetchError } = useSelector((state) => state.kits);
+  
   const navigate = useNavigate();
+  
+  const kitsPerPage = 12;
+  
+  // Fetch kits on mount
   useEffect(() => {
-    const fetchKits = async () => {
-      try {
-        const axiosInstance = createAxiosInstance();
-        const response = await axiosInstance.get("/api/v1/admin/kit_records");
-        console.log(response)
-        const formattedKits = response.data
-          .map((kit) => ({
-            kitId: kit.id,
-            kitNo: kit.kit_number,
-            username: kit.owner_name,
-            email: kit.owner_email,
-            phoneNumber: kit.owner_phone_number,
-            address: kit.address,
-            companyName: kit.company_name || "N/A",
-            nin: kit.nin,
-            status: kit.status,
-            plan: "N/A",
-            serviceNo: kit.service_line_number || "N/A",
-            dateAdded: kit.created_at.split("T")[0],
-            createdAt: new Date(kit.created_at), // Convert to Date for sorting
-          }))
-          .sort((a, b) => b.createdAt - a.createdAt); // Sort from newest to oldest
-
-        setKits(formattedKits);
-      } catch (err) {
-        console.error("Error fetching kits:", err);
-        setError("Failed to load kits. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchKits();
-  }, []);
-
+ const res =   dispatch(fetchKits());
+ console.log(res)
+  }, [dispatch]);
+  
+  // Sync selectedKit to formData
+  const [formData, setFormData] = useState({
+    kit_number: "",
+    address: "",
+    company_name: "",
+    company_number: "",
+    nin: "",
+    status: "active",
+    service_line_number: "",
+  });
+  
   useEffect(() => {
     if (selectedKit) {
       setFormData({
@@ -105,37 +77,19 @@ const KitPage = () => {
         company_name: selectedKit.companyName || "",
         company_number: selectedKit.serviceNo || "",
         nin: selectedKit.nin || "",
-        status: selectedKit.status.toLowerCase() || "active",
+        status: selectedKit.status?.toLowerCase() || "active",
         service_line_number: selectedKit.serviceNo || "",
       });
     }
   }, [selectedKit]);
-  const handleRenewKit = async (kitId) => {
-    console.log(kitId)
-    try {
-      const axiosInstance = createAxiosInstance();
-      const res = await axiosInstance.post(
-        "/api/v1/admin/kit_autorenews/renew_specific_kit",
-        {
-          id: kitId,
-        }
-      );
-      console.log(res)
-  console.log(kitId)
-      toast.success(`Kit with ID: ${kitId} successfully renewed!`);
-      console.log("Renew response:", res.data);
-    } catch (error) {
-      console.error("Error renewing kit:", error);
-      toast.error("Failed to renew kit. Please try again.");
-    }
-  };
   
-
+  // Filter kits based on search
   const filteredKits = useMemo(() => {
     if (!Array.isArray(kits)) return [];
     if (!searchQuery) return kits;
-
+  
     return kits.filter((kit) => {
+      const query = searchQuery.toLowerCase();
       if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
       if (searchType === "month") {
         const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
@@ -143,107 +97,38 @@ const KitPage = () => {
         ).padStart(2, "0")}`;
         return kitMonth === searchQuery;
       }
-      if (searchType === "year") return kit.dateAdded.startsWith(searchQuery);
-      if (searchType === "email") {
-        return kit.email?.toLowerCase().includes(searchQuery.toLowerCase());
+      if (searchType === "year") {
+        return kit.dateAdded?.startsWith(searchQuery);
       }
-
-      return kit[searchType]
-        ?.toString()
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase());
+      if (searchType === "email") {
+        return kit.email?.toLowerCase().includes(query);
+      }
+      return kit[searchType]?.toString().toLowerCase().includes(query);
     });
   }, [searchQuery, searchType, kits]);
-
-  const metrics = useMemo(
-    () => ({
-      total: filteredKits.length,
-      active: filteredKits.filter((kit) => kit.status === "active").length,
-      inactive: filteredKits.filter((kit) => kit.status === "inactive").length,
-    }),
-    [filteredKits]
-  );
-
+  
+  // Kit status metrics
+  const metrics = useMemo(() => ({
+    total: filteredKits.length,
+    active: filteredKits.filter((kit) => kit.status === "active").length,
+    inactive: filteredKits.filter((kit) => kit.status === "inactive").length,
+  }), [filteredKits]);
+  
+  // Pagination logic
+  const indexOfLastKit = currentPage * kitsPerPage;
+  const indexOfFirstKit = indexOfLastKit - kitsPerPage;
+  const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
+  
+  // Kit Actions
   const openModal = (kit) => {
     setSelectedKit({ ...kit });
     setIsModalOpen(true);
   };
-
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedKit(null);
   };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-  const handleSelectChange = (value) => {
- 
-    setFormData((prev) => ({ ...prev, status: value }));
-  };
-  const handleSave = async () => {
-    try {
-      const axiosInstance = createAxiosInstance();
-      const res = await axiosInstance.patch(
-        `/api/v1/admin/kit_records/${selectedKit.kitId}`,
-        {
-          starlink_kit: formData,
-        }
-      );
-      console.log(res)
-      setKits((prevKits) =>
-        prevKits.map((kit) =>
-          kit.kitId === selectedKit.kitId
-            ? {
-                ...kit,
-                ...formData,
-                status:
-                  formData.status.charAt(0).toUpperCase() +
-                  formData.status.slice(1),
-              }
-            : kit
-        )
-      );
-      closeModal();
-    } catch (err) {
-      setError("Failed to update kit. Please try again.");
-    }
-  };
-
-  const indexOfLastKit = currentPage * kitsPerPage;
-  const indexOfFirstKit = indexOfLastKit - kitsPerPage;
-  const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
-
-  const goToRenewals = (kit) => {
-    navigate(`/renewals?kit=${kit.kitNo}`);
-  };
-  const handleTransferKit = async () => {
-    if (!transferEmail) {
-      setError("New owner email is required.");
-      return;
-    }
-    try {
-      const axiosInstance = createAxiosInstance();
-      await axiosInstance.post("/api/v1/admin/kit_transfers/transfer", {
-        kit_number: selectedKit.kitNo,
-        new_owner_email: transferEmail,
-      });
-
-      setKits((prevKits) =>
-        prevKits.map((kit) =>
-          kit.kitNo === selectedKit.kitNo
-            ? { ...kit, email: transferEmail }
-            : kit
-        )
-      );
-
-      closeTransferModal();
-    } catch (err) {
-      setError("Failed to transfer kit. Please try again.");
-    }
-  };
-
+  
   const openTransferModal = (kit) => {
     setSelectedKit(kit);
     setIsTransferModalOpen(true);
@@ -251,14 +136,45 @@ const KitPage = () => {
   const closeTransferModal = () => {
     setIsTransferModalOpen(false);
     setTransferEmail("");
+    setError("");
   };
-
+  
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleSelectChange = (value) => {
+    setFormData((prev) => ({ ...prev, status: value }));
+  };
+  const handleSave = () => {
+  const res =  dispatch(updateKit({ kitId: selectedKit.kitId, formData }));
+  console.log(res)
+    closeModal();
+  };
+  const handleRenewKit = (kitId) => {
+   const res = dispatch(renewKit(kitId));
+    console.log(res)
+  };
+  const handleTransferKit = () => {
+    if (!transferEmail.trim()) {
+      setError("New owner email is required.");
+      return;
+    }
+   const res= dispatch(transferKit({ kitNo: selectedKit.kitNo, newEmail: transferEmail }));
+    console.log(res)
+    closeTransferModal();
+  };
+  const goToRenewals = (kit) => {
+    navigate(`/renewals?kit=${kit.kitNo}`);
+  };
+  
+  // Dropdown toggle
   const toggleDropdown = (kitId, e) => {
     e.stopPropagation();
     setActiveDropdown(activeDropdown === kitId ? null : kitId);
   };
-
-  // Close dropdown when clicking outside
+  
+  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -269,15 +185,13 @@ const KitPage = () => {
         setActiveDropdown(null);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
-  const itemsPerPage = currentKits.length - 1;
-  const indexOfLastItem = currentPage * itemsPerPage;
-
+  }, []);
+  
+  // Search options
   const options = [
     { value: "kitNo", label: "Kit No" },
     { value: "dateAdded", label: "Date Added" },
@@ -286,6 +200,7 @@ const KitPage = () => {
     { value: "username", label: "User" },
     { value: "email", label: "Email" },
   ];
+  
 
   return (
     <div className="kit-container">
@@ -461,7 +376,7 @@ const KitPage = () => {
         currentPage={currentPage}
         onPageChange={setCurrentPage}
         totalItems={currentKits.length}
-        itemsPerPage={itemsPerPage}
+        itemsPerPage='4'
         showPageNumbers={true}
       />
 
