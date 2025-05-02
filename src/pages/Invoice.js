@@ -4,8 +4,12 @@ import "../styles/Wallet.css";
 import EditKitRenewalModal from "../components/renewal/EditKitRenewal";
 import { AppLoader } from "../components/Loader/loader";
 import PageHeader from "../components/PageHeader/PageHeader";
-import { Search } from "lucide-react";
+import { Calendar, CalendarDays, CheckCircle, Clock, DollarSign, Edit2, FileText, Mail, Search, UserCheck } from "lucide-react";
 import { formatDate } from "../components/utils/date";
+import MetricBox from "../components/MetricsBox/MetricsBox";
+import { InfoCard } from "../components/InfoCard/Card";
+import EmptyState from "../components/EmptyState/EmptyState";
+import SearchWithButton from "../components/SearchInput/SearchInput";
 
 const InvoicesPage = () => {
   const [kitNumber, setKitNumber] = useState("");
@@ -73,26 +77,34 @@ const InvoicesPage = () => {
     <div className="kit-container-renewal">
       <PageHeader title="Invoices" />
       <div className="kit-actions-bar">
-        <div className="kit-search-wrapper">
-          <div className="kit-search-input-container">
-            <Search size={24} color="#b6bbc1" className="kit-search-icon" />
-            <input
-              type="text"
-              className="kit-search-input"
-              placeholder="Enter kit number"
-              value={kitNumber}
-              onChange={(e) => setKitNumber(e.target.value)}
-            />
-          </div>
-          <button className="kit-search-button" onClick={handleSearch} disabled={loading}>
-            {loading ? "Searching..." : "Search"}
-          </button>
-        </div>
-      </div>
-
-      <div className="kit-header-wrapper">
-        <h2 className="kit-header-title">Total Invoices: {filteredInvoices.length}</h2>
-      </div>
+    
+    <SearchWithButton
+        type="text"
+        value={kitNumber}
+        onChange={(e) => setKitNumber(e.target.value)}
+        placeholder="Enter kit number"
+      
+        icon={<Mail size={24} />}
+        loading={loading}
+        onSearch={handleSearch}
+        width="70%"
+        withButton={true}
+        buttonText="Search"
+        loadingText="Searching..."
+      />
+    </div>
+<div className="kit-metrics">
+<MetricBox
+        icon={<FileText size={24} />}
+        title="Total Invoices"
+        value={filteredInvoices.length}
+        loading={loading}
+        className="invoice-metric"
+        style={{ width: '100%' }}
+      />
+      
+</div>
+   
 
       <div className="kit-content-area">
         {loading && <AppLoader />}
@@ -101,25 +113,68 @@ const InvoicesPage = () => {
             {filteredInvoices.length > 0 ? (
               <div className="kit-grid">
                 {filteredInvoices.map((item) => (
-                  <div className="kit-card" key={item.id}>
-                    <h4>Kit: {item.kit_number}</h4>
-                    <p>Amount: ₦{item.amount}</p>
-                    <p>Month: {item.month}</p>
-                    <p>Year: {item.year}</p>
-                    <p>Credit Admin: {item.credit_admin ? "Yes" : "No"}</p>
-                    <p>Start Date: {formatDate(item.start_date)}</p>
-                    <p>End Date: {formatDate(item.end_date)}</p>
-                    <p>Deadline: {formatDate(item.deadline)}</p>
-                    <p>Prorated: {item.prorated ? "Yes" : "No"}</p>
-                    <button onClick={() => handleEditClick(item)}>Edit</button>
-                  </div>
+                   <InfoCard
+                   key={item.id}
+                   title={`Kit No: ${item.kit_number}`}
+                   items={[
+                     {
+                       icon: <DollarSign size={16} />,
+                       label: 'Amount',
+                       value: `₦${item.amount}`
+                     },
+                     {
+                       icon: <Calendar size={16} />,
+                       label: 'Month',
+                       value: item.month
+                     },
+                     {
+                       icon: <Calendar size={16} />,
+                       label: 'Year',
+                       value: item.year
+                     },
+                     {
+                       icon: <UserCheck size={16} />,
+                       label: 'Credit Admin',
+                       value: item.credit_admin ? "Yes" : "No",
+                       className: item.credit_admin ? "status-badge active" : "status-badge inactive"
+                     },
+                     {
+                       icon: <CalendarDays size={16} />,
+                       label: 'Start Date',
+                       value: formatDate(item.start_date)
+                     },
+                     {
+                       icon: <CalendarDays size={16} />,
+                       label: 'End Date',
+                       value: formatDate(item.end_date)
+                     },
+                     {
+                       icon: <Clock size={16} />,
+                       label: 'Deadline',
+                       value: formatDate(item.deadline)
+                     },
+                     {
+                       icon: <CheckCircle size={16} />,
+                       label: 'Prorated',
+                       value: item.prorated ? "Yes" : "No",
+                       className: item.prorated ? "status-badge active" : "status-badge inactive"
+                     }
+                   ]}
+                   menuItems={[
+                     {
+                       icon: <Edit2 size={16} />,
+                       label: 'Edit',
+                       onClick: () => handleEditClick(item)
+                     }
+                   ]}
+                   className={item.credit_admin ? "active" : ""}
+                 />
+
                 ))}
               </div>
             ) : (
-              <div className="kit-empty-state">
-                <h3>No Invoices Found</h3>
-                <p>Try searching with a different kit number.</p>
-              </div>
+              <EmptyState title='No Invoices Found' message="Try searching with a different kit number."  />
+           
             )}
           </>
         )}

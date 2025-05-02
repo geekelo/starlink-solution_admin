@@ -131,13 +131,6 @@ const MonthlyRenewalPage = () => {
           loading={loading}
         />
       </div>
-      <div className="kit-grid-box kit-box">
-      <MetricBox
-          icon={<Package size={40} color="#b6bbc1"  />}
-          title={`Total Renewals`}
-          value={renewalData.length}
-          loading={loading}
-        />
 
       <div className="kit-content-area">
         {loading && <AppLoader />}
@@ -184,7 +177,7 @@ const MonthlyRenewalPage = () => {
         />
       )}
     </div>
-    </div>
+
   );
 };
 
