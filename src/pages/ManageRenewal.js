@@ -30,6 +30,7 @@ const RenewalPage = () => {
   const [formData, setFormData] = useState({
     kit_number: "",
     status: "",
+    prorated: false,
     deduct_wallet: false, // <--- Add this
     kit_renewal: {
       amount: "",
@@ -60,7 +61,7 @@ const RenewalPage = () => {
     try {
       const axiosInstance = createAxiosInstance();
       const response = await axiosInstance.get(`/api/v1/admin/kit_renewals?kit_number=${kitNo}`);
-
+console.log(response)
       if (response.data.length > 0) {
         const sortedData = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
         setRenewalData(sortedData);
@@ -90,13 +91,11 @@ const RenewalPage = () => {
     } else {
       setFormData((prevData) => ({
         ...prevData,
-        [name]: value === "true",  // Converts "true"/"false" to boolean
+        [name]: (name === "deduct_wallet" || name === "prorated") ? value === "true" : value,
       }));
     }
   };
   
-  
-
   // Handle create record (API call)
   const handleCreateRecord = async () => {
     try {

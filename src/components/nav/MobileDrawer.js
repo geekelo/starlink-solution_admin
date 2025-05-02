@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { CreditCard, DollarSign, FileText, History, Home, Package, RefreshCw, Users, X } from "lucide-react";
 import "../../styles/Nav.css";
 import logo from "../../assets/logo.png";
+import { PiInvoice } from "react-icons/pi";
 
  const MobileDrawer = ({ isOpen, onClose }) => {
   const location = useLocation();
@@ -17,6 +18,8 @@ import logo from "../../assets/logo.png";
     { icon: <Users size={20} />, name: 'Users', path: '/users' },
     { icon: <DollarSign size={20} />, name: 'Manage Funding', path: '/manage-funds' },
     { icon: <RefreshCw size={20} />, name: 'Manage Renewals', path: '/renewal' },
+    { icon: <PiInvoice size={20} />, name: 'Invoices', path: '/invoices' },
+
   ];
   
   return (

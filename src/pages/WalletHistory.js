@@ -6,7 +6,6 @@ import {
   ArrowDownCircle,
   Database,
   Plus,
-
 } from "lucide-react";
 import "../styles/Wallet.css";
 import Funding from "../components/funding/funding";
@@ -61,7 +60,7 @@ const WalletPage = () => {
             type,
             status: item.status,
             amount: parseFloat(item.amount),
-            date: new Date(item.created_at), 
+            date: new Date(item.created_at),
             email: item.user_email || item.email,
             reference: item.kit_number || item.reference,
             purpose: item.purpose,
@@ -80,7 +79,7 @@ const WalletPage = () => {
           ...formattedRenewals,
           ...formattedWithdrawals,
         ].sort((a, b) => b.date - a.date);
-console.log(formattedRenewals)
+        console.log(formattedRenewals);
         setWalletHistory(sortedTransactions);
       } catch (err) {
         console.error("Failed to fetch wallet history:", err);
@@ -132,35 +131,35 @@ console.log(formattedRenewals)
     }
   };
   const handleModal = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
   return (
     <div className="kit-container">
-    <PageHeader 
-        title="Wallet History" 
-        rightElement={ <WalletBalance onBalanceFetched={setWalletBalance} />    }
+      <PageHeader
+        title="Wallet History"
+        rightElement={<WalletBalance onBalanceFetched={setWalletBalance} />}
       />
       <div className="kit-actions-bar">
-      <AppButton
-        variant="primary"
-        backgroundColor="error"
-        onClick={handleModal} 
-        leftIcon={<Plus />}
-      >
-        Create Withdrawal
-      </AppButton>
+        <AppButton
+          variant="primary"
+          backgroundColor="error"
+          onClick={handleModal}
+          leftIcon={<Plus />}
+        >
+          Create Withdrawal
+        </AppButton>
       </div>
 
       {/* Metrics Section */}
       <div className="kit-metrics">
-      <MetricBox
+        <MetricBox
           icon={<ArrowUpCircle size={40} color="#4c6ef5" />}
           title="Total Funding"
           value={`₦${totalFunding.toLocaleString()}`}
           loading={loading}
         />
-      
-      <MetricBox
+
+        <MetricBox
           icon={<RefreshCw size={40} color="#4c6ef5" />}
           title="Total Renewal"
           value={`₦${totalRenewal.toLocaleString()}`}
@@ -172,20 +171,17 @@ console.log(formattedRenewals)
           value={`₦${totalWithdrawal.toLocaleString()}`}
           loading={loading}
         />
-  <MetricBox
+        <MetricBox
           icon={<Database size={40} color="#4c6ef5" />}
           title="Total in System"
           value={`₦${totalInSystem.toLocaleString()}`}
           loading={loading}
         />
-      
-
-       
       </div>
 
       {/* Tab Buttons */}
       <TabGroup
-        tabs={['All', 'Funding', 'Renewal', 'Withdrawal']}
+        tabs={["All", "Funding", "Renewal", "Withdrawal"]}
         activeTab={activeTab}
         onTabChange={setActiveTab}
         tabPrefix="tab"
@@ -193,7 +189,7 @@ console.log(formattedRenewals)
       {/* Transactions Grid */}
       <div className="kit-grid">
         {loading ? (
-         <AppLoader/>
+          <AppLoader />
         ) : currentTransactions.length === 0 ? (
           <EmptyState message="No transactions found." />
         ) : (
@@ -212,7 +208,7 @@ console.log(formattedRenewals)
               return (
                 <Withdrawal key={transaction.id} transaction={transaction} />
               );
-            } 
+            }
           })
         )}
       </div>
@@ -225,7 +221,6 @@ console.log(formattedRenewals)
         itemsPerPage={itemsPerPage}
         showPageNumbers={true}
       />
-   
 
       {/* View Transaction Modal */}
       {viewModalOpen && selectedTransaction && (
@@ -235,9 +230,9 @@ console.log(formattedRenewals)
           transaction={selectedTransaction}
         />
       )}
-            {/* Modal */}
-            <WithdrawalFormModal
-        isOpen={isModalOpen} 
+      {/* Modal */}
+      <WithdrawalFormModal
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />
     </div>
