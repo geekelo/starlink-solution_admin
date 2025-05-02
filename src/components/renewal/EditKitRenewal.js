@@ -72,6 +72,7 @@ const EditRenewalModal = ({ isOpen, closeModal, transaction, }) => {
   
       if (response.data) {
         toast.success("Renewal updated successfully!");
+        setFormData(response.data);
        
         closeModal();
       } else {

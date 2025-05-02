@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { createAxiosInstance } from "../config/axios";
-import "../styles/Wallet.css";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Renewal from "../components/renewal/Renewal";
 import { ViewRenewalModal } from "../components/renewal/ViewRenewal";
@@ -14,54 +12,40 @@ import EmptyState from "../components/EmptyState/EmptyState";
 import { Package, Search } from "lucide-react";
 import SearchWithButton from "../components/SearchInput/SearchInput";
 import MetricBox from "../components/MetricsBox/MetricsBox";
+import "../styles/Wallet.css";
+import { fetchKitRenewals } from "../redux/slice/renewalSlice";
 
 const MonthlyRenewalPage = () => {
-  const navigate = useNavigate();
-
-  const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [renewalData, setRenewalData] = useState([]);
+  const dispatch = useDispatch();
+  const { data: renewalData, loading, error } = useSelector((state) => state.kitRenewals);
 
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
-  const [kitNumber, setKitNumber] = useState("");
-
-  // Date selectors
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString().padStart(2, "0");
   const currentYear = currentDate.getFullYear().toString();
 
   const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const [selectedYear, setSelectedYear] = useState(currentYear);
+  const [kitNumber, setKitNumber] = useState("");
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 12;
 
-  const totalPages = Math.ceil(renewalData.length / recordsPerPage) || 1;
-  const currentRecords = renewalData.slice(
-    (currentPage - 1) * recordsPerPage,
-    currentPage * recordsPerPage
-  );
-
-  // Fetch all renewals (raw)
-  const fetchRenewals = async () => {
-    setLoading(true);
-    setErrorMessage("");
-    try {
-      const axiosInstance = createAxiosInstance();
-      const response = await axiosInstance.get("/api/v1/admin/kit_renewals");
-      return response.data || [];
-    } catch (error) {
-      console.error("Fetch error:", error);
-      toast.error("Failed to fetch renewal records.");
-      return [];
-    } finally {
-      setLoading(false);
-    }
+  const handleOpenViewModal = (transaction) => {
+    setSelectedTransaction(transaction);
+    setViewModalOpen(true);
   };
+
+  // Fetch all renewals on mount
+  useEffect(() => {
+    dispatch(fetchKitRenewals())
+      .unwrap()
+      .then(() => toast.success("Renewals fetched successfully."))
+      .catch(() => toast.error("Failed to fetch renewal records."));
+  }, [dispatch]);
 
   // Filter data based on selected month/year and kitNumber
   const filterRenewals = (data) => {
@@ -87,36 +71,17 @@ const MonthlyRenewalPage = () => {
     );
   };
 
-  const handleSearch = async () => {
-    setLoading(true);
-    setCurrentPage(1);
-    const allRenewals = await fetchRenewals();
-    const finalData = filterRenewals(allRenewals);
+  const filteredRenewals = filterRenewals(renewalData || []);
 
-    if (finalData.length > 0) {
-      setRenewalData(finalData);
-      toast.success("Renewals fetched successfully.");
-    } else {
-      setRenewalData([]);
-      const noDataMsg = `No renewals found for ${selectedMonth}/${selectedYear}.`;
-      setErrorMessage(noDataMsg);
-      toast.info(noDataMsg);
-    }
-    setLoading(false);
-  };
+  const totalPages = Math.ceil(filteredRenewals.length / recordsPerPage) || 1;
+  const currentRecords = filteredRenewals.slice(
+    (currentPage - 1) * recordsPerPage,
+    currentPage * recordsPerPage
+  );
 
-  const handleOpenViewModal = (transaction) => {
-    setSelectedTransaction(transaction);
-    setViewModalOpen(true);
-  };
-
-  // Trigger fetch only when month/year/kitNumber changes, debounce kitNumber
+  // Reset to page 1 whenever filter criteria changes
   useEffect(() => {
-    const delayDebounce = setTimeout(() => {
-      handleSearch();
-    }, 500); // debounce 500ms
-
-    return () => clearTimeout(delayDebounce);
+    setCurrentPage(1);
   }, [selectedMonth, selectedYear, kitNumber]);
 
   return (
@@ -125,35 +90,21 @@ const MonthlyRenewalPage = () => {
         title="Monthly Renewals"
         rightElement={
           <div className="kit-select">
-            <FormSelect
-              value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-            >
+            <FormSelect value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)}>
               <option value="All">All</option>
               {Array.from({ length: 12 }, (_, index) => {
                 const monthValue = (index + 1).toString().padStart(2, "0");
                 return (
                   <option key={index} value={monthValue}>
-                    {new Date(2025, index).toLocaleString("default", {
-                      month: "long",
-                    })}
+                    {new Date(2025, index).toLocaleString("default", { month: "long" })}
                   </option>
                 );
               })}
             </FormSelect>
-            <FormSelect
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
+            <FormSelect value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
               {Array.from({ length: 5 }, (_, index) => {
-                const yearValue = (
-                  currentDate.getFullYear() - 2 + index
-                ).toString();
-                return (
-                  <option key={yearValue} value={yearValue}>
-                    {yearValue}
-                  </option>
-                );
+                const yearValue = (currentDate.getFullYear() - 2 + index).toString();
+                return <option key={yearValue} value={yearValue}>{yearValue}</option>;
               })}
             </FormSelect>
           </div>
@@ -176,7 +127,7 @@ const MonthlyRenewalPage = () => {
         <MetricBox
           icon={<Package size={40} color="#b6bbc1" />}
           title="Total Renewals"
-          value={renewalData.length}
+          value={filteredRenewals.length}
           loading={loading}
         />
       </div>
@@ -184,7 +135,7 @@ const MonthlyRenewalPage = () => {
       <div className="kit-content-area">
         {loading && <AppLoader />}
 
-        {!loading && renewalData.length > 0 && (
+        {!loading && filteredRenewals.length > 0 && (
           <div className="kit-grid">
             {currentRecords.map((item) => (
               <div key={item.id} className="kit-renewal-item">
@@ -194,10 +145,10 @@ const MonthlyRenewalPage = () => {
           </div>
         )}
 
-        {!loading && renewalData.length === 0 && (
+        {!loading && filteredRenewals.length === 0 && (
           <EmptyState
             icon={<Search />}
-            message={errorMessage || "Select a month and year or enter a kit number to search."}
+            message={error || "No renewals found for selected month, year, or kit number."}
           />
         )}
       </div>
@@ -205,7 +156,7 @@ const MonthlyRenewalPage = () => {
       <Pagination
         currentPage={currentPage}
         onPageChange={setCurrentPage}
-        totalItems={renewalData.length}
+        totalItems={filteredRenewals.length}
         itemsPerPage={recordsPerPage}
         showPageNumbers={true}
       />
@@ -223,7 +174,6 @@ const MonthlyRenewalPage = () => {
           isOpen={editModalOpen}
           closeModal={() => setEditModalOpen(false)}
           transaction={selectedTransaction}
-          
         />
       )}
     </div>
