@@ -51,12 +51,7 @@ const KitPage = () => {
   const navigate = useNavigate();
   
   const kitsPerPage = 12;
-  
-  // Fetch kits on mount
-  useEffect(() => {
- const res =   dispatch(fetchKits());
- console.log(res)
-  }, [dispatch]);
+  console.log(kits)
   
   // Sync selectedKit to formData
   const [formData, setFormData] = useState({
