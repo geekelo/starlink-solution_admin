@@ -51,7 +51,7 @@ const KitPage = () => {
   const navigate = useNavigate();
   
   const kitsPerPage = 12;
-  console.log(kits)
+  
   
   // Sync selectedKit to formData
   const [formData, setFormData] = useState({
@@ -195,6 +195,7 @@ const KitPage = () => {
     { value: "username", label: "User" },
     { value: "email", label: "Email" },
   ];
+  
   
 
   return (
