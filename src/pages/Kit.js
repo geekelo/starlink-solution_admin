@@ -196,6 +196,7 @@ const KitPage = () => {
     { value: "email", label: "Email" },
   ];
   
+  console.log(currentKits)
 
   return (
     <div className="kit-container">

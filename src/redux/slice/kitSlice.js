@@ -22,7 +22,7 @@ export const fetchKits = createAsyncThunk("kits/fetchKits", async (_, thunkAPI) 
         companyName: kit.company_name || "N/A",
         nin: kit.nin,
         status: kit.status,
-        plan: "N/A",
+        plan: kit.plan,
         serviceNo: kit.service_line_number || "N/A",
         dateAdded: kit.created_at.split("T")[0],
     createdAt: kit.created_at,   
