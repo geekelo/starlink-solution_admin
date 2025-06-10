@@ -147,7 +147,6 @@ const Users = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-console.log(kitUserEmail)
   return (
     <div className="kit-container">
       <PageHeader
