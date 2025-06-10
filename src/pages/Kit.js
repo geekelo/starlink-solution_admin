@@ -79,28 +79,31 @@ const KitPage = () => {
   }, [selectedKit]);
   
   // Filter kits based on search
-  const filteredKits = useMemo(() => {
-    if (!Array.isArray(kits)) return [];
-    if (!searchQuery) return kits;
-  
-    return kits.filter((kit) => {
-      const query = searchQuery.toLowerCase();
-      if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
-      if (searchType === "month") {
-        const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
-          new Date(kit.dateAdded).getMonth() + 1
-        ).padStart(2, "0")}`;
-        return kitMonth === searchQuery;
-      }
-      if (searchType === "year") {
-        return kit.dateAdded?.startsWith(searchQuery);
-      }
-      if (searchType === "email") {
-        return kit.email?.toLowerCase().includes(query);
-      }
-      return kit[searchType]?.toString().toLowerCase().includes(query);
-    });
-  }, [searchQuery, searchType, kits]);
+ const filteredKits = useMemo(() => {
+  if (!Array.isArray(kits)) return [];
+
+  const filtered = kits.filter((kit) => {
+    const query = searchQuery.toLowerCase();
+    if (!searchQuery) return true;
+
+    if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
+    if (searchType === "month") {
+      const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
+        new Date(kit.dateAdded).getMonth() + 1
+      ).padStart(2, "0")}`;
+      return kitMonth === searchQuery;
+    }
+    if (searchType === "year") return kit.dateAdded?.startsWith(searchQuery);
+    if (searchType === "email") return kit.email?.toLowerCase().includes(query);
+
+    return kit[searchType]?.toString().toLowerCase().includes(query);
+  });
+
+  // Sort by newest date
+  return filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+}, [searchQuery, searchType, kits]);
+
+
   
   // Kit status metrics
   const metrics = useMemo(() => ({
