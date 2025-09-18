@@ -4,15 +4,21 @@ import { toast } from "react-toastify";
 import { createAxiosInstance } from "../../config/axios";
 
 // Thunk to fetch kits
-export const fetchKits = createAsyncThunk("kits/fetchKits", async (_, thunkAPI) => {
-  console.log("[fetchKits] Thunk started");
-  try {
-    const axiosInstance = createAxiosInstance();
-    const response = await axiosInstance.get("/api/v1/admin/kit_records");
-    console.log("[fetchKits] API response:", response);
 
-    const formattedKits = response.data
-      .map((kit) => ({
+export const fetchKits = createAsyncThunk(
+  "kits/fetchKits",
+  async ({ page = 1, per_page = 10 }, thunkAPI) => {
+    try {
+      const axiosInstance = createAxiosInstance();
+      const response = await axiosInstance.get("/api/v1/admin/kit_records", {
+        params: { page, per_page },
+      });
+
+
+      const { data, meta } = response;
+
+
+      const formattedKits = data?.map((kit) => ({
         kitId: kit.id,
         kitNo: kit.kit_number,
         username: kit.owner_name,
@@ -25,17 +31,17 @@ export const fetchKits = createAsyncThunk("kits/fetchKits", async (_, thunkAPI) 
         plan: kit.plan,
         serviceNo: kit.service_line_number || "N/A",
         dateAdded: kit.created_at.split("T")[0],
-    createdAt: kit.created_at,   
-      }))
-      .sort((a, b) => b.createdAt - a.createdAt);
+        createdAt: kit.created_at,
+      }));
 
-    console.log("[fetchKits] Formatted kits:", formattedKits);
-    return formattedKits;
-  } catch (error) {
-    console.error("[fetchKits] API error:", error);
-    return thunkAPI.rejectWithValue("Failed to fetch kits");
+      return { kits: formattedKits, meta };
+    } catch (error) {
+      console.error("[fetchKits] API error:", error);
+      return thunkAPI.rejectWithValue("Failed to fetch kits");
+    }
   }
-});
+);
+
 
 // Thunk to update kit
 export const updateKit = createAsyncThunk("kits/updateKit", async ({ kitId, formData }, thunkAPI) => {
@@ -98,58 +104,28 @@ const kitSlice = createSlice({
   name: "kits",
   initialState: {
     kits: [],
+    meta: { current_page: 1, total_pages: 1, total_records: 0 },
     loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Fetch Kits
       .addCase(fetchKits.pending, (state) => {
-        console.log("[kitSlice] fetchKits.pending");
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchKits.fulfilled, (state, action) => {
-        console.log("[kitSlice] fetchKits.fulfilled");
-        state.kits = action.payload;
         state.loading = false;
+        state.kits = action.payload.kits;
+        state.meta = action.payload.meta; 
       })
       .addCase(fetchKits.rejected, (state, action) => {
-        console.log("[kitSlice] fetchKits.rejected");
         state.loading = false;
         state.error = action.payload;
-      })
-
-      // Update Kit
-      .addCase(updateKit.fulfilled, (state, action) => {
-        console.log("[kitSlice] updateKit.fulfilled");
-        const { kitId, formData } = action.payload;
-        state.kits = state.kits.map((kit) =>
-          kit.kitId === kitId
-            ? {
-                ...kit,
-                ...formData,
-                status: formData.status.charAt(0).toUpperCase() + formData.status.slice(1),
-              }
-            : kit
-        );
-      })
-
-      // Renew Kit
-      .addCase(renewKit.fulfilled, (state, action) => {
-        console.log("[kitSlice] renewKit.fulfilled", action.payload);
-      })
-
-      // Transfer Kit
-      .addCase(transferKit.fulfilled, (state, action) => {
-        console.log("[kitSlice] transferKit.fulfilled");
-        const { kitNo, newEmail } = action.payload;
-        state.kits = state.kits.map((kit) =>
-          kit.kitNo === kitNo ? { ...kit, email: newEmail } : kit
-        );
       });
   },
 });
+
 
 export default kitSlice.reducer;

@@ -44,14 +44,16 @@ const KitPage = () => {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferEmail, setTransferEmail] = useState("");
   const [error, setError] = useState("");
+    const kitsPerPage = 12;
   
-  const dispatch = useDispatch();
-  const { kits, loading, error: fetchError } = useSelector((state) => state.kits);
-  
+
+
+
+const { kits, loading, meta } = useSelector((state) => state.kits);
+
   const navigate = useNavigate();
   
-  const kitsPerPage = 12;
-  
+
   
   // Sync selectedKit to formData
   const [formData, setFormData] = useState({
@@ -63,7 +65,10 @@ const KitPage = () => {
     status: "active",
     service_line_number: "",
   });
-  
+    const dispatch = useDispatch();
+  useEffect(() => {
+  dispatch(fetchKits({ page: currentPage, per_page: kitsPerPage }));
+}, [dispatch, currentPage, kitsPerPage]);
   useEffect(() => {
     if (selectedKit) {
       setFormData({
@@ -113,9 +118,9 @@ const KitPage = () => {
   }), [filteredKits]);
   
   // Pagination logic
-  const indexOfLastKit = currentPage * kitsPerPage;
-  const indexOfFirstKit = indexOfLastKit - kitsPerPage;
-  const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
+  // const indexOfLastKit = currentPage * kitsPerPage;
+  // const indexOfFirstKit = indexOfLastKit - kitsPerPage;
+  const currentKits = kits;
   
   // Kit Actions
   const openModal = (kit) => {
@@ -283,7 +288,7 @@ const KitPage = () => {
         ) : (
        
             <div className="kit-grid">
-            {currentKits.map((kit) => (
+            {currentKits?.map((kit) => (
               <InfoCard
                 key={kit.kitId}
                 title={`Kit No: ${kit.kitNo}`}
@@ -372,11 +377,11 @@ const KitPage = () => {
       </div>
       {/* Pagination Controls */}
       <Pagination
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        totalItems={currentKits.length}
-        itemsPerPage='4'
-        showPageNumbers={true}
+    currentPage={meta?.current_page}
+  onPageChange={setCurrentPage}
+  totalItems={meta?.total_records}
+  itemsPerPage={kitsPerPage}
+  showPageNumbers={true}
       />
 
       <KitModal
