@@ -473,3 +473,28 @@
     font-size: 13px;
   }
 }
+
+.apply-btn {
+  background-color: #1a3a5f;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.apply-btn:hover {
+  background-color: #1a3a5f;;      
+}
+
+.apply-btn:active {
+  transform: scale(0.96);       
+}
+
+.apply-btn:disabled {
+  background-color: #93c5fd;   
+  cursor: not-allowed;
+}

@@ -44,18 +44,24 @@ const KitPage = () => {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferEmail, setTransferEmail] = useState("");
   const [error, setError] = useState("");
-    const kitsPerPage = 12;
-  
+  const kitsPerPage = 10; // Changed from 12 to 10 to match API default
 
-
-
-const { kits, loading, meta } = useSelector((state) => state.kits);
-
+  const { kits, loading, meta } = useSelector((state) => state.kits);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   
+  // Separate filters state for API calls
+  const [filters, setFilters] = useState({
+    status: "",
+    kit_number: "",
+    owner_name: "",
+    owner_email: "",
+    date_added: "",
+    month: "",
+    year: "",
+  });
 
-  
-  // Sync selectedKit to formData
+  // Form data for editing kits
   const [formData, setFormData] = useState({
     kit_number: "",
     address: "",
@@ -65,10 +71,13 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
     status: "active",
     service_line_number: "",
   });
-    const dispatch = useDispatch();
+
+  // Initial fetch when component mounts
   useEffect(() => {
-  dispatch(fetchKits({ page: currentPage, per_page: kitsPerPage }));
-}, [dispatch, currentPage, kitsPerPage]);
+    dispatch(fetchKits({ page: 1, per_page: kitsPerPage }));
+  }, [dispatch]);
+
+  // Sync selectedKit to formData
   useEffect(() => {
     if (selectedKit) {
       setFormData({
@@ -83,33 +92,31 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
     }
   }, [selectedKit]);
   
-  // Filter kits based on search
- const filteredKits = useMemo(() => {
-  if (!Array.isArray(kits)) return [];
+  // Filter kits based on local search (this is for client-side filtering)
+  const filteredKits = useMemo(() => {
+    if (!Array.isArray(kits)) return [];
 
-  const filtered = kits.filter((kit) => {
-    const query = searchQuery.toLowerCase();
-    if (!searchQuery) return true;
+    const filtered = kits.filter((kit) => {
+      const query = searchQuery.toLowerCase();
+      if (!searchQuery) return true;
 
-    if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
-    if (searchType === "month") {
-      const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
-        new Date(kit.dateAdded).getMonth() + 1
-      ).padStart(2, "0")}`;
-      return kitMonth === searchQuery;
-    }
-    if (searchType === "year") return kit.dateAdded?.startsWith(searchQuery);
-    if (searchType === "email") return kit.email?.toLowerCase().includes(query);
+      if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
+      if (searchType === "month") {
+        const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
+          new Date(kit.dateAdded).getMonth() + 1
+        ).padStart(2, "0")}`;
+        return kitMonth === searchQuery;
+      }
+      if (searchType === "year") return kit.dateAdded?.startsWith(searchQuery);
+      if (searchType === "email") return kit.email?.toLowerCase().includes(query);
 
-    return kit[searchType]?.toString().toLowerCase().includes(query);
-  });
+      return kit[searchType]?.toString().toLowerCase().includes(query);
+    });
 
-  // Sort by newest date
-  return filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-}, [searchQuery, searchType, kits]);
+    // Sort by newest date
+    return filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
+  }, [searchQuery, searchType, kits]);
 
-
-  
   // Kit status metrics
   const metrics = useMemo(() => ({
     total: filteredKits.length,
@@ -117,16 +124,15 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
     inactive: filteredKits.filter((kit) => kit.status === "inactive").length,
   }), [filteredKits]);
   
-  // Pagination logic
-  // const indexOfLastKit = currentPage * kitsPerPage;
-  // const indexOfFirstKit = indexOfLastKit - kitsPerPage;
-  const currentKits = kits;
+  // Use filtered kits for display
+  const currentKits = filteredKits;
   
   // Kit Actions
   const openModal = (kit) => {
     setSelectedKit({ ...kit });
     setIsModalOpen(true);
   };
+  
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedKit(null);
@@ -136,37 +142,71 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
     setSelectedKit(kit);
     setIsTransferModalOpen(true);
   };
+  
   const closeTransferModal = () => {
     setIsTransferModalOpen(false);
     setTransferEmail("");
     setError("");
   };
   
-  const handleChange = (e) => {
+  // Handle filter input changes
+  const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
+  // Handle status filter change
+  const handleStatusFilterChange = (value) => {
+    setFilters((prev) => ({
+      ...prev,
+      status: value,
+    }));
+  };
+
+  // Apply filters - calls API with filters
+  const handleApply = () => {
+    dispatch(fetchKits({ page: 1, per_page: kitsPerPage, filters }));
+    setCurrentPage(1); // Reset to first page when applying filters
+  };
+
+  // Handle form data changes for editing
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle status select change in edit modal
   const handleSelectChange = (value) => {
     setFormData((prev) => ({ ...prev, status: value }));
   };
+  
   const handleSave = () => {
-  const res =  dispatch(updateKit({ kitId: selectedKit.kitId, formData }));
-  console.log(res)
+    const res = dispatch(updateKit({ kitId: selectedKit.kitId, formData }));
+    console.log(res);
     closeModal();
   };
+  
   const handleRenewKit = (kitId) => {
-   const res = dispatch(renewKit(kitId));
-    console.log(res)
+    const res = dispatch(renewKit(kitId));
+    console.log(res);
   };
+  
   const handleTransferKit = () => {
     if (!transferEmail.trim()) {
       setError("New owner email is required.");
       return;
     }
-   const res= dispatch(transferKit({ kitNo: selectedKit.kitNo, newEmail: transferEmail }));
-    console.log(res)
+    const res = dispatch(transferKit({ kitNo: selectedKit.kitNo, newEmail: transferEmail }));
+    console.log(res);
     closeTransferModal();
   };
+  
   const goToRenewals = (kit) => {
     navigate(`/renewals?kit=${kit.kitNo}`);
   };
@@ -193,6 +233,12 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Handle page changes
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    dispatch(fetchKits({ page, per_page: kitsPerPage, filters }));
+  };
   
   // Search options
   const options = [
@@ -203,61 +249,76 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
     { value: "username", label: "User" },
     { value: "email", label: "Email" },
   ];
-  
-  
 
   return (
     <div className="kit-container">
-           <PageHeader
-          title="Kit Management"
-          rightElement={
-            <div className="search-filter">
-              <Select
-                options={options}
-                defaultValue="kitNo"
-                onChange={setSearchType}
-                placeholder="Select filter type"
-                icon={<Filter size={16} />}
-              />
-
-              <div className="search-box">
-                <Search size={24} color="#b6bbc1" />
-                {searchType === "dateAdded" ? (
-                  <input
-                    type="date"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                ) : searchType === "month" ? (
-                  <input
-                    type="month"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                ) : searchType === "year" ? (
-                  <input
-                    type="number"
-                    min="2000"
-                    max={new Date().getFullYear()}
-                    placeholder="Enter Year"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    placeholder={`Search by ${searchType}`}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                )}
-              </div>
-            </div>
-          }
-        />
-      <div className="kit-nav">
+      <PageHeader
+        title="Kit Management"
+        rightElement={
+          <div className="search-filter">
+            <Select
+              options={options}
+              defaultValue="kitNo"
+              onChange={(value) => setSearchType(value)}
+              placeholder="Select filter type"
+              icon={<Filter size={16} />}
+            />
    
+            <div className="search-box">
+              <Search size={24} color="#b6bbc1" />
+              {searchType === "dateAdded" ? (
+                <input
+                  type="date"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              ) : searchType === "month" ? (
+                <input
+                  type="month"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              ) : searchType === "year" ? (
+                <input
+                  type="number"
+                  min="2000"
+                  max={new Date().getFullYear()}
+                  placeholder="Enter Year"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              ) : (
+                <input
+                  type="text"
+                  placeholder={`Search by ${searchType}`}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              )}
+            </div>
+            
+            <Select
+              options={[
+                { value: "", label: "All Status" },
+                { value: "active", label: "Active" },
+                { value: "inactive", label: "Inactive" },
+                { value: "pending", label: "Pending" },
+                { value: "paid", label: "Paid" },
+              ]}
+              defaultValue=""
+              onChange={handleStatusFilterChange}
+              placeholder="Filter by status"
+              icon={<Filter size={16} />}
+            />
 
+            <button className="apply-btn" onClick={handleApply}>
+              Apply
+            </button>
+          </div>
+        }
+      />
+      
+      <div className="kit-nav">
         {error && <p className="error-message">{error}</p>}
       </div>
 
@@ -282,12 +343,12 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
           loading={loading}
         />
       </div>
+      
       <div className="kit-grid">
         {loading ? (
-       <AppLoader/>
+          <AppLoader/>
         ) : (
-       
-            <div className="kit-grid">
+          <div className="kit-grid">
             {currentKits?.map((kit) => (
               <InfoCard
                 key={kit.kitId}
@@ -372,27 +433,28 @@ const { kits, loading, meta } = useSelector((state) => state.kits);
               />
             ))}
           </div>
-         
         )}
       </div>
+      
       {/* Pagination Controls */}
       <Pagination
-    currentPage={meta?.current_page}
-  onPageChange={setCurrentPage}
-  totalItems={meta?.total_records}
-  itemsPerPage={kitsPerPage}
-  showPageNumbers={true}
+        currentPage={meta?.current_page}
+        onPageChange={handlePageChange} // Fixed: Now calls API with new page
+        totalItems={meta?.total_records}
+        itemsPerPage={kitsPerPage}
+        showPageNumbers={true}
       />
 
       <KitModal
         isOpen={isModalOpen}
         formData={formData}
-        handleChange={handleChange}
+        handleChange={handleFormChange} // Fixed: Now uses separate handler
         handleSelectChange={handleSelectChange}
         handleSave={handleSave}
         closeModal={closeModal}
         error={error}
       />
+      
       <Modal
         title="Transfer Kit"
         isOpen={isTransferModalOpen}
