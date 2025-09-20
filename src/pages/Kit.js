@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Package,
   CheckCircle,
@@ -34,23 +34,32 @@ import { fetchKits, renewKit, transferKit, updateKit } from "../redux/slice/kitS
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
-  const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedKit, setSelectedKit] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeDropdown, setActiveDropdown] = useState(null);
-  const dropdownRef = useRef(null);
   
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferEmail, setTransferEmail] = useState("");
   const [error, setError] = useState("");
   
   const dispatch = useDispatch();
-  const { kits, loading, error: fetchError } = useSelector((state) => state.kits);
+  const { kits, loading, meta, error: fetchError } = useSelector((state) => state.kits);
   
   const navigate = useNavigate();
   
   const kitsPerPage = 12;
+  
+  // Separate filters state for API calls
+  const [filters, setFilters] = useState({
+    status: "",
+    kit_number: "",
+    owner_name: "",
+    owner_email: "",
+    address: "",
+    date_added: "",
+    month_added: "",
+    year_added: "",
+  });
   
   
   // Sync selectedKit to formData
@@ -78,44 +87,33 @@ const KitPage = () => {
     }
   }, [selectedKit]);
   
-  // Filter kits based on search
- const filteredKits = useMemo(() => {
-  if (!Array.isArray(kits)) return [];
-
-  const filtered = kits.filter((kit) => {
-    const query = searchQuery.toLowerCase();
-    if (!searchQuery) return true;
-
-    if (searchType === "dateAdded") return kit.dateAdded === searchQuery;
-    if (searchType === "month") {
-      const kitMonth = `${new Date(kit.dateAdded).getFullYear()}-${String(
-        new Date(kit.dateAdded).getMonth() + 1
-      ).padStart(2, "0")}`;
-      return kitMonth === searchQuery;
-    }
-    if (searchType === "year") return kit.dateAdded?.startsWith(searchQuery);
-    if (searchType === "email") return kit.email?.toLowerCase().includes(query);
-
-    return kit[searchType]?.toString().toLowerCase().includes(query);
+  // Initial fetch when component mounts
+  useEffect(() => {
+    dispatch(fetchKits({ page: 1, per_page: kitsPerPage, filters: {} }));
+  }, [dispatch, kitsPerPage]);
+  
+  // Kit status metrics - now using server-side data
+  const metrics = useMemo(() => {
+    if (!Array.isArray(kits)) return { total: 0, active: 0, inactive: 0 };
+    
+    return {
+      total: meta?.total_records || 0,
+      active: kits.filter((kit) => kit.status === "active").length,
+      inactive: kits.filter((kit) => kit.status === "inactive").length,
+    };
+  }, [kits, meta?.total_records]);
+  
+  // Use kits directly from Redux (server-side filtered and paginated)
+  const currentKits = kits || [];
+  
+  // Debug logging
+  console.log("[Kit.js] Debug info:", {
+    kits,
+    currentKits,
+    loading,
+    meta,
+    kitsLength: currentKits?.length
   });
-
-  // Sort by newest date
-  return filtered.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-}, [searchQuery, searchType, kits]);
-
-
-  
-  // Kit status metrics
-  const metrics = useMemo(() => ({
-    total: filteredKits.length,
-    active: filteredKits.filter((kit) => kit.status === "active").length,
-    inactive: filteredKits.filter((kit) => kit.status === "inactive").length,
-  }), [filteredKits]);
-  
-  // Pagination logic
-  const indexOfLastKit = currentPage * kitsPerPage;
-  const indexOfFirstKit = indexOfLastKit - kitsPerPage;
-  const currentKits = filteredKits.slice(indexOfFirstKit, indexOfLastKit);
   
   // Kit Actions
   const openModal = (kit) => {
@@ -165,38 +163,46 @@ const KitPage = () => {
   const goToRenewals = (kit) => {
     navigate(`/renewals?kit=${kit.kitNo}`);
   };
-  
-  // Dropdown toggle
-  const toggleDropdown = (kitId, e) => {
-    e.stopPropagation();
-    setActiveDropdown(activeDropdown === kitId ? null : kitId);
+
+  // Handle filter input changes
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // Handle status filter change
+  const handleStatusFilterChange = (value) => {
+    setFilters((prev) => ({
+      ...prev,
+      status: value,
+    }));
+  };
+
+  // Apply filters - calls API with filters
+  const handleApply = () => {
+    setCurrentPage(1); // Reset to first page when applying filters
+    dispatch(fetchKits({ page: 1, per_page: kitsPerPage, filters }));
+  };
+
+  // Handle page changes
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    dispatch(fetchKits({ page, per_page: kitsPerPage, filters }));
   };
   
-  // Close dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target) &&
-        !event.target.closest(".menu-dots")
-      ) {
-        setActiveDropdown(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
   
-  // Search options
+  // Search options - updated to match backend filter capabilities
   const options = [
-    { value: "kitNo", label: "Kit No" },
+    { value: "kitNo", label: "Kit Number" },
+    { value: "username", label: "Owner Name" },
+    { value: "email", label: "Owner Email" },
+    { value: "address", label: "Address" },
     { value: "dateAdded", label: "Date Added" },
-    { value: "month", label: "Month" },
-    { value: "year", label: "Year" },
-    { value: "username", label: "User" },
-    { value: "email", label: "Email" },
+    { value: "month", label: "Month Added" },
+    { value: "year", label: "Year Added" },
   ];
   
   
@@ -220,40 +226,98 @@ const KitPage = () => {
                 {searchType === "dateAdded" ? (
                   <input
                     type="date"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    name="date_added"
+                    value={filters.date_added || ""}
+                    onChange={handleFilterChange}
                   />
                 ) : searchType === "month" ? (
                   <input
-                    type="month"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    type="number"
+                    name="month_added"
+                    min="1"
+                    max="12"
+                    placeholder="Enter Month (1-12)"
+                    value={filters.month_added || ""}
+                    onChange={handleFilterChange}
                   />
                 ) : searchType === "year" ? (
                   <input
                     type="number"
+                    name="year_added"
                     min="2000"
                     max={new Date().getFullYear()}
                     placeholder="Enter Year"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={filters.year_added || ""}
+                    onChange={handleFilterChange}
+                  />
+                ) : searchType === "kitNo" ? (
+                  <input
+                    type="text"
+                    name="kit_number"
+                    placeholder="Search by Kit Number"
+                    value={filters.kit_number || ""}
+                    onChange={handleFilterChange}
+                  />
+                ) : searchType === "username" ? (
+                  <input
+                    type="text"
+                    name="owner_name"
+                    placeholder="Search by Owner Name"
+                    value={filters.owner_name || ""}
+                    onChange={handleFilterChange}
+                  />
+                ) : searchType === "email" ? (
+                  <input
+                    type="email"
+                    name="owner_email"
+                    placeholder="Search by Owner Email"
+                    value={filters.owner_email || ""}
+                    onChange={handleFilterChange}
                   />
                 ) : (
                   <input
                     type="text"
-                    placeholder={`Search by ${searchType}`}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    name="address"
+                    placeholder="Search by Address"
+                    value={filters.address || ""}
+                    onChange={handleFilterChange}
                   />
                 )}
               </div>
+              
+              <Select
+                options={[
+                  { value: "", label: "All Status" },
+                  { value: "active", label: "Active" },
+                  { value: "inactive", label: "Inactive" },
+                  { value: "pending", label: "Pending" },
+                  { value: "paid", label: "Paid" },
+                ]}
+                defaultValue=""
+                onChange={handleStatusFilterChange}
+                placeholder="Filter by status"
+                icon={<Filter size={16} />}
+              />
+
+              <button className="apply-btn" onClick={handleApply}>
+                Apply
+              </button>
             </div>
           }
         />
       <div className="kit-nav">
-   
-
-        {error && <p className="error-message">{error}</p>}
+        {(error || fetchError) && (
+          <div className="error-message" style={{ 
+            background: '#fee', 
+            border: '1px solid #fcc', 
+            padding: '10px', 
+            borderRadius: '4px',
+            margin: '10px 0',
+            color: '#c33'
+          }}>
+            <strong>Error loading kits:</strong> {error || fetchError}
+          </div>
+        )}
       </div>
 
       {/* Metrics Section */}
@@ -280,10 +344,8 @@ const KitPage = () => {
       <div className="kit-grid">
         {loading ? (
        <AppLoader/>
-        ) : (
-       
-            <div className="kit-grid">
-            {currentKits.map((kit) => (
+        ) : currentKits && currentKits.length > 0 ? (
+          currentKits.map((kit) => (
               <InfoCard
                 key={kit.kitId}
                 title={`Kit No: ${kit.kitNo}`}
@@ -339,18 +401,12 @@ const KitPage = () => {
                   {
                     icon: <Edit2 size={16} />,
                     label: 'Edit',
-                    onClick: () => {
-                      openModal(kit);
-                      setActiveDropdown(null);
-                    }
+                    onClick: () => openModal(kit)
                   },
                   {
                     icon: <RefreshCw size={16} />,
                     label: 'Renewals',
-                    onClick: () => {
-                      goToRenewals(kit);
-                      setActiveDropdown(null);
-                    }
+                    onClick: () => goToRenewals(kit)
                   },
                   {
                     icon: <FolderOpenDot size={16} />,
@@ -365,17 +421,21 @@ const KitPage = () => {
                 ]}
                 className={kit.status.toLowerCase()}
               />
-            ))}
+            ))
+        ) : (
+          <div className="empty-state">
+            <Package size={48} color="#b6bbc1" />
+            <p>No kits found</p>
+            <small>Try adjusting your filters or add some kits</small>
           </div>
-         
         )}
       </div>
       {/* Pagination Controls */}
       <Pagination
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        totalItems={currentKits.length}
-        itemsPerPage='4'
+        currentPage={meta?.current_page || 1}
+        onPageChange={handlePageChange}
+        totalItems={meta?.total_records || 0}
+        itemsPerPage={kitsPerPage}
         showPageNumbers={true}
       />
 
