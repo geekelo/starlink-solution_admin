@@ -157,6 +157,16 @@
   box-shadow: none;
 }
 
+/* Delete menu item styling */
+.delete-menu-item {
+  color: #dc2626 !important;
+}
+
+.delete-menu-item:hover {
+  background-color: #fef2f2 !important;
+  color: #b91c1c !important;
+}
+
 /* .kit-metrics {
   display: flex;
   justify-content: space-around;

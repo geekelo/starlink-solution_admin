@@ -165,7 +165,7 @@ export const InfoCard = ({
                     {menuItems.map((item, index) => (
                       <div
                         key={index}
-                        className="dropdown-item"
+                        className={`dropdown-item ${item.className || ''}`}
                         onClick={(e) => {
                           e.stopPropagation();
                           setShowDropdown(false);

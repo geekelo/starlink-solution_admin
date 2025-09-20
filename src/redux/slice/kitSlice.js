@@ -144,6 +144,23 @@ export const transferKit = createAsyncThunk("kits/transferKit", async ({ kitNo, 
   }
 });
 
+// Thunk to delete kit
+export const deleteKit = createAsyncThunk("kits/deleteKit", async (kitId, thunkAPI) => {
+  console.log("[deleteKit] Thunk started", kitId);
+  try {
+    const axiosInstance = createAxiosInstance();
+    const response = await axiosInstance.delete(`/api/v1/admin/kit_records/${kitId}`);
+
+    console.log("[deleteKit] API response:", response);
+    toast.success("Kit deleted successfully");
+    return kitId;
+  } catch (error) {
+    console.error("[deleteKit] API error:", error);
+    toast.error("Failed to delete kit");
+    return thunkAPI.rejectWithValue("Failed to delete kit");
+  }
+});
+
 const kitSlice = createSlice({
   name: "kits",
   initialState: {
@@ -205,6 +222,13 @@ const kitSlice = createSlice({
         state.kits = state.kits.map((kit) =>
           kit.kitNo === kitNo ? { ...kit, email: newEmail } : kit
         );
+      })
+
+      // Delete Kit
+      .addCase(deleteKit.fulfilled, (state, action) => {
+        console.log("[kitSlice] deleteKit.fulfilled");
+        const deletedKitId = action.payload;
+        state.kits = state.kits.filter((kit) => kit.kitId !== deletedKitId);
       });
   },
 });

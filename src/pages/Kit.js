@@ -17,6 +17,7 @@ import {
   Repeat2,
   FolderOpenDot,
   MailIcon,
+  Trash2,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Kits.css";
@@ -30,7 +31,7 @@ import { AppLoader } from "../components/Loader/loader";
 import { InfoCard } from "../components/InfoCard/Card";
 import { Select } from "../components/Select/Select";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchKits, renewKit, transferKit, updateKit } from "../redux/slice/kitSlice";
+import { fetchKits, renewKit, transferKit, updateKit, deleteKit } from "../redux/slice/kitSlice";
 
 const KitPage = () => {
   const [searchType, setSearchType] = useState("kitNo");
@@ -159,6 +160,17 @@ const KitPage = () => {
    const res= dispatch(transferKit({ kitNo: selectedKit.kitNo, newEmail: transferEmail }));
     console.log(res)
     closeTransferModal();
+  };
+
+  const handleDeleteKit = async (kitId) => {
+    const confirmed = window.confirm("Are you sure you want to delete this kit? This action cannot be undone.");
+    if (confirmed) {
+      const result = await dispatch(deleteKit(kitId));
+      if (result.type === 'kits/deleteKit/fulfilled') {
+        // Refresh the current page data
+        dispatch(fetchKits({ page: currentPage, per_page: kitsPerPage, filters }));
+      }
+    }
   };
   const goToRenewals = (kit) => {
     navigate(`/renewals?kit=${kit.kitNo}`);
@@ -448,6 +460,12 @@ const KitPage = () => {
                     icon: <Repeat2 size={16} />,
                     label: 'Renew',
                     onClick: () => handleRenewKit(kit.kitId)
+                  },
+                  {
+                    icon: <Trash2 size={16} />,
+                    label: 'Delete',
+                    onClick: () => handleDeleteKit(kit.kitId),
+                    className: 'delete-menu-item'
                   }
                 ]}
                 className={kit.status.toLowerCase()}
