@@ -164,21 +164,36 @@ const KitPage = () => {
     navigate(`/renewals?kit=${kit.kitNo}`);
   };
 
-  // Handle filter input changes
+  // Handle filter input changes - only keep one filter at a time
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    // Clear all filters and set only the current one
+    setFilters({
+      status: "",
+      kit_number: "",
+      owner_name: "",
+      owner_email: "",
+      address: "",
+      date_added: "",
+      month_added: "",
+      year_added: "",
+      [name]: value, // Only set the current filter
+    });
   };
 
-  // Handle status filter change
+  // Handle status filter change - only keep one filter at a time
   const handleStatusFilterChange = (value) => {
-    setFilters((prev) => ({
-      ...prev,
+    // Clear all filters and set only the status filter
+    setFilters({
       status: value,
-    }));
+      kit_number: "",
+      owner_name: "",
+      owner_email: "",
+      address: "",
+      date_added: "",
+      month_added: "",
+      year_added: "",
+    });
   };
 
   // Apply filters - calls API with filters
@@ -194,6 +209,22 @@ const KitPage = () => {
   };
   
   
+  // Handle search type change - clear all filters when changing type
+  const handleSearchTypeChange = (value) => {
+    setSearchType(value);
+    // Clear all filters when changing search type
+    setFilters({
+      status: "",
+      kit_number: "",
+      owner_name: "",
+      owner_email: "",
+      address: "",
+      date_added: "",
+      month_added: "",
+      year_added: "",
+    });
+  };
+
   // Search options - updated to match backend filter capabilities
   const options = [
     { value: "kitNo", label: "Kit Number" },
@@ -216,7 +247,7 @@ const KitPage = () => {
               <Select
                 options={options}
                 defaultValue="kitNo"
-                onChange={setSearchType}
+                onChange={handleSearchTypeChange}
                 placeholder="Select filter type"
                 icon={<Filter size={16} />}
               />
@@ -432,7 +463,7 @@ const KitPage = () => {
       </div>
       {/* Pagination Controls */}
       <Pagination
-        currentPage={meta?.current_page || 1}
+        currentPage={currentPage}
         onPageChange={handlePageChange}
         totalItems={meta?.total_records || 0}
         itemsPerPage={kitsPerPage}

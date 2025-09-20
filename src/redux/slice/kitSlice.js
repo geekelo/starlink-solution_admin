@@ -10,12 +10,29 @@ export const fetchKits = createAsyncThunk(
     console.log("[fetchKits] Thunk started with params:", { page, per_page, filters });
     try {
       const axiosInstance = createAxiosInstance();
+      
+      // Only include filter parameters that have values
+      const cleanFilters = {};
+      Object.keys(filters).forEach(key => {
+        if (filters[key] && filters[key].toString().trim() !== '') {
+          cleanFilters[key] = filters[key];
+        }
+      });
+
+      const params = {
+        page,
+        per_page,
+      };
+
+      // Only add filter object if there are actual filters
+      if (Object.keys(cleanFilters).length > 0) {
+        params.filter = cleanFilters;
+      }
+
+      console.log("[fetchKits] Clean params being sent:", params);
+
       const response = await axiosInstance.get("/api/v1/admin/kit_records", {
-        params: { 
-          page, 
-          per_page,
-          filter: filters
-        },
+        params: params,
       });
       
       console.log("[fetchKits] API response:", response.data);
