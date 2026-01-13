@@ -8,24 +8,6 @@ import { FormLabel } from '../FormLabel/Label';
 
 /**
  * InfoCard - A flexible card component to display information with icons, labels, and optional dropdown menu
- * 
- * @param {Object} props
- * @param {string} props.title - The card title
- * @param {Array} props.items - Array of objects with icon, label, value, and optional className
- * @param {Array} props.menuItems - Array of objects with icon, label, and onClick function for dropdown menu
- * @param {string} props.className - Additional CSS classes
- * @param {boolean} props.active - Whether the card is in active state
- * @param {Object} props.style - Additional inline styles
- * @param {boolean} props.showAppButton - Whether to show an app button at the bottom
- * @param {function} props.onAppButtonClick - Function to handle app button click
- * @param {string} props.appButtonLabel - Label for the app button
- * @param {Array} props.statusOptions - Options for the status filter
- * @param {string} props.status - Current status value
- * @param {function} props.setStatus - Function to update status
- * @param {Array} props.planOptions - Options for the plan filter
- * @param {string} props.selectedPlan - Current plan value
- * @param {function} props.setSelectedPlan - Function to update plan
- * @param {boolean} props.appButtonDisabled - Whether the app button is disabled
  */
 
  
@@ -60,6 +42,7 @@ export const InfoCard = ({
     const [currentPlan, setCurrentPlan] = useState(selectedPlan);
     const [copied, setCopied] = useState(false);
     const [kitNumberCopied, setKitNumberCopied] = useState(false);
+    const [emailCopied, setEmailCopied] = useState(false);
     const dropdownRef = useRef(null);
     const cardRef = useRef(null);
     
@@ -109,9 +92,11 @@ export const InfoCard = ({
         setSelectedPlan(value);
       }
     };
+    
     const handleInput = (e) => {
       setAmount(e.target.value)
     }
+    
     // Handle app button click
     const handleAppButtonClick = () => {
       if (onAppButtonClick) {
@@ -147,12 +132,56 @@ export const InfoCard = ({
         });
     };
     
+    // Handle copy functionality specifically for Email
+    const handleCopyEmail = (value) => {
+      navigator.clipboard.writeText(value)
+        .then(() => {
+          setEmailCopied(true);
+          setTimeout(() => setEmailCopied(false), 2000); // Reset after 2 seconds
+        })
+        .catch(err => {
+          console.error('Failed to copy email: ', err);
+        });
+    };
+    
+    // Extract kit number from title if it starts with "Kit No: "
+    const getKitNumberFromTitle = () => {
+      if (title && title.startsWith("Kit No: ")) {
+        return title.replace("Kit No: ", "");
+      }
+      return null;
+    };
+    
     return (
       <div className={cardClasses} style={style} {...props} ref={cardRef}>
         {/* Card Header with Title and Optional Menu */}
         {title && (
-          <h3 className="info-card-title">
-            {title}
+          <h3 className="info-card-title" >
+            <div style={{ display: 'flex', alignItems: 'center', justifySelf: 'flex-start' }}>
+            <span>{title}</span>
+            
+            {/* Add copy button for Kit No title */}
+            {title && title.startsWith("Kit No: ") && (
+              <div
+                className="copy-button"
+                onClick={() => handleCopyKitNumber(getKitNumberFromTitle())}
+                style={{
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginLeft: '5px'
+                }}
+              >
+                {kitNumberCopied ? (
+                  <Check size={16} color="green" />
+                ) : (
+                  <Copy size={16} />
+                )}
+              </div>
+            )}
+            </div>
+         
+            
             {menuItems.length > 0 && (
               <div className="info-card-menu">
                 <div className="menu-dots" onClick={toggleDropdown}>
@@ -180,6 +209,7 @@ export const InfoCard = ({
                 )}
               </div>
             )}
+            
             {/* Copy button if icon is Copy */}
             {icon && icon.type === Copy && (
               <div 
@@ -236,17 +266,19 @@ export const InfoCard = ({
                       marginLeft: '10px'
                     }}
                   >
-                    {kitNumberCopied && item.label === "Kit Number" ? (
+                    {kitNumberCopied ? (
                       <Check size={16} color="green" />
                     ) : (
                       <Copy size={16} />
                     )}
                   </div>
                 )}
-                    {item.label === "Email" && (
+                
+                {/* Add copy button for Email */}
+                {(item.label === "Email" || item.label === "Owner's Email") && (
                   <div 
                     className="copy-button" 
-                    onClick={() => handleCopyKitNumber(item.value)}
+                    onClick={() => handleCopyEmail(item.value)}
                     style={{ 
                       cursor: 'pointer', 
                       display: 'flex', 
@@ -254,7 +286,7 @@ export const InfoCard = ({
                       marginLeft: '10px'
                     }}
                   >
-                    {kitNumberCopied && item.label === "Kit Number" ? (
+                    {emailCopied ? (
                       <Check size={16} color="green" />
                     ) : (
                       <Copy size={16} />
@@ -307,13 +339,12 @@ export const InfoCard = ({
               </div>
             )}
             <AppButton 
-  onClick={handleAppButtonClick}
-  leftIcon={<CheckCheck size={16} />}
-  disabled={appButtonDisabled} 
->
-  {appButtonLabel}
-</AppButton>
-           
+              onClick={handleAppButtonClick}
+              leftIcon={<CheckCheck size={16} />}
+              disabled={appButtonDisabled} 
+            >
+              {appButtonLabel}
+            </AppButton>
           </div>
         )}
       </div>

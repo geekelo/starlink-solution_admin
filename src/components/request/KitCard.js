@@ -73,6 +73,22 @@ const KitCard = ({ kit, plans, fetchStarlinkKits }) => {
     }
   };
   
+      // const response = await axiosInstance.patch(
+      //   `/api/v1/admin/funding_kit_requests/${kit.id}/update_kit_status`,
+      //   payload
+      // );
+  
+  //     console.log("Update successful", response.data);
+      
+  //    const {message, funding} = response.data
+  //    toast.success(`${message}`);
+  //     setShowModal(false);
+  //     alert("Kit updated successfully");
+  //   } catch (error) {
+  //     console.error("Error updating kit:", error);
+  //     alert("Failed to update kit. Please try again.");
+  //   }
+  // };
   // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
